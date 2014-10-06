@@ -1,0 +1,20 @@
+include "include/map.inc"
+include "include/meybot.inc"
+
+window
+(
+    size [800 600]
+)
+
+floorplan
+(
+    bitmap "bitmaps/simple_rooms.png"
+    size [20 20 1]
+)
+
+meybot
+(
+    name "mey1"
+    pose [-5 -6 0 45]
+    color "green"
+)

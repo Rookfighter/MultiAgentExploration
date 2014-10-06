@@ -1,0 +1,49 @@
+#!/bin/bash
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root."
+   exit 1
+fi
+
+START_DIR=$(pwd)
+BASE_DIR=$(dirname $0)
+
+# install player / stage dependencies
+apt-get --yes install build-essential cmake git subversion python python-dev
+apt-get --yes install libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev libgeos-dev libgeos++-dev
+apt-get --yes install libtool libxmu-dev swig freeglut3 freeglut3-dev libgtk2.0-dev
+apt-get --yes install libjpeg-dev libpng-dev libglu1-mesa-dev libfltk1.1 libfltk1.1-dev libltdl7 libltdl-dev libplayerc++ libplayerc++3.0-dev freeglut3 freeglut3-dev
+
+# install player from svn repository
+# revision 9140 was used
+cd "$BASE_DIR"
+
+svn co svn://svn.code.sf.net/p/playerstage/svn/code/player/trunk player-svn
+cd player-svn
+svn up -r9140
+mkdir build
+cd build
+cmake ..
+make
+make install
+
+# install stage
+cd "$BASE_DIR"
+
+wget -O Stage-4.1.1.tar.gz https://github.com/rtv/Stage/archive/v4.1.1.tar.gz
+tar -xzf Stage-4.1.1.tar.gz
+rm Stage-4.1.1.tar.gz
+cd Stage-4.1.1
+mkdir build
+cd build
+cmake ..
+make
+make install
+
+cd "$START_DIR"
+
+echo ""
+echo "========================"
+echo "    Now add libpaths."
+echo "========================"
+

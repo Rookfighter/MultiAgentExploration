@@ -7,17 +7,16 @@
 namespace mae
 {
 
-	class AntMarker
+	class Marker
 	{
 	public:
 		std::string name;
 		Pose pose;
 		bool inUse;
-		double range;
 		int value;
 		
-		AntMarker();
-		~AntMarker();
+		Marker();
+		~Marker();
 
 	};
 

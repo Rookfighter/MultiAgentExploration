@@ -15,6 +15,13 @@ floorplan
 meybot
 (
     name "mey1"
-    pose [-5 -6 0 45]
+    pose [-5 -6 0 30]
     color "green"
+)
+
+meybot
+(
+    name "mey2"
+    pose [-7 -5 0 0]
+    color "red"
 )

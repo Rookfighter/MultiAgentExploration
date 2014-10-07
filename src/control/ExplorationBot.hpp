@@ -4,22 +4,31 @@
 #include <libplayerc++/playerc++.h>
 #include <string>
 #include "common/Odometry.hpp"
+#include "control/Simulation.hpp"
 
 namespace mae
 {
+	
+	class ExplorationBotConfiguration
+	{
+	public:
+		std::string name;
+		Simulation *simulation;
+		int motorIndex;
+	};
 
-	class AntBot
+	class ExplorationBot
 	{
 	protected:
 		std::string name_;
-		PlayerCc::PlayerClient robot_;
+		Simulation *simulation_;
 		PlayerCc::Position2dProxy motor_;
-		PlayerCc::SimulationProxy simulation_;
 		
 	public:
-		AntBot(const std::string &p_name, const std::string &p_host, const int p_port);
-		~AntBot();
+		ExplorationBot(const ExplorationBotConfiguration &p_config);
+		~ExplorationBot();
 		
+		void setPose(const Pose &p_pose);
 		Pose getPose() const;
 		Pose getAbsolutePose();
 		
@@ -28,8 +37,7 @@ namespace mae
 		
 		std::string getName() const;
 		
-		void update();
-		
+		void placeMarker();
 	};
 
 }

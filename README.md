@@ -1,34 +1,20 @@
-# Exploration with Ant Bots
+# Multi Agent Exploration
 
 ## Installation
 
-### Required Programs
+__Attention:__ This project was only tested under __Linux Mint 17__.
 
-The following programs are required to run and compile the project on __Windows__:
+### Requirements
 
-* webots
-* MSYS
+The following things are required to run and compile the project on __Linux__:
 
-### Code Lite
+* Player
+* Stage
+* gcc 4.8 or higher
 
-To compile the project in Code Lite the following environment variables must be set in the project settings:
+### Player/Stage
 
-```
-WEBOTS_HOME=WebotsRootDir
-PATH=MSYSBinDir;WebotsMinGWBinDir;$PATH
-SHELL=sh.exe
-``` 
-
-For code completion add the following directories to the project search path:
-
-```
-WebotsRootDir\include\controller\cpp
-WebotsRootDir\mingw\lib\gcc\i686-w64-mingw32\4.8.0\include\c++
-```
-
-### Player / Stage
-
-For Player/Stage installation on Linux Mint 17 install the following dependencies:
+For Player/Stage installation on Linux Mint 17 install the following __dependencies__:
 
 ```
 sudo apt-get install build-essential cmake git subversion python python-dev
@@ -37,7 +23,7 @@ sudo apt-get install libtool libxmu-dev swig freeglut3 freeglut3-dev libgtk2.0-d
 sudo apt-get install libjpeg-dev libpng-dev libglu1-mesa-dev libfltk1.1 libfltk1.1-dev libltdl7 libltdl-dev libplayerc++ libplayerc++3.0-dev freeglut3 freeglut3-dev
 ```
 
-Now compile and install Player:
+Now compile and install __Player__:
 
 ```
 svn co svn://svn.code.sf.net/p/playerstage/svn/code/player/trunk player
@@ -49,7 +35,7 @@ make
 sudo make install
 ```
 
-Now compile and install Stage:
+Now compile and install __Stage__:
 
 ```
 wget -O Stage-4.1.1.tar.gz https://github.com/rtv/Stage/archive/v4.1.1.tar.gz
@@ -63,7 +49,7 @@ sudo make install
 ```
 
 If you are using a 64bit linux, the Stage libraries will be installed to ```/usr/local/lib64```
-instead of ```/usr/local/lib``` and Stage will fail to load the libraries. Add the following
+instead of ```/usr/local/lib``` and Stage will fail to load the libraries. Add the following lines
 to your ```~/.bashrc```:
 
 ```

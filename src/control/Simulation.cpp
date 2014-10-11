@@ -1,60 +1,18 @@
 #include "control/Simulation.hpp"
 
+#define SIZE_ELEMENT_COUNT 3
+#define SIZE_PROPERTY_NAME "size"
+
 namespace mae
 {
 
-	Simulation::Simulation(const SimulationConfiguration &p_config)
-		:client_(p_config.host, p_config.port), simulation_(&client_, p_config.simulationIndex), updated_(false),
-		 unusedPose_(p_config.unusedPose), markerName_(p_config.markerName)
+	Simulation::Simulation(PlayerClient *p_client, const int p_simulationIndex)
+		:client_(p_client), simulation_(client_->getClient(), p_simulationIndex)
 	{
-		resizeMarkerLists(p_config.markerCount);
 	}
 
 	Simulation::~Simulation()
 	{
-		cleanupLists();
-	}
-
-	void Simulation::resizeMarkerLists(const int p_count)
-	{
-		cleanupLists();
-		
-		unusedMarker_.resize(p_count);
-		usedMarker_.reserve(p_count);
-
-		for(int i = 0; i < unusedMarker_.size(); ++i)
-			unusedMarker_[i] = new Marker();
-			
-		initMarker();
-	}
-
-	void Simulation::initMarker()
-	{
-		std::vector<Marker*> all = getMarker();
-		for(int i = 0; i < all.size(); ++i) {
-			std::stringstream ss;
-			ss << markerName_ << (i + 1);
-			all[i]->name = ss.str();
-			all[i]->value = 0;
-		}
-		
-		for(Marker* marker : unusedMarker_)
-			marker->inUse = false;
-		
-		for(Marker* marker : usedMarker_)
-			marker->inUse = true;
-			
-		updated_ = false;
-	}
-
-	void Simulation::cleanupLists()
-	{
-		std::vector<Marker*> all = getMarker();
-		for(int i = 0; i < all.size(); ++i)
-			delete all[i];
-
-		unusedMarker_.clear();
-		usedMarker_.clear();
 	}
 
 	void Simulation::setPoseOf(const std::string &p_name, const Pose &p_pose)
@@ -73,70 +31,39 @@ namespace mae
 		return result;
 	}
 
-	void Simulation::placeMarkerAt(const Pose& p_pose)
+	void Simulation::setSizeOf(const std::string &p_name, double *p_sizes)
 	{
-		if(unusedMarker_.size() == 0)
-			throw new std::logic_error("Cannot place marker. No unused markers available");
-
-		Marker *marker = unusedMarker_.back();
-		unusedMarker_.erase(unusedMarker_.end());
-		marker->pose = p_pose;
-		setPoseOf(marker->name, marker->pose);
+		setProperty(p_name, SIZE_PROPERTY_NAME, (void*) p_sizes,SIZE_ELEMENT_COUNT * sizeof(double));
 	}
 
-	void Simulation::removeMarker(const std::string &p_name)
+	void Simulation::getSizeOf(const std::string &p_name, double *p_sizes)
 	{
-		if(usedMarker_.size() == 0)
-			throw new std::logic_error("Cannot remove marker. No used markers available");
-
-		std::vector<Marker*>::iterator it;
-		for(it = usedMarker_.begin(); it != usedMarker_.end(); ++it)
-			if((*it)->name == p_name)
-				break;
-		Marker *marker = (*it);
-		usedMarker_.erase(it);
-		setPoseOf(marker->name, marker->pose);
+		getProperty(p_name, SIZE_PROPERTY_NAME, (void*) p_sizes, SIZE_ELEMENT_COUNT * sizeof(double));
 	}
 
-	std::vector<Marker*> Simulation::getUnusedMarker()
+	void Simulation::setProperty(const std::string &p_name,
+	                             const std::string &p_property,
+	                             void *p_value,
+	                             const size_t p_size)
 	{
-		return unusedMarker_;
+		char tmpName[p_name.length() + 1];
+		char tmpProperty[p_property.length() + 1];
+		strcpy(tmpName, p_name.c_str());
+		strcpy(tmpProperty, p_property.c_str());
+
+		simulation_.SetProperty(tmpName, tmpProperty, p_value, p_size);
 	}
 
-	std::vector<Marker*> Simulation::getUsedMarker()
+	void Simulation::getProperty(const std::string &p_name,
+	                             const std::string &p_property,
+	                             void *p_value,
+	                             const size_t p_size)
 	{
-		return usedMarker_;
-	}
+		char tmpName[p_name.length() + 1];
+		char tmpProperty[p_property.length() + 1];
+		strcpy(tmpName, p_name.c_str());
+		strcpy(tmpProperty, p_property.c_str());
 
-	std::vector<Marker*> Simulation::getMarker()
-	{
-		std::vector<Marker*> result(unusedMarker_.size() + usedMarker_.size());
-		for(int i = 0; i < unusedMarker_.size(); ++i)
-			result[i] = unusedMarker_[i];
-		for(int i = 0; i < usedMarker_.size(); ++i)
-			result[i + unusedMarker_.size()] = usedMarker_[i];
-
-		return result;
-	}
-
-	PlayerCc::PlayerClient* Simulation::getClient()
-	{
-		return &client_;
-	}
-
-	void Simulation::update()
-	{
-		client_.Read();
-		if(!updated_)
-			updateMarker();
-	}
-
-	void Simulation::updateMarker()
-	{
-		std::vector<Marker*> all = getMarker();
-		for(Marker *marker : all)
-			marker->pose = getPoseOf(marker->name);
-			
-		updated_ = true;
+		simulation_.GetProperty(tmpName, tmpProperty, p_value, p_size);
 	}
 }

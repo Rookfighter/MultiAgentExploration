@@ -12,12 +12,14 @@ namespace mae
 	public:
 		std::string name;
 		Pose pose;
+		double range;
 		bool inUse;
 		int value;
 		
 		Marker();
 		~Marker();
-
+		
+		std::string str();
 	};
 
 }

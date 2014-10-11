@@ -1,29 +1,29 @@
-#ifndef TUT_MEYBOT_HPP
-#define TUT_MEYBOT_HPP
+#ifndef MAE_MEYBOT_HPP
+#define MAE_MEYBOT_HPP
 
 #include "control/ExplorationBot.hpp"
 
 namespace mae
 {
-	
-	enum MeybotSonar {FRONT=0, LEFT, RIGHT};
-	
-	class MeybotConfiguration : public ExplorationBotConfiguration
-	{
-	public:
-		int rangerIndex;
-	};
-	
+
 	class Meybot : public ExplorationBot
 	{
 	protected:
 		PlayerCc::RangerProxy ranger_;
 	public:
-		Meybot(const MeybotConfiguration &p_config);
+		const static int FRONT = 0;
+		const static int LEFT = 1;
+		const static int RIGHT = 2;
+	
+		Meybot(PlayerClient *p_client,
+		       Simulation *p_simulation,
+		       const std::string &p_name,
+		       const int p_motorIndex);
 		~Meybot();
-		
-		double getSonarDistance(const int p_sensor) const;
-		int getSonarCount() const;
+
+		RangerConfig getRangerConfig();
+		int getRangerCount();
+		double getRangerDistance(const int p_index);
 	};
 
 }

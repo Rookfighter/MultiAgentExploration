@@ -1,5 +1,6 @@
 include "include/map.inc"
 include "include/meybot.inc"
+include "include/marker.inc"
 
 window
 (
@@ -8,20 +9,26 @@ window
 
 floorplan
 (
-    bitmap "bitmaps/simple_rooms.png"
+    bitmap "bitmaps/single_room.png"
     size [20 20 1]
 )
 
 meybot
 (
-    name "mey1"
+    name "meybot1"
     pose [-5 -6 0 30]
     color "green"
 )
 
 meybot
 (
-    name "mey2"
+    name "meybot2"
     pose [-7 -5 0 0]
     color "red"
+)
+
+marker
+(
+    name "marker1"
+    pose [-2 -1.5 0 0]
 )

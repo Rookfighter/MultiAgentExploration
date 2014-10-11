@@ -54,11 +54,3 @@ define meybot position
 
     meybot_sonars()
 )
-
-define meybot_marker model
-(
-    size [0.05 0.05 0]
-    color blue
-
-    gui_outline 0
-)

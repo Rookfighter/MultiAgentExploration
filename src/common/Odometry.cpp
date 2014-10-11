@@ -1,3 +1,4 @@
+#include <sstream>
 #include "common/Odometry.hpp"
 
 namespace mae
@@ -13,6 +14,21 @@ namespace mae
 	Pose::~Pose()
 	{	}
 	
+	void Pose::set(const double p_x, const double p_y, const double p_yaw)
+	{
+		x = p_x;
+		y = p_y;
+		yaw = p_yaw;
+	}
+	
+	std::string Pose::str() const
+	{
+		std::stringstream ss;
+		ss.precision(2);
+		ss << "(" << x << "/" << y << "/" << yaw << ")";
+		return ss.str();
+	}
+	
 	Velocity::Velocity()
 	:Velocity(0,0)
 	{	}
@@ -23,6 +39,20 @@ namespace mae
 	
 	Velocity::~Velocity()
 	{	}
+	
+	void Velocity::set(const double p_linear, const double p_angular)
+	{
+		linear = p_linear;
+		angular = p_angular;
+	}
+	
+	std::string Velocity::str() const
+	{
+		std::stringstream ss;
+		ss.precision(2);
+		ss << "(" << linear << "/" << angular << ")";
+		return ss.str();
+	}
 
 	Odometry::Odometry()
 	:Odometry(Pose(), Velocity())
@@ -34,6 +64,12 @@ namespace mae
 
 	Odometry::~Odometry()
 	{	}
-
+	
+	std::string Odometry::str() const
+	{
+		std::stringstream ss;
+		ss << pose.str() << "," << velocity.str();
+		return ss.str();
+	}
 
 }

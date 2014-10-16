@@ -1,6 +1,7 @@
 #ifndef MAE_SIMULATION_HPP
 #define MAE_SIMULATION_HPP
 
+#include <cstdint>
 #include "control/PlayerClient.hpp"
 #include "common/Odometry.hpp"
 
@@ -30,6 +31,11 @@ namespace mae
 
 		void setSizeOf(const std::string &p_name, double *p_sizes);
 		void getSizeOf(const std::string &p_name, double *p_sizes);
+		
+		void setColorOf(const std::string &p_name, const uint32_t p_color);
+		uint32_t getColorOf(const std::string &p_name);
+		
+		void getVelocityBounds(const std::string &p_name, double* p_bounds);
 	};
 
 }

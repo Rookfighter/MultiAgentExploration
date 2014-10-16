@@ -2,5 +2,6 @@
 *.project
 *.workspace
 build/
+log/
 .codelite/
 compile_commands.json

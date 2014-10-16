@@ -1,17 +1,17 @@
 #include <easylogging++.h>
-#include "control/Meybot.hpp"
-#include "common/Math.hpp"
+#include "control/Pioneer2DX.hpp"
 
-#define MEYBOT_MAX_LIN_VELOCITY 2.0
-#define MEYBOT_MAX_ANG_VELOCITY 2.0
+#define P2DX_MAX_LIN_VELOCITY 2.0
+#define P2DX_MAX_ANG_VELOCITY 2.0
 
 namespace mae
 {
-	Meybot::Meybot(PlayerClient *p_client,
-	               Simulation *p_simulation,
-	               const std::string &p_name,
-	               const int p_motorIndex,
-				   const int p_rangerIndex)
+
+	Pioneer2DX::Pioneer2DX(PlayerClient *p_client,
+	                       Simulation *p_simulation,
+	                       const std::string &p_name,
+	                       const int p_motorIndex,
+						   const int p_rangerIndex)
 		:ExplorationBot(p_client, p_simulation, p_name, p_motorIndex),
 		 ranger_(client_->getClient(), p_rangerIndex), config_()
 	{
@@ -26,8 +26,8 @@ namespace mae
 		
 		LOG(DEBUG) << "Initialized RangerConfig (" << name_ << ")";
 	}
-
-	void Meybot::initConfig()
+	
+	void Pioneer2DX::initConfig()
 	{
 		config_.setSensorCount(ranger_.GetElementCount());
 
@@ -43,33 +43,31 @@ namespace mae
 		}
 	}
 
-	Meybot::~Meybot()
+	Pioneer2DX::~Pioneer2DX()
 	{
 	}
 
-	RangerConfig Meybot::getRangerConfig()
+	RangerConfig Pioneer2DX::getRangerConfig()
 	{
 		return config_;
 	}
 
-	int Meybot::getRangerCount()
+	int Pioneer2DX::getRangerCount()
 	{
 		return config_.sensorCount;
 	}
-
-	double Meybot::getRangerDistance(const int p_index)
+	double Pioneer2DX::getRangerDistance(const int p_index)
 	{
 		return ranger_[p_index];
 	}
 	
-	bool Meybot::hasValidRangerData()
+	bool Pioneer2DX::hasValidRangerData()
 	{
 		return ranger_.IsValid();
 	}
 
-	Velocity Meybot::getMaxVelocity() const
+	Velocity Pioneer2DX::getMaxVelocity() const
 	{
-		return Velocity(MEYBOT_MAX_LIN_VELOCITY, MEYBOT_MAX_ANG_VELOCITY);
+		return Velocity(P2DX_MAX_LIN_VELOCITY, P2DX_MAX_ANG_VELOCITY);
 	}
-
 }

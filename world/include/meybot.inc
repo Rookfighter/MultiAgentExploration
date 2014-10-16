@@ -7,7 +7,7 @@ define meybotsonar sensor
 	# define the angular field of view in degrees
 	fov 30
 	# define the number of samples spread over the fov
-    samples 1   
+    samples 1 
 )
 
 define meybot_sonars ranger
@@ -49,8 +49,20 @@ define meybot position
     mass 10.0
     drive "diff"
     
-    # hit obstacles
-    obstacle_return 1
+    obstacle_return 1           	# Can hit things.
+    ranger_return 0.5            	# reflects sonar beams
+    blob_return 1               	# Seen by blobfinders  
+    fiducial_return 1           	# Seen as "1" fiducial finders
+       	  
+    localization_origin [0 0 0 0] 	# Start odometry at (0, 0, 0).
+    localization "odom"         	
+    odom_error [ 0.05 0.05 0.0 0.1 ]	# Odometry error or slip in X, Y and Theta
+                                   	# (Uniform random distribution)   
+
+    # four DOF kinematics limits
+    # [ xmin xmax ymin ymax zmin zmax amin amax ]				
+    velocity_bounds [-0.5 0.5 0 0 0 0 -90.0 90.0 ]					
+    acceleration_bounds [-0.5 0.5 0 0 0 0 -90 90.0 ]
 
     meybot_sonars()
 )

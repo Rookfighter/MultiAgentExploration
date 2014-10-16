@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.3)
 
 project(MultiAgentExploration)
 
@@ -23,3 +23,8 @@ file(GLOB MAE_TEST_SRC "src/test/*.cpp" "src/test/*.hpp")
 PLAYER_ADD_PLAYERCPP_CLIENT(
     Test
     SOURCES ${MULTI_AGENT_EXPLORATION_SRC} ${MAE_TEST_SRC})
+
+add_custom_command(TARGET Test POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_LIST_DIR}/conf/easylog.conf"
+    $<TARGET_FILE_DIR:Test>)

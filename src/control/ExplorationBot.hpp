@@ -11,13 +11,15 @@ namespace mae
 	class RangerConfig
 	{
 	public:
+		RangerConfig();
 		RangerConfig(const int p_sensorCount);
 		
-		int count;
+		int sensorCount;
 		std::vector<Pose> sensorPose;
 		std::vector<double> fov;
 		std::vector<double> maxRange;
 		
+		void setSensorCount(const int p_sensorCount);
 		std::string str(const int p_index) const;
 	};
 	
@@ -28,7 +30,7 @@ namespace mae
 		PlayerClient *client_;
 		Simulation *simulation_;
 		PlayerCc::Position2dProxy motor_;
-
+		
 	public:
 		ExplorationBot(PlayerClient *p_client,
 		               Simulation *p_simulation,
@@ -50,6 +52,9 @@ namespace mae
 		virtual RangerConfig getRangerConfig() = 0;
 		virtual int getRangerCount() = 0;
 		virtual double getRangerDistance(const int p_index) = 0;
+		virtual bool hasValidRangerData() = 0;
+		
+		virtual Velocity getMaxVelocity() const = 0;
 
 	};
 

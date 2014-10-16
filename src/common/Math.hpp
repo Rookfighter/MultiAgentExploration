@@ -27,6 +27,8 @@ namespace mae
 	
 	double normalizeRadian(const double p_radian);
 	double normalizeDegree(const double p_degree);
+	
+	bool sameDouble(const double a, const double b, const double eps);
 }
 
 #endif

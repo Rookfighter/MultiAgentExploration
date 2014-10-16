@@ -1,12 +1,26 @@
 #include <sstream>
+#include <easylogging++.h>
 #include "control/ExplorationBot.hpp"
 
 namespace mae
 {
-	RangerConfig::RangerConfig(const int p_sensorCount)
-		: count(p_sensorCount), sensorPose(count), fov(count), maxRange(count)
+	RangerConfig::RangerConfig()
+	:RangerConfig(0)
 	{
-
+		
+	}
+	
+	RangerConfig::RangerConfig(const int p_sensorCount)
+		: sensorCount(p_sensorCount), sensorPose(sensorCount), fov(sensorCount), maxRange(sensorCount)
+	{
+	}
+	
+	void RangerConfig::setSensorCount(const int p_sensorCount)
+	{
+		sensorCount = p_sensorCount;
+		sensorPose.resize(sensorCount);
+		fov.resize(sensorCount);
+		maxRange.resize(sensorCount);
 	}
 	
 	std::string RangerConfig::str(const int p_index) const
@@ -25,8 +39,12 @@ namespace mae
 	                               const int p_motorIndex)
 		:client_(p_client), simulation_(p_simulation), motor_(client_->getClient(), p_motorIndex), name_(p_name)
 	{
+		LOG(DEBUG) << "Connected PositionProxy: " << p_motorIndex << " (" << name_ << ")";
+		
 		motor_.SetMotorEnable(true);
 		motor_.RequestGeom();
+		
+		LOG(DEBUG) << "Requested Geometry PositionProxy (" << name_ << ")";
 	}
 
 	ExplorationBot::~ExplorationBot()
@@ -77,5 +95,4 @@ namespace mae
 		p_marker->pose = currentPose;
 		simulation_->setPoseOf(p_marker->name, currentPose);
 	}
-
 }

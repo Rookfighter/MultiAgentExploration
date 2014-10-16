@@ -4,17 +4,20 @@
 
 namespace mae
 {
+	/*=============
+	 * RangerConfig
+	 *=============*/
 	RangerConfig::RangerConfig()
-	:RangerConfig(0)
+		:RangerConfig(0)
 	{
-		
+
 	}
-	
+
 	RangerConfig::RangerConfig(const int p_sensorCount)
 		: sensorCount(p_sensorCount), sensorPose(sensorCount), fov(sensorCount), maxRange(sensorCount)
 	{
 	}
-	
+
 	void RangerConfig::setSensorCount(const int p_sensorCount)
 	{
 		sensorCount = p_sensorCount;
@@ -22,29 +25,62 @@ namespace mae
 		fov.resize(sensorCount);
 		maxRange.resize(sensorCount);
 	}
-	
+
 	std::string RangerConfig::str(const int p_index) const
 	{
 		std::stringstream ss;
 		ss.precision(2);
-		
+
 		ss << "id=" << p_index << ",p=" << sensorPose[p_index].str() << ",fov=" << fov[p_index] << ",mr=" << maxRange[p_index];
-		
+
 		return ss.str();
 	}
+
+	/*===============
+	 * ExplorationBot
+	 *===============*/
 
 	ExplorationBot::ExplorationBot(PlayerClient *p_client,
 	                               Simulation *p_simulation,
 	                               const std::string &p_name,
-	                               const int p_motorIndex)
-		:client_(p_client), simulation_(p_simulation), motor_(client_->getClient(), p_motorIndex), name_(p_name)
+	                               const int p_motorIndex,
+	                               const int p_rangerIndex)
+		:client_(p_client), simulation_(p_simulation),
+		 motor_(client_->getClient(), p_motorIndex),
+		 ranger_(client_->getClient(), p_rangerIndex),
+		 name_(p_name), config_()
 	{
 		LOG(DEBUG) << "Connected PositionProxy: " << p_motorIndex << " (" << name_ << ")";
-		
+		LOG(DEBUG) << "Connected RangerProxy: " << p_rangerIndex << " (" << name_ << ")";
+
 		motor_.SetMotorEnable(true);
 		motor_.RequestGeom();
-		
 		LOG(DEBUG) << "Requested Geometry PositionProxy (" << name_ << ")";
+
+		ranger_.RequestGeom();
+		ranger_.RequestConfigure();
+
+		LOG(DEBUG) << "Requested Geometry for RangerProxy (" << name_ << ")";
+
+		updateRangerConfig();
+
+		LOG(DEBUG) << "Initialized RangerConfig (" << name_ << ")";
+	}
+
+	void ExplorationBot::updateRangerConfig()
+	{
+		config_.setSensorCount(ranger_.GetElementCount());
+
+		double maxRange = ranger_.GetMaxRange();
+		double fov = ranger_.GetMaxAngle() - ranger_.GetMinAngle();
+
+		for(int i = 0; i < config_.sensorCount; ++i) {
+			player_pose3d_t pose = ranger_.GetElementPose(i);
+
+			config_.sensorPose[i].set(pose.px, pose.py, pose.pyaw);
+			config_.maxRange[i] = maxRange;
+			config_.fov[i] = fov;
+		}
 	}
 
 	ExplorationBot::~ExplorationBot()
@@ -81,6 +117,26 @@ namespace mae
 		Velocity result;
 		result.linear = motor_.GetXSpeed();
 		result.angular = motor_.GetYawSpeed();
+	}
+
+	double ExplorationBot::getRangerDistance(const int p_index)
+	{
+		return ranger_[p_index];
+	}
+
+	bool ExplorationBot::hasValidRangerData()
+	{
+		return ranger_.IsValid();
+	}
+
+	int ExplorationBot::getRangerCount() const
+	{
+		return config_.sensorCount;
+	}
+
+	const RangerConfig& ExplorationBot::getRangerConfig() const
+	{
+		return config_;
 	}
 
 	std::string ExplorationBot::getName() const

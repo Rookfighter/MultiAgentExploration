@@ -15,6 +15,7 @@ namespace mae
 		RangerConfig(const int p_sensorCount);
 
 		int sensorCount;
+		int rangeCount;
 		std::vector<Pose> sensorPose;
 		std::vector<double> fov;
 		std::vector<double> maxRange;
@@ -41,7 +42,7 @@ namespace mae
 		               const std::string &p_name,
 		               const int p_motorIndex,
 		               const int p_rangerIndex);
-		~ExplorationBot();
+		virtual ~ExplorationBot();
 
 		void setPose(const Pose &p_pose);
 		Pose getPose() const;

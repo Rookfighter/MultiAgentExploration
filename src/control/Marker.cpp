@@ -20,7 +20,7 @@ namespace mae
 	{
 		std::stringstream ss;
 		ss.precision(2);
-		ss << name << ",p=" << pose.str() << ",r=" << range << ",iu=" << boolToString(inUse) << ",v=" << value; 
+		ss << "id: " << id << " " << name << ",p=" << pose.str() << ",r=" << range << ",iu=" << boolToString(inUse) << ",v=" << value; 
 		
 		return ss.str();
 	}

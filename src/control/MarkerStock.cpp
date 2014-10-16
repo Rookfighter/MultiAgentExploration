@@ -46,6 +46,7 @@ namespace mae
 		for(int i = 0; i < availableMarker_.size(); ++i) {
 			std::stringstream ss;
 			ss << markerName_ << (i + 1);
+			availableMarker_[i]->id = i;
 			availableMarker_[i]->name = ss.str();
 			availableMarker_[i]->value = 0;
 			availableMarker_[i]->inUse = false;
@@ -77,13 +78,13 @@ namespace mae
 	{
 		if(availableMarker_.size() == 0)
 			throw new std::logic_error("Cannot acquire marker. No markers available");
-		
+
 		Marker *marker = availableMarker_.back();
 		availableMarker_.pop_back();
 		inUseMarker_.push_back(marker);
 		marker->value = 0;
 		marker->inUse = true;
-		
+
 		return marker;
 	}
 
@@ -107,7 +108,7 @@ namespace mae
 	{
 		std::vector<Marker*> all = getAll();
 		for(Marker *marker : all) {
-			
+
 			marker->pose = simulation_->getPoseOf(marker->name);
 			/*double size[3];
 			simulation_->getSizeOf(marker->name, size);

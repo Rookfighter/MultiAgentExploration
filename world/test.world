@@ -1,5 +1,4 @@
 include "include/map.inc"
-include "include/meybot.inc"
 include "include/marker.inc"
 include "include/pioneer.inc"
 
@@ -12,22 +11,8 @@ window
 
 floorplan
 (
-    bitmap "bitmaps/single_room.png"
+    bitmap "bitmaps/simple_rooms.png"
     size [20 20 1]
-)
-
-meybot
-(
-    name "meybot1"
-    pose [-5 -6 0 30]
-    color "green"
-)
-
-meybot
-(
-    name "meybot2"
-    pose [-7 -5 0 0]
-    color "red"
 )
 
 pioneer2dx

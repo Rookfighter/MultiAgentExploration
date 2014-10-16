@@ -11,18 +11,22 @@ namespace mae
 	private:
 		ExplorationBot &robot_;
 		Velocity velocity_;
-		
+
+		double minFrontDistance_;
 		double minLeftDistance_;
 		double minRightDistance_;
-		double frontThreshold;
-		
+
+		double frontStopDistance_;
+
 		void checkObstacle();
 		void avoidObstacle();
 		void cruise();
-	public:
-		Wander(ExplorationBot &p_robot, const double p_frontThreshold = 1.0);
-		~Wander();
 		
+	public:
+		Wander(ExplorationBot &p_robot,
+		       const double p_frontStopDistance = 1.0);
+		~Wander();
+
 		void execute();
 	};
 

@@ -10,6 +10,7 @@ namespace mae
 	class Marker
 	{
 	public:
+		int id;
 		std::string name;
 		Pose pose;
 		double range;

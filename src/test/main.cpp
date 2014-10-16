@@ -1,8 +1,8 @@
 #include <stdexcept>
-#include "control/Meybot.hpp"
 #include "control/Pioneer2DX.hpp"
 #include "BasicTest.hpp"
 #include "HeisenbergTest.hpp"
+#include "WanderTest.hpp"
 
 _INITIALIZE_EASYLOGGINGPP
 
@@ -14,18 +14,18 @@ namespace mae
 		PlayerClient client_;
 		Simulation simulation_;
 		MarkerStock stock_;
-		Meybot meybot_;
 		Pioneer2DX pioneer_;
 		BasicTest basicTest_;
 		HeisenbergTest heisenbergTest_;
+		WanderTest wanderTest_;
 
 	public:
 		TestApplication()
 			:client_(), simulation_(&client_, 0), stock_(&simulation_, 1),
-			 meybot_(&client_, &simulation_, "meybot1", 0, 0),
-			 pioneer_(&client_, &simulation_, "pioneer1", 2, 2),
+			 pioneer_(&client_, &simulation_, "pioneer1", 0, 0),
 			 basicTest_(client_,simulation_, stock_, pioneer_),
-			 heisenbergTest_(client_, pioneer_) {
+			 heisenbergTest_(client_, pioneer_),
+			 wanderTest_(client_, pioneer_){
 
 		}
 		
@@ -37,7 +37,7 @@ namespace mae
 		void run() {
 			LOG(INFO) << "Running Test";
 			try {
-				heisenbergTest_.execute();
+				wanderTest_.execute();
 			} catch (std::exception &e) {
 				LOG(WARNING) << "Catched exception: " << e.what();
 			} catch (PlayerCc::PlayerError &e) {

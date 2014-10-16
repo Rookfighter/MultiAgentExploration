@@ -70,7 +70,8 @@ namespace mae
 	void ExplorationBot::updateRangerConfig()
 	{
 		config_.setSensorCount(ranger_.GetElementCount());
-
+		config_.rangeCount = ranger_.GetRangeCount();
+		
 		double maxRange = ranger_.GetMaxRange();
 		double fov = ranger_.GetMaxAngle() - ranger_.GetMinAngle();
 

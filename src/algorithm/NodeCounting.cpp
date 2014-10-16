@@ -11,5 +11,8 @@ namespace mae
 	{
 	}
 
-
+	void NodeCounting::step()
+	{
+		
+	}
 }

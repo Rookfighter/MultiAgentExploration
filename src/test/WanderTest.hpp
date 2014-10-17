@@ -18,7 +18,7 @@ namespace mae
 		           ExplorationBot &p_bot);
 		~WanderTest();
 
-		void execute();
+		void step();
 	};
 
 }

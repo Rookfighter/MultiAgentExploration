@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include "control/Pioneer2DX.hpp"
+#include "control/SimulationLoader.hpp"
 #include "BasicTest.hpp"
 #include "HeisenbergTest.hpp"
 #include "WanderTest.hpp"
@@ -11,36 +11,37 @@ namespace mae
 	class TestApplication
 	{
 	private:
-		PlayerClient client_;
-		Simulation simulation_;
-		MarkerStock stock_;
-		Pioneer2DX pioneer_;
-		BasicTest basicTest_;
-		HeisenbergTest heisenbergTest_;
-		WanderTest wanderTest_;
+		SimulationLoader loader_;
+		BasicTest *basicTest_;
+		HeisenbergTest *heisenbergTest_;
+		WanderTest *wanderTest_;
 
 	public:
-		TestApplication()
-			:client_(), simulation_(&client_, 0), stock_(&simulation_, 1),
-			 pioneer_(&client_, &simulation_, "pioneer1", 0, 0),
-			 basicTest_(client_,simulation_, stock_, pioneer_),
-			 heisenbergTest_(client_, pioneer_),
-			 wanderTest_(client_, pioneer_){
-
+		TestApplication() {
+			loader_.load("test.yaml");
+			basicTest_ = new BasicTest(*loader_.getClient(),
+			                           *loader_.getSimulation(),
+			                           *loader_.getStock(),
+			                           *loader_.getRobot("pioneer1"));
+			heisenbergTest_ = new HeisenbergTest(*loader_.getClient(),
+			                                     *loader_.getRobot("pioneer1"));
+			wanderTest_ = new WanderTest(*loader_.getClient(),
+			                             *loader_.getRobot("pioneer1"));
 		}
-		
-		~TestApplication()
-		{
-			
+
+		~TestApplication() {
+			delete wanderTest_;
+			delete heisenbergTest_;
+			delete wanderTest_;
 		}
 
 		void run() {
 			LOG(INFO) << "Running Test";
 			try {
-				wanderTest_.execute();
-			} catch (std::exception &e) {
+				wanderTest_->step();
+			} catch(std::exception &e) {
 				LOG(WARNING) << "Catched exception: " << e.what();
-			} catch (PlayerCc::PlayerError &e) {
+			} catch(PlayerCc::PlayerError &e) {
 				LOG(WARNING) << "Catched player error: " << e.GetErrorStr();
 			}
 		}
@@ -51,7 +52,7 @@ int main(int argc, char **argv)
 {
 	el::Configurations conf("easylog.conf");
 	el::Loggers::reconfigureLogger("default", conf);
-	
+
 	LOG(INFO) << "App started.";
 	mae::TestApplication app;
 	app.run();

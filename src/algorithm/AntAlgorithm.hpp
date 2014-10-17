@@ -1,6 +1,9 @@
 #ifndef MAE_ANT_ALGORITHM_HPP
 #define MAE_ANT_ALGORITHM_HPP
 
+#include "control/ExplorationBot.hpp"
+#include "control/MarkerStock.hpp"
+
 namespace mae
 {
 	

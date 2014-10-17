@@ -7,7 +7,12 @@
 
 namespace mae
 {
-
+	typedef struct {
+		Simulation *simulation;
+		std::string markerName;
+		int markerCount;
+	} StockConfig;
+	
 	class MarkerStock
 	{
 	private:
@@ -20,9 +25,7 @@ namespace mae
 		void cleanup();
 		void init();
 	public:
-		MarkerStock(Simulation *p_simulation,
-		            const int p_markerCount,
-		            const std::string &p_markerName="marker");
+		MarkerStock(const StockConfig &p_config);
 
 		~MarkerStock();
 

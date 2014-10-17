@@ -27,7 +27,7 @@ namespace mae
 		          ExplorationBot &p_bot);
 		~BasicTest();
 		
-		void execute();
+		void step();
 	};
 
 }

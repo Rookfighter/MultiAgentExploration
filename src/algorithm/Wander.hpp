@@ -27,7 +27,7 @@ namespace mae
 		       const double p_frontStopDistance = 1.0);
 		~Wander();
 
-		void execute();
+		void step();
 	};
 
 }

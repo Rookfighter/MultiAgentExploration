@@ -10,10 +10,10 @@
 namespace mae
 {
 
-	Simulation::Simulation(PlayerClient *p_client, const int p_simulationIndex)
-		:client_(p_client), simulation_(client_->getClient(), p_simulationIndex)
+	Simulation::Simulation(const SimulationConfig& p_config)
+		:client_(p_config.client), simulation_(client_->getClient(), p_config.simulationIndex)
 	{
-		LOG(DEBUG) << "Connected SimulationProxy: " << p_simulationIndex;
+		LOG(DEBUG) << "Connected SimulationProxy: " << p_config.simulationIndex;
 	}
 
 	Simulation::~Simulation()

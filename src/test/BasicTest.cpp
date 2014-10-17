@@ -17,7 +17,7 @@ namespace mae
 	{
 	}
 
-	void BasicTest::execute()
+	void BasicTest::step()
 	{
 		updateClient();
 		LOG(INFO) << "Marker before refresh.";

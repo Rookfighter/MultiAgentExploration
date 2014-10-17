@@ -15,7 +15,7 @@ namespace mae
 
 	}
 
-	void HeisenbergTest::execute()
+	void HeisenbergTest::step()
 	{
 		while(true) {
 			client_.update();

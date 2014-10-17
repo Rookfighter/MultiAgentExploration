@@ -40,18 +40,15 @@ namespace mae
 	 * ExplorationBot
 	 *===============*/
 
-	ExplorationBot::ExplorationBot(PlayerClient *p_client,
-	                               Simulation *p_simulation,
-	                               const std::string &p_name,
-	                               const int p_motorIndex,
-	                               const int p_rangerIndex)
-		:client_(p_client), simulation_(p_simulation),
-		 motor_(client_->getClient(), p_motorIndex),
-		 ranger_(client_->getClient(), p_rangerIndex),
-		 name_(p_name), config_()
+	ExplorationBot::ExplorationBot(const RobotConfig &p_config)
+		:client_(p_config.client), simulation_(p_config.simulation),
+		 motor_(client_->getClient(), p_config.motorIndex),
+		 ranger_(client_->getClient(), p_config.rangerIndex),
+		 name_(p_config.name), maxVelocity_(p_config.maxVelocity),
+		 minVelocity_(p_config.minVelocity), config_()
 	{
-		LOG(DEBUG) << "Connected PositionProxy: " << p_motorIndex << " (" << name_ << ")";
-		LOG(DEBUG) << "Connected RangerProxy: " << p_rangerIndex << " (" << name_ << ")";
+		LOG(DEBUG) << "Connected PositionProxy: " << p_config.motorIndex << " (" << name_ << ")";
+		LOG(DEBUG) << "Connected RangerProxy: " << p_config.rangerIndex << " (" << name_ << ")";
 
 		motor_.SetMotorEnable(true);
 		motor_.RequestGeom();
@@ -71,7 +68,7 @@ namespace mae
 	{
 		config_.setSensorCount(ranger_.GetElementCount());
 		config_.rangeCount = ranger_.GetRangeCount();
-		
+
 		double maxRange = ranger_.GetMaxRange();
 		double fov = ranger_.GetMaxAngle() - ranger_.GetMinAngle();
 
@@ -151,5 +148,27 @@ namespace mae
 		currentPose.yaw = 0;
 		p_marker->pose = currentPose;
 		simulation_->setPoseOf(p_marker->name, currentPose);
+	}
+
+	double ExplorationBot::getAngleTo(Marker* p_marker)
+	{
+		// TODO : implement angle to marker direction with some derivation
+		return 0;
+	}
+
+	bool ExplorationBot::isAtMarker(Marker* p_marker)
+	{
+		// TODO : implement being at marker with som derivation
+		return true;
+	}
+
+	Velocity ExplorationBot::getMaxVelocity() const
+	{
+		return maxVelocity_;
+	}
+
+	Velocity ExplorationBot::getMinVelocity() const
+	{
+		return minVelocity_;
 	}
 }

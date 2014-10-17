@@ -16,8 +16,8 @@ namespace mae
 		 distance_(0), maxDistance_(2.0)
 	{
 		std::vector<Marker*> all = p_stock.getAll();
-		if(!all.empty())
-			maxDistance = 1.1 * 
+		/*if(!all.empty())
+			maxDistance_ = 1.1 * */
 	}
 
 	AntState* AntStateWandering::update()

@@ -23,6 +23,17 @@ namespace mae
 		void setSensorCount(const int p_sensorCount);
 		std::string str(const int p_index) const;
 	};
+	
+	typedef struct {
+		PlayerClient *client;
+		Simulation *simulation;
+		std::string name;
+		int motorIndex;
+		int rangerIndex;
+		
+		Velocity maxVelocity;
+		Velocity minVelocity;
+	} RobotConfig;
 
 	class ExplorationBot
 	{
@@ -33,15 +44,15 @@ namespace mae
 		PlayerCc::RangerProxy ranger_;
 
 		std::string name_;
+		Velocity maxVelocity_;
+		Velocity minVelocity_;
 		RangerConfig config_;
 
 		void updateRangerConfig();
+		
+		
 	public:
-		ExplorationBot(PlayerClient *p_client,
-		               Simulation *p_simulation,
-		               const std::string &p_name,
-		               const int p_motorIndex,
-		               const int p_rangerIndex);
+		ExplorationBot(const RobotConfig &p_config);
 		virtual ~ExplorationBot();
 
 		void setPose(const Pose &p_pose);
@@ -60,9 +71,11 @@ namespace mae
 		std::string getName() const;
 
 		void placeMarker(Marker* p_marker);
+		double getAngleTo(Marker* p_marker);
+		bool isAtMarker(Marker* p_marker);
 
-		virtual Velocity getMaxVelocity() const = 0;
-		virtual Velocity getMinVelocity() const = 0;
+		Velocity getMaxVelocity() const;
+		Velocity getMinVelocity() const;
 
 	};
 

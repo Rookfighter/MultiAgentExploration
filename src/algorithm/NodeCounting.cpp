@@ -3,7 +3,10 @@
 namespace mae
 {
 
-	NodeCounting::NodeCounting()
+	NodeCounting::NodeCounting(ExplorationBot &p_robot,
+	                           Simulation &p_simulation,
+	                           MarkerStock &p_stock)
+		:robot_(p_robot), simulation_(p_simulation), stock_(p_stock)
 	{
 	}
 
@@ -13,6 +16,6 @@ namespace mae
 
 	void NodeCounting::step()
 	{
-		
+
 	}
 }

@@ -5,12 +5,10 @@
 namespace mae
 {
 
-	MarkerStock::MarkerStock(Simulation *p_simulation,
-	                         const int p_markerCount,
-	                         const std::string &p_markerName)
-		:simulation_(p_simulation), markerName_(p_markerName), availableMarker_(), inUseMarker_()
+	MarkerStock::MarkerStock(const StockConfig &p_config)
+		:simulation_(p_config.simulation), markerName_(p_config.markerName), availableMarker_(), inUseMarker_()
 	{
-		resize(p_markerCount);
+		resize(p_config.markerCount);
 	}
 
 	MarkerStock::~MarkerStock()

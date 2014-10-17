@@ -19,7 +19,7 @@ namespace mae
 		               ExplorationBot &p_bot);
 		~HeisenbergTest();
 
-		void execute();
+		void step();
 
 	};
 

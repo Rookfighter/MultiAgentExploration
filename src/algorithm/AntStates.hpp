@@ -1,6 +1,8 @@
 #ifndef MAE_ANT_STATES_HPP
 #define MAE_ANT_STATES_HPP
 
+#include "algorithm/AntUpdateRules.hpp"
+
 namespace mae
 {
 
@@ -10,7 +12,7 @@ namespace mae
 		ExplorationBot &robot_;
 		Simulation &simulation_;
 		MarkerStock &stock_;
-		UpdateRule &updateRule_;
+		AntUpdateRule &updateRule_;
 
 	public:
 		AntState(ExplorationBot &p_robot,
@@ -32,7 +34,7 @@ namespace mae
 		                    Simulation &p_simulation,
 		                    MarkerStock &p_stock,
 		                    AntUpdateRule &p_updateRule)
-			:AntState(p_robot, p_simulation, p_stock) { }
+			:AntState(p_robot, p_simulation, p_stock, p_updateRule) { }
 
 		~AntStateOrientating() { }
 
@@ -63,7 +65,7 @@ namespace mae
 		                    Simulation &p_simulation,
 		                    MarkerStock &p_stock,
 		                    AntUpdateRule &p_updateRule)
-			:AntState(p_robot, p_simulation, p_stock) { }
+			:AntState(p_robot, p_simulation, p_stock, p_updateRule) { }
 
 		~AntStateDropping() { }
 
@@ -77,7 +79,7 @@ namespace mae
 		                    Simulation &p_simulation,
 		                    MarkerStock &p_stock,
 		                    AntUpdateRule &p_updateRule)
-			:AntState(p_robot, p_simulation, p_stock) { }
+			:AntState(p_robot, p_simulation, p_stock, p_updateRule) { }
 
 		~AntStateUpdating() { }
 

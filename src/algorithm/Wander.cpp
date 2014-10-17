@@ -23,7 +23,7 @@ namespace mae
 
 	}
 
-	void Wander::execute()
+	void Wander::step()
 	{
 		// no valid data, so we can't use sensors
 		if(!robot_.hasValidRangerData())

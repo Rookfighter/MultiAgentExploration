@@ -1,6 +1,9 @@
 #ifndef MAE_NODE_COUNTING_HPP
 #define MAE_NODE_COUNTING_HPP
 
+#include "control/ExplorationBot.hpp"
+#include "control/MarkerStock.hpp"
+
 namespace mae
 {
 	class NodeCountingState

@@ -3,5 +3,6 @@
 *.workspace
 build/
 log/
+lib/
 .codelite/
 compile_commands.json

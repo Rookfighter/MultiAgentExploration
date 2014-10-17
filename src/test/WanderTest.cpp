@@ -14,11 +14,11 @@ namespace mae
 	}
 
 
-	void WanderTest::execute()
+	void WanderTest::step()
 	{
 		while(true) {
 			client_.update();
-			wander_.execute();
+			wander_.step();
 		}
 	}
 

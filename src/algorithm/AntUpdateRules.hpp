@@ -1,6 +1,9 @@
 #ifndef MAE_ANT_UPDATE_RULES_HPP
 #define MAE_ANT_UPDATE_RULES_HPP
 
+#include "control/ExplorationBot.hpp"
+#include "control/MarkerStock.hpp"
+
 namespace mae
 {
 
@@ -18,7 +21,7 @@ namespace mae
 
 		virtual void update() = 0;
 
-	}
+	};
 
 }
 

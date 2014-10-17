@@ -7,6 +7,11 @@
 
 namespace mae
 {
+	typedef struct {
+		PlayerClient *client;
+		int simulationIndex;
+	} SimulationConfig;
+	
 	class Simulation
 	{
 	private:
@@ -23,7 +28,7 @@ namespace mae
 		                 void *p_value,
 		                 const size_t p_size);
 	public:
-		Simulation(PlayerClient *p_client, const int p_simulationIndex);
+		Simulation(const SimulationConfig& p_config);
 		~Simulation();
 
 		void setPoseOf(const std::string &p_name, const Pose &p_pose);

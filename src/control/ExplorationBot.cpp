@@ -1,6 +1,7 @@
 #include <sstream>
 #include <easylogging++.h>
 #include "control/ExplorationBot.hpp"
+#include "common/Math.hpp"
 
 namespace mae
 {
@@ -94,8 +95,8 @@ namespace mae
 	Pose ExplorationBot::getPose() const
 	{
 		Pose result;
-		result.x = motor_.GetXPos();
-		result.y = motor_.GetYPos();
+		result.position.x = motor_.GetXPos();
+		result.position.y = motor_.GetYPos();
 		result.yaw = motor_.GetYaw();
 		return result;
 	}
@@ -150,23 +151,27 @@ namespace mae
 		simulation_->setPoseOf(p_marker->name, currentPose);
 	}
 
+	Vector2 ExplorationBot::getDistanceTo(Marker* p_marker)
+	{
+		// TODO : implement distance to marker direction with some derivation
+		Vector2 result;
+		result = p_marker->pose.position - getAbsolutePose().position;
+		return result;
+	}
+	
 	double ExplorationBot::getAngleTo(Marker* p_marker)
 	{
-		// TODO : implement angle to marker direction with some derivation
-		return 0;
+		Vector2 distance = getDistanceTo(p_marker);
+		double result = atan2(distance.y, distance.x) - getAbsolutePose().yaw;
+		result = normalizeRadian(result);
+		return result;
 	}
-
-	bool ExplorationBot::isAtMarker(Marker* p_marker)
-	{
-		// TODO : implement being at marker with som derivation
-		return true;
-	}
-
+	
 	Velocity ExplorationBot::getMaxVelocity() const
 	{
 		return maxVelocity_;
 	}
-
+	
 	Velocity ExplorationBot::getMinVelocity() const
 	{
 		return minVelocity_;

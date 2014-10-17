@@ -24,7 +24,7 @@ namespace mae
 	{
 		char tmpName[p_name.length() + 1];
 		strcpy(tmpName, p_name.c_str());
-		simulation_.SetPose2d(tmpName, p_pose.x, p_pose.y, p_pose.yaw);
+		simulation_.SetPose2d(tmpName, p_pose.position.x, p_pose.position.y, p_pose.yaw);
 	}
 
 	Pose Simulation::getPoseOf(const std::string &p_name)
@@ -32,7 +32,7 @@ namespace mae
 		Pose result;
 		char tmpName[p_name.length() + 1];
 		strcpy(tmpName, p_name.c_str());
-		simulation_.GetPose2d(tmpName, result.x, result.y, result.yaw);
+		simulation_.GetPose2d(tmpName, result.position.x, result.position.y, result.yaw);
 		return result;
 	}
 

@@ -3,6 +3,6 @@
 *.workspace
 build/
 log/
-lib/
+lib/yaml-cpp
 .codelite/
 compile_commands.json

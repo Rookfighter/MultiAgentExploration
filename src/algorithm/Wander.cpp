@@ -1,4 +1,3 @@
-#include <easylogging++.h>
 #include "algorithm/Wander.hpp"
 #include "common/Math.hpp"
 

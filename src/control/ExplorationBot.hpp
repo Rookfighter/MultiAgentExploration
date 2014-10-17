@@ -71,9 +71,9 @@ namespace mae
 		std::string getName() const;
 
 		void placeMarker(Marker* p_marker);
+		Vector2 getDistanceTo(Marker* p_marker);
 		double getAngleTo(Marker* p_marker);
-		bool isAtMarker(Marker* p_marker);
-
+		
 		Velocity getMaxVelocity() const;
 		Velocity getMinVelocity() const;
 

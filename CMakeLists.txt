@@ -10,7 +10,7 @@ find_package(YamlCpp REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 add_definitions( -DBOOST_SIGNALS_NO_DEPRECATION_WARNING )
-include_directories("src" "${YAMLCPP_INCLUDE_DIR}")
+include_directories("src" "lib/easylogging++" "${YAMLCPP_INCLUDE_DIR}")
  
 # These files include macros that make building against Player easier. They provide
 # the PLAYER_ADD* macros
@@ -32,11 +32,3 @@ target_link_libraries(Test ${YAMLCPP_LIBRARY})
 
 file(GLOB CONFIG_FILES "config/*")
 file(COPY ${CONFIG_FILES} DESTINATION ${CMAKE_BINARY_DIR})
-
-#foreach( CONFIG_FILE ${CONFIG_FILES} )
-
-#endforeach( CONFIG_FILE ${CONFIG_FILES} )
-#add_custom_command(TARGET Test POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-#    "${CMAKE_CURRENT_LIST_DIR}/config/easylog.conf"
-#    $<TARGET_FILE_DIR:Test>)

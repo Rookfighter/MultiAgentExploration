@@ -21,7 +21,12 @@ namespace mae
 
 	void MoveToMarker::step(Marker *p_targetMarker)
 	{
-		angleToTarget_ = robot_.getAngleTo(p_targetMarker);
+		// CHECK is this correct simulated -- distance has error, so is it ok
+		// to use absolutePosition to determine angle offset?
+		Vector2 distance = robot_.getDistanceTo(p_targetMarker);
+		angleToTarget_ = atan2(distance.y, distance.x) - robot_.getAbsolutePose().yaw;
+		// normalize between [-pi;pi]
+		angleToTarget_ = normalizeRadian(angleToTarget_);
 
 		if(fabs(angleToTarget_) > MAX_ANGLE_DIFF)
 			turnToMarker(p_targetMarker);

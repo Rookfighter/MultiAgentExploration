@@ -1,0 +1,16 @@
+client:
+    host: localhost
+    port: 6665
+simulation:
+    simulation_index: 0
+stock:
+    marker_name: marker
+    marker_count: 1
+robots:
+    -
+        name: pioneer1
+        motor_index: 0
+        ranger_index: 0
+        max_velocity: [2.0, 2.0]
+        min_velocity: [-2.0, -2.0]
+

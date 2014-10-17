@@ -21,6 +21,7 @@ namespace mae
 		StockConfig stockConfig_;
 		std::vector<RobotConfig> robotConfigs_;
 		
+		void init();
 		void cleanup();
 	public:
 		SimulationLoader();

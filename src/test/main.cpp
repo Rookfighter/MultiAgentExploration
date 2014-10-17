@@ -18,7 +18,7 @@ namespace mae
 
 	public:
 		TestApplication() {
-			loader_.load("test.yaml");
+			loader_.load("test_simulation.yaml");
 			basicTest_ = new BasicTest(*loader_.getClient(),
 			                           *loader_.getSimulation(),
 			                           *loader_.getStock(),
@@ -38,7 +38,7 @@ namespace mae
 		void run() {
 			LOG(INFO) << "Running Test";
 			try {
-				wanderTest_->step();
+				basicTest_->step();
 			} catch(std::exception &e) {
 				LOG(WARNING) << "Catched exception: " << e.what();
 			} catch(PlayerCc::PlayerError &e) {

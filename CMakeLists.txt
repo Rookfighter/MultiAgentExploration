@@ -21,14 +21,14 @@ include(UsePlayerPlugin)
 file(GLOB MULTI_AGENT_EXPLORATION_SRC
     "src/algorithm/*.cpp"
     "src/common/*.cpp"
-    "src/control/*.cpp")
+    "src/control/*.cpp"
+    "src/test/*.cpp")
 
 # add nodecounting client
-file(GLOB MAE_TEST_SRC "src/test/*.cpp" "src/test/*.hpp")
 PLAYER_ADD_PLAYERCPP_CLIENT(
-    Test
-    SOURCES ${MULTI_AGENT_EXPLORATION_SRC} ${MAE_TEST_SRC})
-target_link_libraries(Test ${YAMLCPP_LIBRARY})
+    ${PROJECT_NAME}
+    SOURCES ${MULTI_AGENT_EXPLORATION_SRC} ${MAE_TEST_SRC} "src/main.cpp")
+target_link_libraries(${PROJECT_NAME} ${YAMLCPP_LIBRARY})
 
 file(GLOB CONFIG_FILES "config/*")
 file(COPY ${CONFIG_FILES} DESTINATION ${CMAKE_BINARY_DIR})

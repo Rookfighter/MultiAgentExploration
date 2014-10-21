@@ -1,9 +1,9 @@
 #ifndef MAE_HEISENBERG_TEST_HPP
 #define MAE_HEISENBERG_TEST_HPP
 
+#include <easylogging++.h>
 #include "algorithm/HeisenbergObstacleAvoid.hpp"
 #include "control/ExplorationBot.hpp"
-#include "easylogging++.h"
 
 namespace mae
 {

@@ -1,4 +1,4 @@
-#include "WanderTest.hpp"
+#include "test/WanderTest.hpp"
 
 namespace mae
 {

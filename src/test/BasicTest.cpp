@@ -1,5 +1,5 @@
-#include "BasicTest.hpp"
-#include "easylogging++.h"
+#include <easylogging++.h>
+#include "test/BasicTest.hpp"
 
 namespace mae
 {

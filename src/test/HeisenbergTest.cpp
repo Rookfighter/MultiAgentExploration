@@ -1,4 +1,4 @@
-#include "HeisenbergTest.hpp"
+#include "test/HeisenbergTest.hpp"
 
 namespace mae
 {

@@ -73,6 +73,7 @@ namespace mae
 		void placeMarker(Marker* p_marker);
 		Vector2 getDistanceTo(Marker* p_marker);
 		double getAngleTo(Marker* p_marker);
+		std::vector<Marker*> getMarkerInRange(const std::vector<Marker*> &p_availableMarker);
 		
 		Velocity getMaxVelocity() const;
 		Velocity getMinVelocity() const;

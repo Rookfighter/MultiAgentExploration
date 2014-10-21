@@ -11,6 +11,7 @@ namespace mae
 		Simulation *simulation;
 		std::string markerName;
 		int markerCount;
+		double markerRange;
 	} StockConfig;
 	
 	class MarkerStock

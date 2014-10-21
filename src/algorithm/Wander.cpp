@@ -25,8 +25,10 @@ namespace mae
 	void Wander::step()
 	{
 		// no valid data, so we can't use sensors
-		if(!robot_.hasValidRangerData())
+		if(!robot_.hasValidRangerData()) {
+			robot_.setVelocity(Velocity(0,0));
 			return;
+		}
 		
 		checkObstacle();
 

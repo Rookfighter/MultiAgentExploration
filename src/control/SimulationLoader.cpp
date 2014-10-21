@@ -11,6 +11,7 @@
 
 #define MARKER_NAME_NODE "marker_name"
 #define MARKER_COUNT_NODE "marker_count"
+#define MARKER_RANGE_NODE "marker_range"
 
 #define SIMULATION_INDEX_NODE "simulation_index"
 
@@ -52,6 +53,7 @@ namespace mae
 		YAML::Node stockNode = config[STOCK_NODE];
 		stockConfig_.markerName = stockNode[MARKER_NAME_NODE].as<std::string>();
 		stockConfig_.markerCount = stockNode[MARKER_COUNT_NODE].as<int>();
+		stockConfig_.markerRange = stockNode[MARKER_RANGE_NODE].as<double>();
 		
 		// get configuration for all robots
 		YAML::Node robotsNode = config[ROBOTS_NODE];

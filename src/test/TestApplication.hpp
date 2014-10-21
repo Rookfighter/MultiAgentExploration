@@ -6,6 +6,7 @@
 #include "test/BasicTest.hpp"
 #include "test/HeisenbergTest.hpp"
 #include "test/WanderTest.hpp"
+#include "test/NodeCountingTest.hpp"
 
 namespace mae
 {
@@ -17,6 +18,7 @@ class TestApplication
 		BasicTest *basicTest_;
 		HeisenbergTest *heisenbergTest_;
 		WanderTest *wanderTest_;
+		NodeCountingTest *ncTest_;
 
 	public:
 		TestApplication();

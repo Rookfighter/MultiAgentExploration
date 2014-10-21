@@ -14,7 +14,7 @@ namespace mae
 	}
 
 
-	void WanderTest::step()
+	void WanderTest::execute()
 	{
 		while(true) {
 			client_.update();

@@ -1,25 +1,22 @@
 #ifndef MAE_ANT_ALGORITHM_HPP
 #define MAE_ANT_ALGORITHM_HPP
 
-#include "control/ExplorationBot.hpp"
-#include "control/MarkerStock.hpp"
+#include "algorithm/AntState.hpp"
 
 namespace mae
 {
 	
 	class AntAlgorithm
 	{
+	private:
+		AntState *state_;
 	protected:
-		ExplorationBot &robot_;
-		Simulation &simulation_;
-		MarkerStock &stock_;
-
+		void init(AntState *p_initialState);
 	public:
-		AntAlgorithm(ExplorationBot &p_robot,
-		             Simulation &p_simulation,
-		             MarkerStock &p_stock);
+		AntAlgorithm();
 		virtual ~AntAlgorithm();
-
+		
+		void step();
 	};
 
 }

@@ -161,9 +161,25 @@ namespace mae
 	
 	double ExplorationBot::getAngleTo(Marker* p_marker)
 	{
+		// TODO - is this correct simulated -- distance has error, so is it ok
+		// to use absolutePosition to determine angle offset?
 		Vector2 distance = getDistanceTo(p_marker);
 		double result = atan2(distance.y, distance.x) - getAbsolutePose().yaw;
 		result = normalizeRadian(result);
+		return result;
+	}
+	
+	std::vector<Marker*> ExplorationBot::getMarkerInRange(const std::vector<Marker*> &p_availableMarker)
+	{
+		std::vector<Marker*> result;
+		result.reserve(p_availableMarker.size());
+		
+		for(Marker *marker : p_availableMarker) {
+			Vector2 distance = getDistanceTo(marker);
+			if(distance.lengthSQ() <= marker->range * marker->range)
+				result.push_back(marker);
+		}
+		
 		return result;
 	}
 	

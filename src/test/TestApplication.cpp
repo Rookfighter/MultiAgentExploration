@@ -14,10 +14,15 @@ namespace mae
 		                                     *loader_.getRobot("pioneer1"));
 		wanderTest_ = new WanderTest(*loader_.getClient(),
 		                             *loader_.getRobot("pioneer1"));
+		ncTest_ = new NodeCountingTest(loader_.getClient(),
+		                               loader_.getRobot("pioneer1"),
+		                               loader_.getSimulation(),
+		                               loader_.getStock());
 	}
 
 	TestApplication::~TestApplication()
 	{
+		delete ncTest_;
 		delete wanderTest_;
 		delete heisenbergTest_;
 		delete wanderTest_;
@@ -27,7 +32,7 @@ namespace mae
 	{
 		LOG(INFO) << "Running Test";
 		try {
-			basicTest_->step();
+			ncTest_->execute();
 		} catch(std::exception &e) {
 			LOG(WARNING) << "Catched exception: " << e.what();
 		} catch(PlayerCc::PlayerError &e) {

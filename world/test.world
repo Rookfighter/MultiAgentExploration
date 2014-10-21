@@ -11,8 +11,8 @@ window
 
 floorplan
 (
-    bitmap "bitmaps/simple_rooms.png"
-    size [20 20 1]
+    bitmap "bitmaps/single_room.png"
+    size [10 10 1]
 )
 
 pioneer2dx
@@ -26,8 +26,24 @@ pioneer2dx
     color "blue"
 )
 
-marker
-(
-    name "marker1"
-    pose [-2 -1.5 0 0]
-)
+marker( name "marker1" pose [ -15 -15 0 0 ] )
+marker( name "marker2" pose [ -15 -15 0 0 ] )
+marker( name "marker3" pose [ -15 -15 0 0 ] )
+marker( name "marker4" pose [ -15 -15 0 0 ] )
+marker( name "marker5" pose [ -15 -15 0 0 ] )
+marker( name "marker6" pose [ -15 -15 0 0 ] )
+marker( name "marker7" pose [ -15 -15 0 0 ] )
+marker( name "marker8" pose [ -15 -15 0 0 ] )
+marker( name "marker9" pose [ -15 -15 0 0 ] )
+marker( name "marker10" pose [ -15 -15 0 0 ] )
+marker( name "marker11" pose [ -15 -15 0 0 ] )
+marker( name "marker12" pose [ -15 -15 0 0 ] )
+marker( name "marker13" pose [ -15 -15 0 0 ] )
+marker( name "marker14" pose [ -15 -15 0 0 ] )
+marker( name "marker15" pose [ -15 -15 0 0 ] )
+marker( name "marker16" pose [ -15 -15 0 0 ] )
+marker( name "marker17" pose [ -15 -15 0 0 ] )
+marker( name "marker18" pose [ -15 -15 0 0 ] )
+marker( name "marker19" pose [ -15 -15 0 0 ] )
+marker( name "marker20" pose [ -15 -15 0 0 ] )
+

@@ -9,6 +9,9 @@ namespace mae
 		:simulation_(p_config.simulation), markerName_(p_config.markerName), availableMarker_(), inUseMarker_()
 	{
 		resize(p_config.markerCount);
+		
+		for(Marker* marker: availableMarker_)
+			marker->range = p_config.markerRange;
 	}
 
 	MarkerStock::~MarkerStock()

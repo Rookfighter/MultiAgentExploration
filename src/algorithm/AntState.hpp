@@ -1,0 +1,41 @@
+#ifndef MAE_ANT_STATE_HPP
+#define MAE_ANT_STATE_HPP
+
+#include "control/ExplorationBot.hpp"
+#include "control/MarkerStock.hpp"
+
+namespace mae
+{
+	typedef void (*updateValueFunc)(Marker* p_current, Marker* p_next);
+	
+	class AntStateProperties
+	{
+	public:
+		ExplorationBot *robot;
+		Simulation *simulation;
+		MarkerStock *stock;
+		
+		Marker *currentMarker;
+		Marker *nextMarker;
+		double angleToTurn;
+		
+		updateValueFunc updateValue; 
+		
+		AntStateProperties();
+		~AntStateProperties();
+	};
+	
+	class AntState
+	{
+	protected:
+		AntStateProperties properties_;
+	public:
+		AntState(const AntStateProperties &p_properties);
+		virtual ~AntState();
+		
+		virtual AntState* update() = 0;
+	};
+
+}
+
+#endif

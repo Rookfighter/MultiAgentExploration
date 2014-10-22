@@ -3,7 +3,7 @@
 
 #include <easylogging++.h>
 #include "algorithm/HeisenbergObstacleAvoid.hpp"
-#include "control/ExplorationBot.hpp"
+#include "simulation/ExplorationBot.hpp"
 
 namespace mae
 {

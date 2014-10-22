@@ -1,8 +1,8 @@
 #ifndef MAE_ANT_STATE_HPP
 #define MAE_ANT_STATE_HPP
 
-#include "control/ExplorationBot.hpp"
-#include "control/MarkerStock.hpp"
+#include "simulation/ExplorationBot.hpp"
+#include "simulation/MarkerStock.hpp"
 
 namespace mae
 {

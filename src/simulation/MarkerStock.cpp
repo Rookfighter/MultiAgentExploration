@@ -1,17 +1,15 @@
 #include <sstream>
 #include <iostream>
-#include "control/MarkerStock.hpp"
+#include "simulation/MarkerStock.hpp"
 
 namespace mae
 {
 
 	MarkerStock::MarkerStock(const StockConfig &p_config)
-		:simulation_(p_config.simulation), markerName_(p_config.markerName), availableMarker_(), inUseMarker_()
+		:config_(p_config), simulation_(config_.simulation),
+		markerName_(config_.markerName), availableMarker_(), inUseMarker_()
 	{
-		resize(p_config.markerCount);
-		
-		for(Marker* marker: availableMarker_)
-			marker->range = p_config.markerRange;
+		resize(config_.markerCount);
 	}
 
 	MarkerStock::~MarkerStock()
@@ -27,9 +25,7 @@ namespace mae
 		inUseMarker_.reserve(p_markerCount);
 
 		for(int i = 0; i < availableMarker_.size(); ++i)
-			availableMarker_[i] = new Marker();
-
-		init();
+			availableMarker_[i] = new Marker(config_, i);
 	}
 
 	void MarkerStock::cleanup()
@@ -40,18 +36,6 @@ namespace mae
 
 		availableMarker_.clear();
 		inUseMarker_.clear();
-	}
-
-	void MarkerStock::init()
-	{
-		for(int i = 0; i < availableMarker_.size(); ++i) {
-			std::stringstream ss;
-			ss << markerName_ << (i + 1);
-			availableMarker_[i]->id = i;
-			availableMarker_[i]->name = ss.str();
-			availableMarker_[i]->value = 0;
-			availableMarker_[i]->inUse = false;
-		}
 	}
 
 	std::vector<Marker*> MarkerStock::getAll()
@@ -83,8 +67,8 @@ namespace mae
 		Marker *marker = availableMarker_.back();
 		availableMarker_.pop_back();
 		inUseMarker_.push_back(marker);
-		marker->value = 0;
-		marker->inUse = true;
+		marker->setValue(0);
+		marker->setInUSe(true);
 
 		return marker;
 	}
@@ -96,25 +80,20 @@ namespace mae
 
 		std::vector<Marker*>::iterator it;
 		for(it = inUseMarker_.begin(); it != inUseMarker_.end(); ++it)
-			if((*it)->name == p_marker->name)
+			if((*it)->getID() == p_marker->getID())
 				break;
 
 		Marker *marker = (*it);
 		inUseMarker_.erase(it);
 		availableMarker_.push_back(marker);
-		marker->inUse = false;
+		marker->setInUSe(false);
 	}
 
 	void MarkerStock::refresh()
 	{
 		std::vector<Marker*> all = getAll();
-		for(Marker *marker : all) {
-
-			marker->pose = simulation_->getPoseOf(marker->name);
-			/*double size[3];
-			simulation_->getSizeOf(marker->name, size);
-			marker->range = size[0];*/
-		}
+		for(Marker *marker : all)
+			marker->refreshData();
 	}
 
 }

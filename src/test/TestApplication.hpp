@@ -2,7 +2,7 @@
 #define MA_TEST_APPLICATION_HPP
 
 #include <stdexcept>
-#include "control/SimulationLoader.hpp"
+#include "simulation/SimulationLoader.hpp"
 #include "test/BasicTest.hpp"
 #include "test/HeisenbergTest.hpp"
 #include "test/WanderTest.hpp"

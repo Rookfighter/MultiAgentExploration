@@ -2,29 +2,22 @@
 #define MAE_MARKER_STOCK_HPP
 
 #include <vector>
-#include "control/Simulation.hpp"
-#include "control/Marker.hpp"
+#include "simulation/Marker.hpp"
 
 namespace mae
-{
-	typedef struct {
-		Simulation *simulation;
-		std::string markerName;
-		int markerCount;
-		double markerRange;
-	} StockConfig;
-	
+{	
 	class MarkerStock
 	{
 	private:
 		Simulation *simulation_;
-		std::string markerName_;
+		
+		StockConfig config_;
+		
 		std::vector<Marker*> availableMarker_;
 		std::vector<Marker*> inUseMarker_;
 		
 		void resize(const int p_markerCount);
 		void cleanup();
-		void init();
 	public:
 		MarkerStock(const StockConfig &p_config);
 

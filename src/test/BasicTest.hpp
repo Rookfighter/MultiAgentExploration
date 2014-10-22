@@ -1,8 +1,8 @@
 #ifndef MAE_BASIC_TEST_HPP
 #define MAE_BASIC_TEST_HPP
 
-#include "control/MarkerStock.hpp"
-#include "control/ExplorationBot.hpp"
+#include "simulation/MarkerStock.hpp"
+#include "simulation/ExplorationBot.hpp"
 
 namespace mae
 {

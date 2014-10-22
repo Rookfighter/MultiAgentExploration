@@ -1,7 +1,7 @@
 #ifndef MAE_WANDER_HPP
 #define MAE_WANDER_HPP
 
-#include "control/ExplorationBot.hpp"
+#include "simulation/ExplorationBot.hpp"
 
 namespace mae
 {

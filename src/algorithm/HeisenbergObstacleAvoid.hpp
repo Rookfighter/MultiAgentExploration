@@ -1,7 +1,7 @@
 #ifndef MAE_HEISENBERG_OBSTACLE_AVOID_HPP
 #define MAE_HEISENBERG_OBSTACLE_AVOID_HPP
 
-#include "control/ExplorationBot.hpp"
+#include "simulation/ExplorationBot.hpp"
 
 namespace mae
 {
@@ -10,7 +10,7 @@ namespace mae
 	{
 	private:
 		ExplorationBot &robot_;
-		RangerConfig config_;
+		RangerProperties config_;
 		std::vector<double> distance_;
 		Velocity velocity_;
 		double distanceThreshold_;

@@ -2,7 +2,7 @@
 #define MAE_SIMULATION_HPP
 
 #include <cstdint>
-#include "control/PlayerClient.hpp"
+#include "simulation/PlayerClient.hpp"
 #include "common/Odometry.hpp"
 
 namespace mae

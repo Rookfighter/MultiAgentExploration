@@ -17,10 +17,8 @@ namespace mae
 
 	AntState* DroppingMarker::update()
 	{
-		Marker *toDrop = properties_.stock->acquireMarker();
-		
-		properties_.robot->placeMarker(toDrop);
-		properties_.currentMarker = toDrop;
+		Marker* dropped = properties_.robot->dropMarker();
+		properties_.currentMarker = dropped;
 		
 		return new SelectingTarget(properties_);
 	}

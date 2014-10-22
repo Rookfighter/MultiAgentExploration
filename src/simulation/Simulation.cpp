@@ -1,4 +1,4 @@
-#include "control/Simulation.hpp"
+#include "simulation/Simulation.hpp"
 #include <easylogging++.h>
 
 #define SIZE_ELEMENT_COUNT 3

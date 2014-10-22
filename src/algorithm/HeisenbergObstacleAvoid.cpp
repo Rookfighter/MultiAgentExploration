@@ -9,8 +9,8 @@ namespace mae
 {
 
 	HeisenbergObstacleAvoid::HeisenbergObstacleAvoid(ExplorationBot &p_robot,  const double p_distanceThreshold)
-		: robot_(p_robot), config_(robot_.getRangerConfig()),
-		  distance_(config_.sensorCount), distanceThreshold_(p_distanceThreshold)
+		: robot_(p_robot), config_(robot_.getRanger().getProperties()),
+		  distance_(config_.getMeasurementCount()), distanceThreshold_(p_distanceThreshold)
 	{
 	}
 
@@ -20,7 +20,7 @@ namespace mae
 
 	void HeisenbergObstacleAvoid::execute()
 	{
-		if(robot_.hasValidRangerData()) {
+		if(robot_.getRanger().hasValidData()) {
 			updateDistance();
 
 			velocity_.set(1.0, 0);
@@ -40,8 +40,8 @@ namespace mae
 
 	void HeisenbergObstacleAvoid::updateDistance()
 	{
-		for(int i = 0; i < config_.sensorCount; ++i) {
-				distance_[i] = robot_.getRangerDistance(i);
+		for(int i = 0; i < config_.getMeasurementCount(); ++i) {
+				distance_[i] = robot_.getRanger().getDistance(i);
 		}
 	}
 

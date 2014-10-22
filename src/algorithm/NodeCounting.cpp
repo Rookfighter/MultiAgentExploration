@@ -6,7 +6,7 @@ namespace mae
 	static void updateValueNodeCounting(Marker *p_current, Marker *p_next)
 	{
 		assert(p_current != NULL);
-		p_current->value++;
+		p_current->incrementValue();
 	}
 	
 	NodeCounting::NodeCounting(ExplorationBot *p_robot,

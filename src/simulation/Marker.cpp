@@ -9,7 +9,7 @@ namespace mae
 	}
 
 	Marker::Marker(const StockConfig& p_config, const int p_id)
-		:simulation_(p_config.simulation) id_(p_id), range_(p_config.markerRange),
+		:simulation_(p_config.simulation), id_(p_id), range_(p_config.markerRange),
 		 inUse_(false), value_(0)
 	{
 		std::stringstream ss;
@@ -71,6 +71,11 @@ namespace mae
 	void Marker::refreshData()
 	{
 		pose_ = simulation_->getPoseOf(name_);
+	}
+	
+	void Marker::incrementValue()
+	{
+		value_++;
 	}
 
 	std::string Marker::str()

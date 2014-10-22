@@ -32,7 +32,7 @@ namespace mae
 	{
 	}
 
-	static World* WorldLoader::load(const std::string &p_file)
+	World* WorldLoader::load(const std::string &p_file)
 	{
 		YAML::Node config, clientNode, simulationNode, stockNode, robotsNode;
 		std::string host;
@@ -81,20 +81,20 @@ namespace mae
 		
 		World *result = new World;
 		
-		result.client_ = new PlayerClient(host, port);
+		result->client_ = new PlayerClient(host, port);
 		
-		simulationConfig.client = result.client_;
-		result.simulation_ = new Simulation(simulationConfig);
+		simulationConfig.client = result->client_;
+		result->simulation_ = new Simulation(simulationConfig);
 		
-		stockConfig.simulation = result.simulation_;
-		result.stock_ = new MarkerStock(stockConfig);
+		stockConfig.simulation = result->simulation_;
+		result->stock_ = new MarkerStock(stockConfig);
 		
-		result.robots_.resize(robotConfigs.size());
-		for(int i = 0; i < result.robots_.size(); ++i) {
-			robotConfigs[i].client = result.client_;
-			robotConfigs[i].simulation = result.simulation_;
-			robotConfigs[i].stock = result.stock_;
-			result.robots_[i] = new ExplorationBot(robotConfigs[i]);
+		result->robots_.resize(robotConfigs.size());
+		for(int i = 0; i < result->robots_.size(); ++i) {
+			robotConfigs[i].client = result->client_;
+			robotConfigs[i].simulation = result->simulation_;
+			robotConfigs[i].stock = result->stock_;
+			result->robots_[i] = new ExplorationBot(robotConfigs[i]);
 		}
 		
 		return result;

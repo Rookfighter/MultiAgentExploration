@@ -19,7 +19,7 @@ namespace mae
 		void printAllMarker();
 		void refreshStock();
 		void printRobot(ExplorationBot &p_bot);
-		void printRangerConfig(RangerConfig &p_config);
+		void printRangerProperties(RangerProperties &p_properties);
 	public:
 		BasicTest(PlayerClient &p_client,
 		          Simulation &p_simulation,

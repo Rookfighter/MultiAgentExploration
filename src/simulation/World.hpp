@@ -5,11 +5,9 @@
 
 namespace mae
 {
-	class WorldLoader;
-	
 	class World
 	{
-		friend WorldLoader
+		friend class WorldLoader;
 	private:
 		PlayerClient *client_;
 		Simulation *simulation_;
@@ -22,7 +20,7 @@ namespace mae
 		
 		PlayerClient* getClient();
 		Simulation* getSimulation();
-		MarkerStock* getMarkerStock();
+		MarkerStock* getStock();
 		
 		const std::vector<ExplorationBot*>& getRobots();
 		ExplorationBot* getRobot(const std::string& p_name);

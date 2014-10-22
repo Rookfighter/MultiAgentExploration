@@ -25,8 +25,8 @@ namespace mae
 	void Wander::step()
 	{
 		// no valid data, so we can't use sensors
-		if(!robot_.hasValidRangerData()) {
-			robot_.setVelocity(Velocity(0,0));
+		if(!robot_.getRanger().hasValidData()) {
+			robot_.getMotor().setVelocity(Velocity(0,0));
 			return;
 		}
 		
@@ -37,25 +37,25 @@ namespace mae
 		else
 			cruise();
 
-		robot_.setVelocity(velocity_);
+		robot_.getMotor().setVelocity(velocity_);
 	}
 
 	void Wander::checkObstacle()
 	{
-		const RangerConfig& config = robot_.getRangerConfig();
+		const RangerProperties& properties = robot_.getRanger().getProperties();
 
 		minFrontDistance_ = 1e6;
 		minLeftDistance_ = 1e6;
 		minRightDistance_ = 1e6;
 
-		for(int i = 0; i < config.sensorCount; ++i) {
+		for(int i = 0; i < properties.getMeasurementCount(); ++i) {
 			// normalize yaw in [-pi;pi]
-			double normalizedYaw = normalizeRadian(config.sensorPose[i].yaw);
+			double normalizedYaw = normalizeRadian(properties.getMeasurementOrigins()[i].yaw);
 			// don't use rangers with yaw bigger than 90°
 			if(fabs(normalizedYaw) > MEASURE_BEGIN_ANGLE)
 				continue;
 
-			double measuredDistance = robot_.getRangerDistance(i);
+			double measuredDistance = robot_.getRanger().getDistance(i);
 			if(normalizedYaw > FRONT_BEGIN_ANGLE) {
 				// left side
 				minLeftDistance_ = std::min(minLeftDistance_, measuredDistance);
@@ -72,16 +72,16 @@ namespace mae
 	void Wander::avoidObstacle()
 	{
 		if(minLeftDistance_ < minRightDistance_)
-			velocity_.angular = robot_.getMinVelocity().angular;
+			velocity_.angular = robot_.getMotor().getMinVelocity().angular;
 		else
-			velocity_.angular = robot_.getMaxVelocity().angular;
+			velocity_.angular = robot_.getMotor().getMaxVelocity().angular;
 			
 		velocity_.linear = 0;
 	}
 	
 	void Wander::cruise()
 	{
-		velocity_ = robot_.getMaxVelocity();
+		velocity_ = robot_.getMotor().getMaxVelocity();
 		velocity_.angular = 0;
 	}
 

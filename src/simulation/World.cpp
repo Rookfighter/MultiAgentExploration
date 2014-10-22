@@ -27,7 +27,7 @@ namespace mae
 		return simulation_;
 	}
 	
-	MarkerStock* World::getMarkerStock()
+	MarkerStock* World::getStock()
 	{
 		return stock_;
 	}

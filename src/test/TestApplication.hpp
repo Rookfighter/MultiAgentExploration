@@ -2,11 +2,11 @@
 #define MA_TEST_APPLICATION_HPP
 
 #include <stdexcept>
-#include "simulation/SimulationLoader.hpp"
 #include "test/BasicTest.hpp"
 #include "test/HeisenbergTest.hpp"
 #include "test/WanderTest.hpp"
 #include "test/NodeCountingTest.hpp"
+#include "simulation/World.hpp"
 
 namespace mae
 {
@@ -14,7 +14,7 @@ namespace mae
 class TestApplication
 	{
 	private:
-		SimulationLoader loader_;
+		World *world_;
 		BasicTest *basicTest_;
 		HeisenbergTest *heisenbergTest_;
 		WanderTest *wanderTest_;

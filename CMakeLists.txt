@@ -21,7 +21,7 @@ include(UsePlayerPlugin)
 file(GLOB MULTI_AGENT_EXPLORATION_SRC
     "src/algorithm/*.cpp"
     "src/common/*.cpp"
-    "src/control/*.cpp"
+    "src/simulation/*.cpp"
     "src/test/*.cpp")
 
 # add nodecounting client

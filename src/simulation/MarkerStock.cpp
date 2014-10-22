@@ -7,7 +7,7 @@ namespace mae
 
 	MarkerStock::MarkerStock(const StockConfig &p_config)
 		:config_(p_config), simulation_(config_.simulation),
-		markerName_(config_.markerName), availableMarker_(), inUseMarker_()
+		 availableMarker_(), inUseMarker_()
 	{
 		resize(config_.markerCount);
 	}

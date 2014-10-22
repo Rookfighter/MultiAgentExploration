@@ -8,7 +8,7 @@ namespace mae
 {
 	class RangerProperties
 	{
-		friend Ranger
+		friend class Ranger;
 	private:
 		double fov_;
 		double maxRange_;

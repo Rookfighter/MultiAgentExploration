@@ -7,7 +7,7 @@ namespace mae
 {
 	ExplorationBot::ExplorationBot(const RobotConfig &p_config)
 		: name_(p_config.name), simulation_(p_config.simulation),
-		  motor_(p_config), ranger_(p_config)
+		  motor_(p_config), ranger_(p_config), markerSensor_(p_config)
 	{
 		LOG(DEBUG) << "Initialized Robot (" << name_ << ")";
 	}
@@ -46,12 +46,12 @@ namespace mae
 		return name_;
 	}
 
-	void ExplorationBot::dropMarker()
+	Marker* ExplorationBot::dropMarker()
 	{
 		Pose markerPose = getAbsolutePose();
 		markerPose.yaw = 0;
 		Marker *marker = stock_->acquireMarker();
-		marker->setPose(markerPose)
+		marker->setPose(markerPose);
 		
 		return marker;
 	}

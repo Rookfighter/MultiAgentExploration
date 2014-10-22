@@ -24,15 +24,16 @@ namespace mae
 		
 		std::string robotName_;
 		
-		Vector2 getDistanceTo(Marker* p_marker);
-		double getAngleTo(Marker* p_marker);
-	
 	public:
 		MarkerSensor(const RobotConfig& p_config);
 		~MarkerSensor();
 		
 		std::vector<Marker*> getMarkerInRange();
 		std::vector<MarkerMeasurement> measureMarkerInRange();
+		Marker* getClosestMarker();
+		
+		Vector2 getDistanceTo(Marker* p_marker);
+		double getAngleTo(Marker* p_marker);
 		
 	};
 

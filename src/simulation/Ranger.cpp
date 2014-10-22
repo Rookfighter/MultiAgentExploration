@@ -41,13 +41,13 @@ namespace mae
 	{
 		return measurementOrigins_;
 	}
-	
+
 	std::string RangerProperties::str(const int p_index) const
 	{
 		std::stringstream ss;
 		ss.precision(2);
 
-		ss << "id=" << p_index << ",orig=" << measurementOrigins_[p_index].str() << ",fov=" << fov_] << ",mr=" << maxRange_;
+		ss << "id=" << p_index << ",orig=" << measurementOrigins_[p_index].str() << ",fov=" << fov_ << ",mr=" << maxRange_;
 
 		return ss.str();
 	}
@@ -62,20 +62,20 @@ namespace mae
 
 		ranger_.RequestGeom();
 		ranger_.RequestConfigure();
-		LOG(DEBUG) << "Requested Geometry and Configure for RangerProxy " << p_rangerIndex << " (" << p_config.name << ")";
+		LOG(DEBUG) << "Requested Geometry and Configure for RangerProxy " << p_config.rangerIndex << " (" << p_config.name << ")";
 
 		updateProperties();
-		LOG(DEBUG) << "Initialized MeasurementProperties " << p_rangerIndex << " (" << p_config.name << ")";
+		LOG(DEBUG) << "Initialized MeasurementProperties " << p_config.rangerIndex << " (" << p_config.name << ")";
 	}
 
 	void Ranger::updateProperties()
 	{
-		properties_.setMeasurementCount(ranger_.GetElementCount())
+		properties_.setMeasurementCount(ranger_.GetElementCount());
 
 		properties_.maxRange_ = ranger_.GetMaxRange();
 		properties_.fov_ = ranger_.GetMaxAngle() - ranger_.GetMinAngle();
 
-		for(int i = 0; i < config_.sensorCount; ++i) {
+		for(int i = 0; i < properties_.getMeasurementCount(); ++i) {
 			player_pose3d_t pose = ranger_.GetElementPose(i);
 
 			properties_.measurementOrigins_[i].set(pose.px, pose.py, pose.pyaw);
@@ -91,7 +91,7 @@ namespace mae
 	{
 		return ranger_.GetRange(p_index);
 	}
-	
+
 	bool Ranger::hasValidData() const
 	{
 		return ranger_.IsValid();

@@ -35,18 +35,16 @@ namespace mae
 		printRobot(bot_);
 
 		LOG(INFO) << "Getting RangerConfig.";
-		RangerConfig config = bot_.getRangerConfig();
-		printRangerConfig(config);
+		RangerProperties properties = bot_.getRanger().getProperties();
+		printRangerProperties(properties);
 
-		LOG(INFO) << "Acquiring Marker.";
-		Marker *markerTmp = stock_.acquireMarker();
-		LOG(INFO) << "Placing Marker.";
-		bot_.placeMarker(markerTmp);
+		LOG(INFO) << "Dropping Marker.";
+		bot_.dropMarker();
 
 		printAllMarker();
 
 		LOG(INFO) << "Drving away.";
-		bot_.setVelocity(Velocity(2.0,0));
+		bot_.getMotor().setVelocity(Velocity(2.0,0));
 		printRobot(bot_);
 		
 		/*LOG(INFO) << "Setting color.";
@@ -77,16 +75,16 @@ namespace mae
 	void BasicTest::printRobot(ExplorationBot &p_bot)
 	{
 		LOG(INFO) << "Robot: " << p_bot.getName();
-		LOG(INFO) << "-- Pose: " << p_bot.getPose().str();
-		LOG(INFO) << "-- Velocity: " << p_bot.getVelocity().str();
-		LOG(INFO) << "-- Max Velocity: " << p_bot.getMaxVelocity().str();
+		LOG(INFO) << "-- Pose: " << p_bot.getMotor().getPose().str();
+		LOG(INFO) << "-- Velocity: " << p_bot.getMotor().getVelocity().str();
+		LOG(INFO) << "-- Max Velocity: " << p_bot.getMotor().getMaxVelocity().str();
 		LOG(INFO) << "-- Abs. Pose: " << p_bot.getAbsolutePose().str();
 	}
 
-	void BasicTest::printRangerConfig(RangerConfig &p_config)
+	void BasicTest::printRangerProperties(RangerProperties &p_properties)
 	{
-		LOG(INFO) << "RangerConfig ";
-		for(int i = 0; i < p_config.sensorCount; ++i)
-			LOG(INFO) << "-- " << p_config.str(i);
+		LOG(INFO) << "RangerProperties ";
+		for(int i = 0; i < p_properties.getMeasurementCount(); ++i)
+			LOG(INFO) << "-- " << p_properties.str(i);
 	}
 }

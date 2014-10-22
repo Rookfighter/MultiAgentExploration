@@ -25,7 +25,7 @@ namespace mae
 
 	MovingToMarker::MovingToMarker(const AntStateProperties &p_properties)
 		:AntState(p_properties), wander_(*p_properties.robot),
-		 lastPose_(p_properties.robot->getPose()), movedDistance_(0)
+		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0)
 	{
 		LOG(DEBUG) << "New MovingToMarker state.";
 	}
@@ -60,33 +60,33 @@ namespace mae
 	void MovingToMarker::updateGeometry()
 	{
 		// get moved distance since last call
-		Pose currentPose = properties_.robot->getPose();
+		Pose currentPose = properties_.robot->getMotor().getPose();
 		movedDistance_ += (currentPose.position - lastPose_.position).length();
 		lastPose_ = currentPose;
 
 		// get angle to target Marker
-		angleToTarget_ = properties_.robot->getAngleTo(properties_.nextMarker);
+		angleToTarget_ = properties_.robot->getMarkerSensor().getAngleTo(properties_.nextMarker);
 	}
 
 	bool MovingToMarker::reachedTarget()
 	{
-		return properties_.robot->getDistanceTo(properties_.nextMarker).length() <=
-		       (DISTANCE_FACTOR * properties_.nextMarker->range);
+		return properties_.robot->getMarkerSensor().getDistanceTo(properties_.nextMarker).length() <=
+		       (DISTANCE_FACTOR * properties_.nextMarker->getRange());
 	}
 
 	bool MovingToMarker::movedEnough()
 	{
-		return movedDistance_ >= (MOVEMENT_FACTOR * properties_.nextMarker->range);
+		return movedDistance_ >= (MOVEMENT_FACTOR * properties_.nextMarker->getRange());
 	}
 
 	void MovingToMarker::turnToMarker()
 	{
 		double angularVelocity;
 		if(angleToTarget_ < 0)
-			angularVelocity = TURN_FACTOR * properties_.robot->getMinVelocity().angular;
+			angularVelocity = TURN_FACTOR * properties_.robot->getMotor().getMinVelocity().angular;
 		else
-			angularVelocity = TURN_FACTOR * properties_.robot->getMaxVelocity().angular;
-		properties_.robot->setVelocity(Velocity(0, angularVelocity));
+			angularVelocity = TURN_FACTOR * properties_.robot->getMotor().getMaxVelocity().angular;
+		properties_.robot->getMotor().setVelocity(Velocity(0, angularVelocity));
 	}
 
 	void MovingToMarker::moveTowardsMarker()

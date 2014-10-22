@@ -18,11 +18,11 @@ namespace mae
 
 	AntState* InitialAntState::update()
 	{
-		std::vector<Marker*> markerInRange = properties_.robot->getMarkerInRange(properties_.stock->getInUse());
+		std::vector<Marker*> markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
 		if(markerInRange.empty())
 			return new DroppingMarker(properties_);
 		else {
-			properties_.nextMarker = markerInRange[0];
+			properties_.nextMarker = properties_.robot->getMarkerSensor().getClosestMarker();
 			return new MovingToMarker(properties_);
 		}
 	}

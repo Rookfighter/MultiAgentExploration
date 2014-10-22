@@ -1,3 +1,4 @@
+#include <easylogging++.h>
 #include "test/TestApplication.hpp"
 
 _INITIALIZE_EASYLOGGINGPP

@@ -36,6 +36,7 @@ namespace mae
 		bool isInUse() const;
 		
 		void refreshData();
+		void incrementValue();
 		
 		std::string str();
 	};

@@ -1,23 +1,25 @@
+#include <easylogging++.h>
 #include "test/TestApplication.hpp"
+#include "simulation/WorldLoader.hpp"
 
 namespace mae
 {
 
 	TestApplication::TestApplication()
 	{
-		loader_.load("test_simulation.yaml");
-		basicTest_ = new BasicTest(*loader_.getClient(),
-		                           *loader_.getSimulation(),
-		                           *loader_.getStock(),
-		                           *loader_.getRobot("pioneer1"));
-		heisenbergTest_ = new HeisenbergTest(*loader_.getClient(),
-		                                     *loader_.getRobot("pioneer1"));
-		wanderTest_ = new WanderTest(*loader_.getClient(),
-		                             *loader_.getRobot("pioneer1"));
-		ncTest_ = new NodeCountingTest(loader_.getClient(),
-		                               loader_.getRobot("pioneer1"),
-		                               loader_.getSimulation(),
-		                               loader_.getStock());
+		world_ = WorldLoader::load("test_simulation.yaml");
+		basicTest_ = new BasicTest(*world_->getClient(),
+		                           *world_->getSimulation(),
+		                           *world_->getStock(),
+		                           *world_->getRobot("pioneer1"));
+		heisenbergTest_ = new HeisenbergTest(*world_->getClient(),
+		                                     *world_->getRobot("pioneer1"));
+		wanderTest_ = new WanderTest(*world_->getClient(),
+		                             *world_->getRobot("pioneer1"));
+		ncTest_ = new NodeCountingTest(world_->getClient(),
+		                               world_->getRobot("pioneer1"),
+		                               world_->getSimulation(),
+		                               world_->getStock());
 	}
 
 	TestApplication::~TestApplication()
@@ -26,6 +28,7 @@ namespace mae
 		delete wanderTest_;
 		delete heisenbergTest_;
 		delete wanderTest_;
+		delete world_;
 	}
 
 	void TestApplication::run()
@@ -37,6 +40,8 @@ namespace mae
 			LOG(WARNING) << "Catched exception: " << e.what();
 		} catch(PlayerCc::PlayerError &e) {
 			LOG(WARNING) << "Catched player error: " << e.GetErrorStr();
+		} catch(...) {
+			LOG(WARNING) << "Catched unkown instance.";
 		}
 	}
 

@@ -25,14 +25,14 @@ namespace mae
 
 			velocity_.set(1.0, 0);
 
-			for(int i = 0; i < config_.sensorCount; ++i) {
+			for(int i = 0; i < config_.getMeasurementCount(); ++i) {
 				if(distance_[i] <= distanceThreshold_)
 					avoidObstalce(i);
 			}
 
-			velocity_.linear *= robot_.getMaxVelocity().linear;
-			velocity_.angular *= robot_.getMaxVelocity().angular;
-			robot_.setVelocity(velocity_);
+			velocity_.linear *= robot_.getMotor().getMaxVelocity().linear;
+			velocity_.angular *= robot_.getMotor().getMaxVelocity().angular;
+			robot_.getMotor().setVelocity(velocity_);
 		} else {
 			LOG(DEBUG) << "Heisenberg: No valid ranger data";
 		}
@@ -41,17 +41,18 @@ namespace mae
 	void HeisenbergObstacleAvoid::updateDistance()
 	{
 		for(int i = 0; i < config_.getMeasurementCount(); ++i) {
-				distance_[i] = robot_.getRanger().getDistance(i);
+			distance_[i] = robot_.getRanger().getDistance(i);
 		}
 	}
 
 	void HeisenbergObstacleAvoid::avoidObstalce(const int p_sensorID)
 	{
 		// normalize yaw between [-pi;pi]
-		double normalizedYaw = normalizeRadian(config_.sensorPose[p_sensorID].yaw);
+		double normalizedYaw = normalizeRadian(config_.getMeasurementOrigins()[p_sensorID].yaw);
 		// if yaw is close to front then direction gain is high
 		double directionGain = 1 - fabs(normalizedYaw / (2 * M_PI));
-		double toChange = velocity_.linear * directionGain * ((distanceThreshold_ - distance_[p_sensorID]) / distanceThreshold_);
+		double toChange = velocity_.linear * directionGain *
+		                  ((distanceThreshold_ - distance_[p_sensorID]) / distanceThreshold_);
 		if(normalizedYaw < 0)
 			velocity_.angular += toChange;
 		else if(normalizedYaw > 0)

@@ -1,5 +1,6 @@
 #include <sstream>
 #include <iostream>
+#include <easylogging++.h>
 #include "simulation/MarkerStock.hpp"
 
 namespace mae
@@ -10,6 +11,7 @@ namespace mae
 		 availableMarker_(), inUseMarker_()
 	{
 		resize(config_.markerCount);
+		LOG(DEBUG) << "Initialized MarkerStock: " << config_.markerCount << " Marker";
 	}
 
 	MarkerStock::~MarkerStock()
@@ -25,7 +27,7 @@ namespace mae
 		inUseMarker_.reserve(p_markerCount);
 
 		for(int i = 0; i < availableMarker_.size(); ++i)
-			availableMarker_[i] = new Marker(config_, i);
+			availableMarker_[i] = new Marker(config_, i + 1);
 	}
 
 	void MarkerStock::cleanup()
@@ -63,12 +65,11 @@ namespace mae
 	{
 		if(availableMarker_.size() == 0)
 			throw new std::logic_error("Cannot acquire marker. No markers available");
-
 		Marker *marker = availableMarker_.back();
 		availableMarker_.pop_back();
 		inUseMarker_.push_back(marker);
 		marker->setValue(0);
-		marker->setInUSe(true);
+		marker->setInUse(true);
 
 		return marker;
 	}
@@ -86,7 +87,7 @@ namespace mae
 		Marker *marker = (*it);
 		inUseMarker_.erase(it);
 		availableMarker_.push_back(marker);
-		marker->setInUSe(false);
+		marker->setInUse(false);
 	}
 
 	void MarkerStock::refresh()

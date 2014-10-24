@@ -34,7 +34,7 @@ namespace mae
 		bot_.setPose(Pose(2,2,1.5));
 		printRobot(bot_);
 
-		LOG(INFO) << "Getting RangerConfig.";
+		LOG(INFO) << "Getting RangerProperties.";
 		RangerProperties properties = bot_.getRanger().getProperties();
 		printRangerProperties(properties);
 

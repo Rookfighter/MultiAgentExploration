@@ -25,7 +25,6 @@ namespace mae
 	TestApplication::~TestApplication()
 	{
 		delete ncTest_;
-		delete wanderTest_;
 		delete heisenbergTest_;
 		delete wanderTest_;
 		delete world_;

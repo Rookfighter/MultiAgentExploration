@@ -1,4 +1,5 @@
 #include <yaml-cpp/yaml.h>
+#include <easylogging++.h>
 #include "simulation/WorldLoader.hpp"
 
 #define CLIENT_NODE "client"
@@ -34,6 +35,8 @@ namespace mae
 
 	World* WorldLoader::load(const std::string &p_file)
 	{
+		LOG(DEBUG) << "Loading config: " << p_file;
+		
 		YAML::Node config, clientNode, simulationNode, stockNode, robotsNode;
 		std::string host;
 		int port;
@@ -42,25 +45,32 @@ namespace mae
 		std::vector<RobotConfig> robotConfigs;
 		
 		config = YAML::LoadFile(p_file);
+		LOG(DEBUG) << "-- file found";
 		
 		// get configuration of client
 		clientNode = config[CLIENT_NODE];
 		host = clientNode[HOST_NODE].as<std::string>();
 		port = clientNode[PORT_NDOE].as<int>();
+		LOG(DEBUG) << "-- client info found";
 		
 		// get configuration of simulation
 		simulationNode = config[SIMULATION_NODE];
 		simulationConfig.simulationIndex = simulationNode[SIMULATION_INDEX_NODE].as<int>();
+		LOG(DEBUG) << "-- simulation info found";
 		
 		// get configuration of marker stock
 		stockNode = config[STOCK_NODE];
 		stockConfig.markerName = stockNode[MARKER_NAME_NODE].as<std::string>();
 		stockConfig.markerCount = stockNode[MARKER_COUNT_NODE].as<int>();
 		stockConfig.markerRange = stockNode[MARKER_RANGE_NODE].as<double>();
+		LOG(DEBUG) << "-- stock info found";
 		
 		// get configuration for all robots
 		robotsNode = config[ROBOTS_NODE];
+		LOG(DEBUG) << "-- robot info found";
 		if(robotsNode.IsSequence()) {
+			LOG(DEBUG) << "-- is sequence: " << robotsNode.size();
+			
 			robotConfigs.resize(robotsNode.size());
 			for(int i = 0; i < robotsNode.size(); ++i) {
 				robotConfigs[i].name = robotsNode[i][NAME_NODE].as<std::string>();

@@ -33,7 +33,7 @@ namespace mae
 		value_ = p_value;
 	}
 	
-	void Marker::setInUSe(const bool p_inUse)
+	void Marker::setInUse(const bool p_inUse)
 	{
 		inUse_ = p_inUse;
 	}

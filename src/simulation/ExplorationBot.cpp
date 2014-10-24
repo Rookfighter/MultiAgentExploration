@@ -7,7 +7,8 @@ namespace mae
 {
 	ExplorationBot::ExplorationBot(const RobotConfig &p_config)
 		: name_(p_config.name), simulation_(p_config.simulation),
-		  motor_(p_config), ranger_(p_config), markerSensor_(p_config)
+		  motor_(p_config), ranger_(p_config), markerSensor_(p_config),
+		  stock_(p_config.stock)
 	{
 		LOG(DEBUG) << "Initialized Robot (" << name_ << ")";
 	}

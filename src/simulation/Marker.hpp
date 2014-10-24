@@ -25,7 +25,7 @@ namespace mae
 		
 		void setPose(const Pose& p_pose);
 		void setValue(const int p_value);
-		void setInUSe(const bool p_inUse);
+		void setInUse(const bool p_inUse);
 		
 		int getID() const;
 		const std::string& getName() const;

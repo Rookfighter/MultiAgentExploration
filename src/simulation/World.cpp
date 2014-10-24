@@ -11,6 +11,7 @@ namespace mae
 	{
 		for(ExplorationBot* robot: robots_)
 			delete robot;
+		robots_.clear();
 		
 		delete stock_;
 		delete simulation_;

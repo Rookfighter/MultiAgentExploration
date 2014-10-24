@@ -1,6 +1,7 @@
 #include <easylogging++.h>
 #include "algorithm/SelectingTarget.hpp"
 #include "algorithm/UpdatingValue.hpp"
+#include "common/Math.hpp"
 
 #define MAX_ANGLE_DIFF (M_PI / 2) // 90°
 

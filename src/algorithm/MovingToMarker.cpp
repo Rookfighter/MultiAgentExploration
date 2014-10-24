@@ -2,6 +2,7 @@
 #include "algorithm/MovingToMarker.hpp"
 #include "algorithm/SelectingTarget.hpp"
 #include "algorithm/DroppingMarker.hpp"
+#include "common/Math.hpp"
 
 /* avoid moving in a direction that is farer
  * away than this. */
@@ -13,7 +14,7 @@
 
 /* determines how much of marker range is
  * enough to be close enough*/
-#define DISTANCE_FACTOR 0.1
+#define DISTANCE_FACTOR 0.05
 
 /* determines how much fo marker range should
  * be moved until attempt to reach marker is

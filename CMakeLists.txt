@@ -3,14 +3,16 @@ cmake_minimum_required(VERSION 2.8.3)
 project(MultiAgentExploration)
 
 get_filename_component(YAMLCPP_ROOT "lib/yaml-cpp" ABSOLUTE)
+get_filename_component(EASYLOGGING++_ROOT "lib/easylogging++" ABSOLUTE)
 set(CMAKE_MODULE_PATH "/usr/local/share/cmake/Modules" "${CMAKE_CURRENT_LIST_DIR}/cmake-modules")
 
 #find required packages
 find_package(YamlCpp REQUIRED)
+find_package(Easylogging++ REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 add_definitions( -DBOOST_SIGNALS_NO_DEPRECATION_WARNING )
-include_directories("src" "lib/easylogging++" "${YAMLCPP_INCLUDE_DIR}")
+include_directories("src" "${EASYLOGGING++_INCLUDE_DIR}" "${YAMLCPP_INCLUDE_DIR}")
  
 # These files include macros that make building against Player easier. They provide
 # the PLAYER_ADD* macros

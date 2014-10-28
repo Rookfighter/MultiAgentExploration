@@ -25,9 +25,9 @@ namespace mae
 	std::vector<Marker*> MarkerSensor::getMarkerInRange()
 	{
 		std::vector<Marker*> result;
-		result.reserve(stock_->getInUse().size());
+		result.reserve(stock_->getMarker().size());
 
-		for(Marker *marker : stock_->getInUse()) {
+		for(Marker *marker : stock_->getMarker()) {
 			Vector2 distance = getDistanceTo(marker);
 			if(distance.lengthSQ() <= marker->getRange() * marker->getRange())
 				result.push_back(marker);
@@ -53,7 +53,7 @@ namespace mae
 	Marker* MarkerSensor::getClosestMarker()
 	{
 		Marker *result = NULL;
-		for(Marker *marker : stock_->getInUse()) {
+		for(Marker *marker : stock_->getMarker()) {
 			if(result == NULL || getDistanceTo(result).lengthSQ() > getDistanceTo(marker).lengthSQ())
 				result = marker;
 		}

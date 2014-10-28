@@ -3,15 +3,18 @@
 #include <easylogging++.h>
 #include "simulation/MarkerStock.hpp"
 
+#define MARKER_SIZE 0.05
+
 namespace mae
 {
 
 	MarkerStock::MarkerStock(const StockConfig &p_config)
-		:config_(p_config), simulation_(config_.simulation),
-		 availableMarker_(), inUseMarker_()
+		:graphics_(p_config.client->getClient(), p_config.graphicsIndex),
+		 config_(p_config), markerPool_(), marker_(), currentID_(0)
 	{
-		resize(config_.markerCount);
-		LOG(DEBUG) << "Initialized MarkerStock: " << config_.markerCount << " Marker";
+		LOG(DEBUG) << "Connected Graphics2DProxy: " << p_config.graphicsIndex << " (" << p_config.stockName << ")";
+		refill(config_.refillCount);
+		LOG(DEBUG) << "Initialized MarkerStock: " << config_.refillCount << " Marker (" << p_config.stockName << ")";
 	}
 
 	MarkerStock::~MarkerStock()
@@ -19,55 +22,41 @@ namespace mae
 		cleanup();
 	}
 
-	void MarkerStock::resize(const int p_markerCount)
+	void MarkerStock::refill(const int p_markerCount)
 	{
-		cleanup();
+		markerPool_.resize(p_markerCount);
 
-		availableMarker_.resize(p_markerCount);
-		inUseMarker_.reserve(p_markerCount);
-
-		for(int i = 0; i < availableMarker_.size(); ++i)
-			availableMarker_[i] = new Marker(config_, i + 1);
+		for(int i = 0; i < markerPool_.size(); ++i) {
+			markerPool_[i] = new Marker(config_.markerRange, currentID_);
+			markerPool_[i]->addObserver(this);
+			currentID_++;
+		}
 	}
 
 	void MarkerStock::cleanup()
 	{
-		std::vector<Marker*> all = getAll();
-		for(int i = 0; i < all.size(); ++i)
-			delete all[i];
+		for(int i = 0; i < markerPool_.size(); ++i)
+			delete markerPool_[i];
+		for(int i = 0; i < marker_.size(); ++i)
+			delete marker_[i];
 
-		availableMarker_.clear();
-		inUseMarker_.clear();
+		markerPool_.clear();
+		marker_.clear();
 	}
 
-	std::vector<Marker*> MarkerStock::getAll()
+	std::vector<Marker*>& MarkerStock::getMarker()
 	{
-		std::vector<Marker*> result(availableMarker_.size() + inUseMarker_.size());
-		for(int i = 0; i < availableMarker_.size(); ++i)
-			result[i] = availableMarker_[i];
-		for(int i = 0; i < inUseMarker_.size(); ++i)
-			result[i + availableMarker_.size()] = inUseMarker_[i];
-
-		return result;
-	}
-
-	std::vector<Marker*>& MarkerStock::getAvailable()
-	{
-		return availableMarker_;
-	}
-
-	std::vector<Marker*>& MarkerStock::getInUse()
-	{
-		return inUseMarker_;
+		return marker_;
 	}
 
 	Marker* MarkerStock::acquireMarker()
 	{
-		if(availableMarker_.size() == 0)
-			throw new std::logic_error("Cannot acquire marker. No markers available");
-		Marker *marker = availableMarker_.back();
-		availableMarker_.pop_back();
-		inUseMarker_.push_back(marker);
+		if(markerPool_.empty())
+			refill(config_.refillCount);
+			
+		Marker *marker = markerPool_.back();
+		markerPool_.pop_back();
+		marker_.push_back(marker);
 		marker->setValue(0);
 		marker->setInUse(true);
 
@@ -76,25 +65,54 @@ namespace mae
 
 	void MarkerStock::releaseMarker(Marker *p_marker)
 	{
-		if(inUseMarker_.size() == 0)
-			throw new std::logic_error("Cannot release marker. No markers in use");
-
+		assert(!marker_.empty());
+		
 		std::vector<Marker*>::iterator it;
-		for(it = inUseMarker_.begin(); it != inUseMarker_.end(); ++it)
+		for(it = marker_.begin(); it != marker_.end(); ++it)
 			if((*it)->getID() == p_marker->getID())
 				break;
 
 		Marker *marker = (*it);
-		inUseMarker_.erase(it);
-		availableMarker_.push_back(marker);
+		marker_.erase(it);
+		markerPool_.push_back(marker);
 		marker->setInUse(false);
 	}
-
-	void MarkerStock::refresh()
+	
+	void MarkerStock::notify(void *p_data)
 	{
-		std::vector<Marker*> all = getAll();
-		for(Marker *marker : all)
-			marker->refreshData();
+		redrawMarker();
+	}
+
+	void MarkerStock::redrawMarker()
+	{
+		graphics_.Clear();
+		
+		player_color_t markerColor;
+		
+		markerColor.red = 200;
+		markerColor.blue = 0;
+		markerColor.green = 0;
+		markerColor.alpha = 255;
+		
+		graphics_.Color(200, 0, 0, 255);
+		
+		for(Marker *marker : marker_) {
+			player_point_2d_t points[4];
+			
+			points[0].px = marker->getPose().position.x + MARKER_SIZE;
+			points[0].py = marker->getPose().position.y + MARKER_SIZE;
+			
+			points[1].px = marker->getPose().position.x - MARKER_SIZE;
+			points[1].py = marker->getPose().position.y + MARKER_SIZE;
+			
+			points[2].px = marker->getPose().position.x - MARKER_SIZE;
+			points[2].py = marker->getPose().position.y - MARKER_SIZE;
+			
+			points[3].px = marker->getPose().position.x + MARKER_SIZE;
+			points[3].py = marker->getPose().position.y - MARKER_SIZE;
+			
+			graphics_.DrawPolygon(points, 4, true, markerColor);
+		}
 	}
 
 }

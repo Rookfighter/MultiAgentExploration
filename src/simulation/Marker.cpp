@@ -8,24 +8,20 @@ namespace mae
 		return b ? "true" : "false";
 	}
 
-	Marker::Marker(const StockConfig& p_config, const int p_id)
-		:simulation_(p_config.simulation), id_(p_id), range_(p_config.markerRange),
+	Marker::Marker(const double p_range, const int p_id)
+		:id_(p_id), range_(p_range),
 		 inUse_(false), value_(0)
 	{
-		std::stringstream ss;
-		ss << p_config.markerName << id_;
-		name_ = ss.str();
 	}
 	
 	Marker::~Marker()
 	{
-		
 	}
 
 	void Marker::setPose(const Pose& p_pose)
 	{
 		pose_ = p_pose;
-		simulation_->setPoseOf(name_, pose_);
+		redraw();
 	}
 	
 	void Marker::setValue(const int p_value)
@@ -36,16 +32,12 @@ namespace mae
 	void Marker::setInUse(const bool p_inUse)
 	{
 		inUse_ = p_inUse;
+		redraw();
 	}
 
 	int Marker::getID() const
 	{
 		return id_;
-	}
-	
-	const std::string& Marker::getName() const
-	{
-		return name_;
 	}
 	
 	const Pose& Marker::getPose() const
@@ -67,11 +59,6 @@ namespace mae
 	{
 		return inUse_;
 	}
-
-	void Marker::refreshData()
-	{
-		pose_ = simulation_->getPoseOf(name_);
-	}
 	
 	void Marker::incrementValue()
 	{
@@ -82,8 +69,13 @@ namespace mae
 	{
 		std::stringstream ss;
 		ss.precision(2);
-		ss << "id: " << id_ << " " << name_ << ",pos=" << pose_.str() << ",rng=" << range_ << ",use=" << boolToString(inUse_) << ",val=" << value_;
+		ss << "id: " << id_ << " pos=" << pose_.str() << ",rng=" << range_ << ",use=" << boolToString(inUse_) << ",val=" << value_;
 
 		return ss.str();
+	}
+	
+	void Marker::redraw()
+	{
+		notifyAll(NULL);
 	}
 }

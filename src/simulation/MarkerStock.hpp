@@ -2,35 +2,37 @@
 #define MAE_MARKER_STOCK_HPP
 
 #include <vector>
+#include "common/Observer.hpp"
 #include "simulation/Marker.hpp"
+#include "simulation/StockConfig.hpp"
 
 namespace mae
 {	
-	class MarkerStock
+	class MarkerStock : public Observer
 	{
 	private:
-		Simulation *simulation_;
-		
+		PlayerCc::Graphics2dProxy graphics_;
 		StockConfig config_;
 		
-		std::vector<Marker*> availableMarker_;
-		std::vector<Marker*> inUseMarker_;
+		std::vector<Marker*> markerPool_;
+		std::vector<Marker*> marker_;
 		
-		void resize(const int p_markerCount);
+		int currentID_;
+		
+		void refill(const int p_markerCount);
 		void cleanup();
+		void redrawMarker();
 	public:
 		MarkerStock(const StockConfig &p_config);
 
 		~MarkerStock();
 
-		std::vector<Marker*> getAll();
-		std::vector<Marker*>& getAvailable();
-		std::vector<Marker*>& getInUse();
+		std::vector<Marker*>& getMarker();
 
 		Marker* acquireMarker();
 		void releaseMarker(Marker *p_marker);
-
-		void refresh();
+		
+		void notify(void *p_data);
 	};
 
 }

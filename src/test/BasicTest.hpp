@@ -17,7 +17,6 @@ namespace mae
 
 		void updateClient();
 		void printAllMarker();
-		void refreshStock();
 		void printRobot(ExplorationBot &p_bot);
 		void printRangerProperties(RangerProperties &p_properties);
 	public:

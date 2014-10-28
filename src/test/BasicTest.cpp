@@ -20,11 +20,7 @@ namespace mae
 	void BasicTest::execute()
 	{
 		updateClient();
-		LOG(INFO) << "Marker before refresh.";
-		printAllMarker();
-
-		refreshStock();
-		LOG(INFO) << "Marker after refresh.";
+		
 		printAllMarker();
 
 		LOG(INFO) << "Starting Position.";
@@ -61,15 +57,8 @@ namespace mae
 	void BasicTest::printAllMarker()
 	{
 		LOG(INFO) << "Marker";
-		std::vector<Marker*> all = stock_.getAll();
-		for(Marker* marker : all)
+		for(Marker* marker : stock_.getMarker())
 			LOG(INFO) << "--" << marker->str();
-	}
-
-	void BasicTest::refreshStock()
-	{
-		LOG(INFO) << "Refreshing stock";
-		stock_.refresh();
 	}
 
 	void BasicTest::printRobot(ExplorationBot &p_bot)

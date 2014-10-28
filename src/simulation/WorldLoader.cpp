@@ -10,9 +10,10 @@
 #define HOST_NODE "host"
 #define PORT_NDOE "port"
 
-#define MARKER_NAME_NODE "marker_name"
-#define MARKER_COUNT_NODE "marker_count"
+#define STOCK_NAME_NODE "stock_name"
+#define REFILL_COUNT_NODE "refill_count"
 #define MARKER_RANGE_NODE "marker_range"
+#define GRAPHICS_INDEX_NODE "graphics_index"
 
 #define SIMULATION_INDEX_NODE "simulation_index"
 
@@ -60,9 +61,10 @@ namespace mae
 		
 		// get configuration of marker stock
 		stockNode = config[STOCK_NODE];
-		stockConfig.markerName = stockNode[MARKER_NAME_NODE].as<std::string>();
-		stockConfig.markerCount = stockNode[MARKER_COUNT_NODE].as<int>();
+		stockConfig.stockName = stockNode[STOCK_NAME_NODE].as<std::string>();
+		stockConfig.refillCount = stockNode[REFILL_COUNT_NODE].as<int>();
 		stockConfig.markerRange = stockNode[MARKER_RANGE_NODE].as<double>();
+		stockConfig.graphicsIndex = stockNode[GRAPHICS_INDEX_NODE].as<int>();
 		LOG(DEBUG) << "-- stock info found";
 		
 		// get configuration for all robots
@@ -96,7 +98,7 @@ namespace mae
 		simulationConfig.client = result->client_;
 		result->simulation_ = new Simulation(simulationConfig);
 		
-		stockConfig.simulation = result->simulation_;
+		stockConfig.client = result->client_;
 		result->stock_ = new MarkerStock(stockConfig);
 		
 		result->robots_.resize(robotConfigs.size());

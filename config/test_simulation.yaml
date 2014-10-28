@@ -4,9 +4,10 @@ client:
 simulation:
     simulation_index: 0
 stock:
-    marker_name: marker
-    marker_count: 20
+    stock_name: markerStock
+    refill_count: 10
     marker_range: 2.0
+    graphics_index: 0
 robots:
     -
         name: pioneer1

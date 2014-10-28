@@ -2,6 +2,7 @@
 #define MAE_ROBOT_CONFIG_HPP
 
 #include <string>
+#include "simulation/Simulation.hpp"
 #include "simulation/MarkerStock.hpp"
 #include "common/Odometry.hpp"
 

@@ -6,28 +6,47 @@ __Attention:__ This project was only tested under __Linux Mint 17__.
 
 ### Requirements
 
-The following things are required to run and compile the project on __Linux__:
+The following dependencies are required to run and compile the project on __Linux__:
 
 * Player
 * Stage
+* yaml-cpp (__lib__ subdirectory)
+* easylogging++ (__lib__ subdirectory)
 * gcc 4.8 or higher
 
 ### Player/Stage
 
-For Player/Stage installation on Linux Mint 17 install the following __dependencies__:
+For Player/Stage installation the following dependencies are required:
+
+* autotools
+* libboost-thread
+* libboost-signals
+* libcv 2.4
+* libhighgui 2.4
+* libgdk-pixbuf 2.0
+* libgnomecanvas 2
+* libgsl0
+* libtool
+* libxmu
+* swig
+* freeglut3
+* libgtk2.0
+* libjpeg
+* libpng 12
+* libglu1-mesa
+* libfltk 1.1
+* libltdl
+* libplayerc++ 3.0
 
 ```
-sudo apt-get install build-essential cmake git subversion python python-dev
-sudo apt-get install libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev
-sudo apt-get install libtool libxmu-dev swig freeglut3 freeglut3-dev libgtk2.0-dev
-sudo apt-get install libjpeg-dev libpng-dev libglu1-mesa-dev libfltk1.1 libfltk1.1-dev libltdl7 libltdl-dev libplayerc++ libplayerc++3.0-dev freeglut3 freeglut3-dev
+sudo apt-get install autotools-dev build-essential cmake git subversion python python-dev ruby ruby-dev libboost-thread1.54.0 libboost-thread1.54.0-dev libboost-signals1.54.0 libboost-signals1.54.0-dev libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev libjpeg-dev libtool libxmu-dev swig freeglut3 freeglut3-dev libfltk1.1 libfltk1.1-dev libgtk2.0-dev libltdl7 libltdl-dev libpng12-0 libpng12-dev libplayerc++3.0 libplayerc++3.0-dev libglu1-mesa libglu1-mesa-dev
 ```
 
 Now compile and install __Player__:
 
 ```
-svn co svn://svn.code.sf.net/p/playerstage/svn/code/player/trunk player
-cd player
+svn co svn://svn.code.sf.net/p/playerstage/svn/code/player/trunk player-svn
+cd player-svn
 mkdir build
 cd build
 cmake ..

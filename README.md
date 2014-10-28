@@ -39,7 +39,7 @@ For Player/Stage installation the following dependencies are required:
 * libplayerc++ 3.0
 
 ```
-sudo apt-get install autotools-dev build-essential cmake git subversion python python-dev ruby ruby-dev libboost-thread1.54.0 libboost-thread1.54.0-dev libboost-signals1.54.0 libboost-signals1.54.0-dev libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev libjpeg-dev libtool libxmu-dev swig freeglut3 freeglut3-dev libfltk1.1 libfltk1.1-dev libgtk2.0-dev libltdl7 libltdl-dev libpng12-0 libpng12-dev libplayerc++3.0 libplayerc++3.0-dev libglu1-mesa libglu1-mesa-dev
+sudo apt-get install autotools-dev build-essential cmake git subversion python python-dev ruby ruby-dev libboost-thread1.54.0 libboost-thread1.54-dev libboost-signals1.54.0 libboost-signals1.54-dev libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev libjpeg-dev libtool libxmu-dev swig freeglut3 freeglut3-dev libfltk1.1 libfltk1.1-dev libgtk2.0-dev libltdl7 libltdl-dev libpng12-0 libpng12-dev libplayerc++3.0 libplayerc++3.0-dev libglu1-mesa libglu1-mesa-dev
 ```
 
 Now compile and install __Player__:

@@ -90,7 +90,7 @@ namespace mae
 				                                 robotsNode[i][MAX_VELOCITY_NODE][1].as<double>());
 			}
 		}
-		
+			
 		World *result = new World;
 		
 		result->client_ = new PlayerClient(host, port);
@@ -99,6 +99,7 @@ namespace mae
 		result->simulation_ = new Simulation(simulationConfig);
 		
 		stockConfig.client = result->client_;
+		stockConfig.simulation = result->simulation_;
 		result->stock_ = new MarkerStock(stockConfig);
 		
 		result->robots_.resize(robotConfigs.size());

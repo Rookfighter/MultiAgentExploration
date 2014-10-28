@@ -10,7 +10,7 @@ namespace mae
 
 	Marker::Marker(const double p_range, const int p_id)
 		:id_(p_id), range_(p_range),
-		 inUse_(false), value_(0)
+		 inUse_(false), value_(0), drawRange_(true)
 	{
 	}
 	
@@ -29,9 +29,9 @@ namespace mae
 		value_ = p_value;
 	}
 	
-	void Marker::setInUse(const bool p_inUse)
+	void Marker::setDrawRange(const bool p_drawRange)
 	{
-		inUse_ = p_inUse;
+		drawRange_ = p_drawRange;
 		redraw();
 	}
 
@@ -58,6 +58,11 @@ namespace mae
 	bool Marker::isInUse() const
 	{
 		return inUse_;
+	}
+	
+	bool Marker::drawRange() const
+	{
+		return drawRange_;
 	}
 	
 	void Marker::incrementValue()

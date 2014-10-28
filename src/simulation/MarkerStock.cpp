@@ -7,14 +7,24 @@
 
 namespace mae
 {
-
+	
+	static void createRegularPolygon(const double p_radius, player_point_2d_t* p_corners, const int p_cornerCount) {
+		for(int i = 0; i < p_cornerCount; ++i) {
+			p_corners[i].px = p_radius * cos((2 * M_PI * i) / p_cornerCount);
+			p_corners[i].py = p_radius * sin((2 * M_PI * i) / p_cornerCount);
+		}
+	}
+	
 	MarkerStock::MarkerStock(const StockConfig &p_config)
 		:graphics_(p_config.client->getClient(), p_config.graphicsIndex),
 		 config_(p_config), markerPool_(), marker_(), currentID_(0)
 	{
 		LOG(DEBUG) << "Connected Graphics2DProxy: " << p_config.graphicsIndex << " (" << p_config.stockName << ")";
+		pose_ = config_.simulation->getPoseOf(config_.stockName);
+		LOG(DEBUG) << "Initialized stock pose " << pose_.str() << "(" << p_config.stockName << ")";
 		refill(config_.refillCount);
 		LOG(DEBUG) << "Initialized MarkerStock: " << config_.refillCount << " Marker (" << p_config.stockName << ")";
+		createRegularPolygon(1, rangePolygon_, rangePolygonCount_);
 	}
 
 	MarkerStock::~MarkerStock()
@@ -58,7 +68,7 @@ namespace mae
 		markerPool_.pop_back();
 		marker_.push_back(marker);
 		marker->setValue(0);
-		marker->setInUse(true);
+		marker->inUse_ = true;
 
 		return marker;
 	}
@@ -75,7 +85,7 @@ namespace mae
 		Marker *marker = (*it);
 		marker_.erase(it);
 		markerPool_.push_back(marker);
-		marker->setInUse(false);
+		marker->inUse_ = false;
 	}
 	
 	void MarkerStock::notify(void *p_data)
@@ -87,32 +97,53 @@ namespace mae
 	{
 		graphics_.Clear();
 		
+		graphics_.Color(0, 0, 0, 0);
+		
+		for(Marker *marker : marker_) {
+			if(marker->drawRange())
+				drawMarkerRange(marker);
+			drawMarkerCenter(marker);
+		}
+	}
+	
+	void MarkerStock::drawMarkerCenter(Marker *p_marker)
+	{
 		player_color_t markerColor;
 		
 		markerColor.red = 200;
 		markerColor.blue = 0;
 		markerColor.green = 0;
-		markerColor.alpha = 255;
+		markerColor.alpha = 0;
 		
-		graphics_.Color(200, 0, 0, 255);
+		player_point_2d_t points[4];
+		Vector2 relativePos = p_marker->getPose().position - pose_.position;
+		points[0].px = relativePos.x + MARKER_SIZE;
+		points[0].py = relativePos.y + MARKER_SIZE;
 		
-		for(Marker *marker : marker_) {
-			player_point_2d_t points[4];
-			
-			points[0].px = marker->getPose().position.x + MARKER_SIZE;
-			points[0].py = marker->getPose().position.y + MARKER_SIZE;
-			
-			points[1].px = marker->getPose().position.x - MARKER_SIZE;
-			points[1].py = marker->getPose().position.y + MARKER_SIZE;
-			
-			points[2].px = marker->getPose().position.x - MARKER_SIZE;
-			points[2].py = marker->getPose().position.y - MARKER_SIZE;
-			
-			points[3].px = marker->getPose().position.x + MARKER_SIZE;
-			points[3].py = marker->getPose().position.y - MARKER_SIZE;
-			
-			graphics_.DrawPolygon(points, 4, true, markerColor);
-		}
+		points[1].px = relativePos.x - MARKER_SIZE;
+		points[1].py = relativePos.y + MARKER_SIZE;
+		
+		points[2].px = relativePos.x - MARKER_SIZE;
+		points[2].py = relativePos.y - MARKER_SIZE;
+		
+		points[3].px = relativePos.x + MARKER_SIZE;
+		points[3].py = relativePos.y - MARKER_SIZE;
+		
+		graphics_.DrawPolygon(points, 4, true, markerColor);
 	}
-
+	
+	void MarkerStock::drawMarkerRange(Marker *p_marker)
+	{
+		Vector2 relativePos = p_marker->getPose().position - pose_.position;
+		player_color_t rangeColor;
+		
+		player_point_2d_t points[rangePolygonCount_];
+		for(int i = 0; i < rangePolygonCount_; ++i) {
+			points[i].px = p_marker->getRange() * rangePolygon_[i].px + relativePos.x;
+			points[i].py = p_marker->getRange() * rangePolygon_[i].py + relativePos.y;
+		}
+		
+		graphics_.DrawPolygon(points, rangePolygonCount_, false, rangeColor);
+	}
+	
 }

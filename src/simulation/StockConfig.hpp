@@ -2,7 +2,7 @@
 #define MAE_STOCK_CONFIG_HPP
 
 #include <string>
-#include "simulation/PlayerClient.hpp"
+#include "simulation/Simulation.hpp"
 
 namespace mae
 {
@@ -11,6 +11,7 @@ namespace mae
 	{
 	public:
 		PlayerClient *client;
+		Simulation *simulation;
 		int graphicsIndex;
 		std::string stockName;
 		double markerRange;

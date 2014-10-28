@@ -56,5 +56,5 @@ define marker model
 
     obstacle_return 0 
     
-    marker_range()
+    #marker_range()
 )

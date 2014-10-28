@@ -77,7 +77,7 @@ namespace mae
 		// TODO - is this correct simulated -- distance has error, so is it ok
 		// to use absolutePosition to determine angle offset?
 		Vector2 distance = getDistanceTo(p_marker);
-		double result = atan2(distance.y, distance.x) - simulation_->getPoseOf(robotName_).yaw;
+		double result = atan2(distance.y, distance.x) - normalizeRadian(simulation_->getPoseOf(robotName_).yaw);
 		result = normalizeRadian(result);
 		return result;
 	}

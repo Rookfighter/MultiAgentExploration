@@ -3,7 +3,7 @@
 #include "algorithm/UpdatingValue.hpp"
 #include "common/Math.hpp"
 
-#define MAX_ANGLE_DIFF (M_PI / 2) // 90°
+#define MAX_ANGLE_DIFF (M_PI / 3) // 60°
 
 namespace mae
 {
@@ -45,10 +45,12 @@ namespace mae
 		std::vector<Marker*> markerInRangeTmp = properties_.robot->getMarkerSensor().getMarkerInRange();
 
 		if(properties_.currentMarker == NULL) {
+			LOG(DEBUG) << "-- current Marker is NULL";
 			markerInRange_ = markerInRangeTmp;
 		} else {
 			markerInRange_.reserve(markerInRangeTmp.size() - 1);
 			for(Marker *marker : markerInRangeTmp) {
+				LOG(DEBUG) << "-- comparing IDs: current=" << properties_.currentMarker->getID() << " toComp=" << marker->getID();
 				if(properties_.currentMarker->getID() != marker->getID())
 					markerInRange_.push_back(marker);
 			}
@@ -59,12 +61,8 @@ namespace mae
 	{
 		size_t markerCount = markerInRange_.size();
 
-		if(markerCount == 0) {
+		if(markerCount < 2) {
 			properties_.angleToTurn = 0;
-			return true;
-		} else if(markerCount == 1) {
-			properties_.angleToTurn = properties_.robot->getMarkerSensor().getAngleTo(markerInRange_[0])
-			                          + MAX_ANGLE_DIFF;
 			return true;
 		}
 
@@ -83,7 +81,7 @@ namespace mae
 		double angleDiffs[markerCount];
 		for(int i = 0; i < markerCount; ++i) {
 			int next = (i + 1) % markerCount;
-			angleDiffs[i] = markerAngleInRange[i].angle - markerAngleInRange[next].angle;
+			angleDiffs[i] = markerAngleInRange[next].angle - markerAngleInRange[i].angle;
 		}
 
 		// find the max difference

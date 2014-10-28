@@ -17,6 +17,7 @@ namespace mae
 		double angleToTarget_;
 		
 		void updateGeometry();
+		bool reachedDirection();
 		bool reachedTarget();
 		bool movedEnough();
 		void turnToMarker();

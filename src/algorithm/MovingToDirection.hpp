@@ -15,10 +15,11 @@ namespace mae
 		Pose lastPose_;
 		double movedDistance_;
 		double turnedAngle_;
+		bool reachedDirection_;
 		
 		void updateGeometry();
-		bool reachedTarget();
 		bool reachedDirection();
+		bool movedEnough();
 		void move();
 		void turn();
 	public:

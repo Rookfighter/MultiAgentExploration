@@ -5,8 +5,8 @@
 #include "common/Math.hpp"
 
 /* avoid moving in a direction that is farer
- * away than this. */
-#define MAX_ANGLE_DIFF (M_PI / 18) // 10°
+ * away than this (+/-). */
+#define ANGLE_EPS (M_PI / 36) // 5°
 
 /* determines how much of the max angular
  * velocity is used */
@@ -14,7 +14,7 @@
 
 /* determines how much of marker range is
  * enough to be close enough*/
-#define DISTANCE_FACTOR 0.05
+#define DISTANCE_EPS 0.05
 
 /* determines how much fo marker range should
  * be moved until attempt to reach marker is
@@ -48,9 +48,9 @@ namespace mae
 			// moved far, but did not reach marker
 			return new DroppingMarker(properties_);
 		}
-		
+
 		// no target reached, we still have to move
-		if(fabs(angleToTarget_) > MAX_ANGLE_DIFF)
+		if(!reachedDirection())
 			turnToMarker();
 		else
 			moveTowardsMarker();
@@ -69,15 +69,23 @@ namespace mae
 		angleToTarget_ = properties_.robot->getMarkerSensor().getAngleTo(properties_.nextMarker);
 	}
 
+	bool MovingToMarker::reachedDirection()
+	{
+		return sameDouble(angleToTarget_,
+		                  0,
+		                  ANGLE_EPS);
+	}
+
 	bool MovingToMarker::reachedTarget()
 	{
-		return properties_.robot->getMarkerSensor().getDistanceTo(properties_.nextMarker).length() <=
-		       (DISTANCE_FACTOR * properties_.nextMarker->getRange());
+		return sameDouble(properties_.robot->getMarkerSensor().getDistanceTo(properties_.nextMarker).length(),
+		                  properties_.nextMarker->getRange(),
+		                  DISTANCE_EPS);
 	}
 
 	bool MovingToMarker::movedEnough()
 	{
-		return movedDistance_ >= (MOVEMENT_FACTOR * properties_.nextMarker->getRange());
+		return movedDistance_ >= MOVEMENT_FACTOR * properties_.nextMarker->getRange();
 	}
 
 	void MovingToMarker::turnToMarker()

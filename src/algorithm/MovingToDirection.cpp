@@ -9,7 +9,10 @@
 
 /* determines how much of marker range should
  * be moved until we place new marker */
-#define MOVEMENT_FACTOR 0.9
+#define MOVEMENT_FACTOR 0.8
+
+/* precision of turn angle check */
+#define TURN_EPS ((M_PI / 180) * 5) // precision 5°
 
 namespace mae
 {
@@ -17,7 +20,7 @@ namespace mae
 	MovingToDirection::MovingToDirection(const AntStateProperties &p_properties)
 		: AntState(p_properties), wander_(*p_properties.robot),
 		  lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
-		  turnedAngle_(0)
+		  turnedAngle_(0), reachedDirection_(false)
 	{
 		LOG(DEBUG) << "New MovingToDirection state.";
 		properties_.angleToTurn = normalizeRadian(properties_.angleToTurn);
@@ -30,18 +33,21 @@ namespace mae
 	AntState* MovingToDirection::update()
 	{
 		updateGeometry();
-		if(reachedTarget())
-			return new DroppingMarker(properties_);
-		else if(reachedDirection())
-			move();
-		else {
-			LOG(DEBUG) << "Angle to turn: " << properties_.angleToTurn << " turned angle: " << turnedAngle_;
+		if(!reachedDirection_)
+			reachedDirection_ = reachedDirection();
+		
+		if(!reachedDirection_) {
 			turn();
+		} else {
+			if(movedEnough())
+				return new DroppingMarker(properties_);
+			else
+				move();
 		}
-			
+
 		return NULL;
 	}
-	
+
 	void MovingToDirection::updateGeometry()
 	{
 		// get moved distance since last call
@@ -50,23 +56,25 @@ namespace mae
 		turnedAngle_ += normalizeRadian(currentPose.yaw - lastPose_.yaw);
 		lastPose_ = currentPose;
 	}
-
-	bool MovingToDirection::reachedTarget()
-	{
-		assert(properties_.currentMarker != NULL);
-		return movedDistance_ >= (MOVEMENT_FACTOR * properties_.currentMarker->getRange());
-	}
 	
 	bool MovingToDirection::reachedDirection()
 	{
-		return fabs(turnedAngle_) >= fabs(properties_.angleToTurn);
+		return sameDouble(fabs(turnedAngle_),
+		                  fabs(properties_.angleToTurn),
+		                  TURN_EPS);
 	}
 	
+	bool MovingToDirection::movedEnough()
+	{
+		assert(properties_.currentMarker != NULL);
+		return movedDistance_ >= MOVEMENT_FACTOR * properties_.currentMarker->getRange();
+	}
+
 	void MovingToDirection::move()
 	{
 		wander_.step();
 	}
-	
+
 	void MovingToDirection::turn()
 	{
 		double angularVelocity;
@@ -74,7 +82,7 @@ namespace mae
 			angularVelocity = properties_.robot->getMotor().getMinVelocity().angular * TURN_FACTOR;
 		else
 			angularVelocity = properties_.robot->getMotor().getMaxVelocity().angular * TURN_FACTOR;
-			
+
 		properties_.robot->getMotor().setVelocity(Velocity(0, angularVelocity));
 	}
 

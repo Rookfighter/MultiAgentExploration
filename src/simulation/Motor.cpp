@@ -54,7 +54,7 @@ namespace mae
 	
 	const Velocity& Motor::getMinVelocity() const
 	{
-		return maxVelocity_;
+		return minVelocity_;
 	}
 
 

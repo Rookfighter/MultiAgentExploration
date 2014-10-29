@@ -12,6 +12,9 @@ namespace mae
 	{
 	private:
 		static const int rangePolygonCount_ = 12;
+		static player_color_t BLACK;
+		static player_color_t RED;
+		static player_color_t GREEN;
 		player_point_2d_t rangePolygon_[rangePolygonCount_];
 	
 		PlayerCc::Graphics2dProxy graphics_;

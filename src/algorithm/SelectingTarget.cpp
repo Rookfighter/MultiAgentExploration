@@ -30,15 +30,17 @@ namespace mae
 	AntState* SelectingTarget::update()
 	{
 		watch_.start();
+		if(properties_.nextMarker != NULL)
+			properties_.nextMarker->setHighlighted(false);
 		properties_.nextMarker = NULL;
 
 		getMarkerInRange();
 		if(!checkBlankSpace()) {
 			getMarkerTarget();
+			properties_.nextMarker->setHighlighted(true);
 		}
 		
 		watch_.stop();
-		
 		LOG(DEBUG) << "-- " << watch_.strMsec();
 		
 		return new UpdatingValue(properties_);

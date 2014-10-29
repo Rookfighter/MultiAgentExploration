@@ -13,8 +13,8 @@ namespace mae
 		
 		Pose lastPose_;
 		double movedDistance_;
-		
 		double angleToTarget_;
+		bool reachedDirection_;
 		
 		void updateGeometry();
 		bool reachedDirection();

@@ -16,6 +16,7 @@ namespace mae
 		double range_;
 		bool inUse_;
 		bool drawRange_;
+		bool highlighted_;
 		int value_;
 		
 		void redraw();
@@ -26,6 +27,7 @@ namespace mae
 		void setPose(const Pose& p_pose);
 		void setValue(const int p_value);
 		void setDrawRange(const bool p_drawRange);
+		void setHighlighted(const bool p_highlighted);
 		
 		int getID() const;
 		const Pose& getPose() const;
@@ -33,6 +35,7 @@ namespace mae
 		int getValue() const;
 		bool isInUse() const;
 		bool drawRange() const;
+		bool isHighlighted() const;
 		
 		void incrementValue();
 		

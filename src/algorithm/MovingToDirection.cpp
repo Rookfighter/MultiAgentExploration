@@ -20,10 +20,11 @@ namespace mae
 	MovingToDirection::MovingToDirection(const AntStateProperties &p_properties)
 		: AntState(p_properties), wander_(*p_properties.robot),
 		  lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
-		  turnedAngle_(0), reachedDirection_(false)
+		  reachedDirection_(false)
 	{
 		LOG(DEBUG) << "New MovingToDirection state.";
-		properties_.angleToTurn = normalizeRadian(properties_.angleToTurn);
+		LOG(DEBUG) << "-- angleToTurn= " << p_properties.angleToTurn;
+		remainingToTurn_ = normalizeRadian(properties_.angleToTurn);
 	}
 
 	MovingToDirection::~MovingToDirection()
@@ -54,14 +55,14 @@ namespace mae
 		// get moved distance since last call
 		Pose currentPose = properties_.robot->getMotor().getPose();
 		movedDistance_ += (currentPose.position - lastPose_.position).length();
-		turnedAngle_ += normalizeRadian(currentPose.yaw - lastPose_.yaw);
+		remainingToTurn_ -= normalizeRadian(currentPose.yaw - lastPose_.yaw);
 		lastPose_ = currentPose;
 	}
 	
 	bool MovingToDirection::reachedDirection()
 	{
-		return sameDouble(fabs(turnedAngle_),
-		                  fabs(properties_.angleToTurn),
+		return sameDouble(remainingToTurn_,
+		                  0,
 		                  TURN_EPS);
 	}
 	
@@ -79,11 +80,11 @@ namespace mae
 	void MovingToDirection::turn()
 	{
 		double angularVelocity;
-		if(properties_.angleToTurn < 0)
+		if(remainingToTurn_ < 0)
 			angularVelocity = properties_.robot->getMotor().getMinVelocity().angular * TURN_FACTOR;
 		else
 			angularVelocity = properties_.robot->getMotor().getMaxVelocity().angular * TURN_FACTOR;
-
+		
 		properties_.robot->getMotor().setVelocity(Velocity(0, angularVelocity));
 	}
 

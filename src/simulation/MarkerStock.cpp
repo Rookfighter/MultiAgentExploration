@@ -7,6 +7,10 @@
 
 namespace mae
 {
+	/* a,r,g,b */
+	player_color_t MarkerStock::BLACK = {0,0,0,0};
+	player_color_t MarkerStock::RED = {0,200,0,0};
+	player_color_t MarkerStock::GREEN = {0,100,200,100};
 	
 	static void createRegularPolygon(const double p_radius, player_point_2d_t* p_corners, const int p_cornerCount) {
 		for(int i = 0; i < p_cornerCount; ++i) {
@@ -97,9 +101,11 @@ namespace mae
 	{
 		graphics_.Clear();
 		
-		graphics_.Color(0, 0, 0, 0);
-		
 		for(Marker *marker : marker_) {
+			if(marker->isHighlighted())
+				graphics_.Color(GREEN);
+			else
+				graphics_.Color(BLACK);
 			if(marker->drawRange())
 				drawMarkerRange(marker);
 			drawMarkerCenter(marker);
@@ -108,13 +114,6 @@ namespace mae
 	
 	void MarkerStock::drawMarkerCenter(Marker *p_marker)
 	{
-		player_color_t markerColor;
-		
-		markerColor.red = 200;
-		markerColor.blue = 0;
-		markerColor.green = 0;
-		markerColor.alpha = 0;
-		
 		player_point_2d_t points[4];
 		Vector2 relativePos = p_marker->getPose().position - pose_.position;
 		points[0].px = relativePos.x + MARKER_SIZE;
@@ -129,13 +128,12 @@ namespace mae
 		points[3].px = relativePos.x + MARKER_SIZE;
 		points[3].py = relativePos.y - MARKER_SIZE;
 		
-		graphics_.DrawPolygon(points, 4, true, markerColor);
+		graphics_.DrawPolygon(points, 4, true, RED);
 	}
 	
 	void MarkerStock::drawMarkerRange(Marker *p_marker)
 	{
 		Vector2 relativePos = p_marker->getPose().position - pose_.position;
-		player_color_t rangeColor;
 		
 		player_point_2d_t points[rangePolygonCount_];
 		for(int i = 0; i < rangePolygonCount_; ++i) {
@@ -143,7 +141,7 @@ namespace mae
 			points[i].py = p_marker->getRange() * rangePolygon_[i].py + relativePos.y;
 		}
 		
-		graphics_.DrawPolygon(points, rangePolygonCount_, false, rangeColor);
+		graphics_.DrawPolygon(points, rangePolygonCount_, false, RED);
 	}
 	
 }

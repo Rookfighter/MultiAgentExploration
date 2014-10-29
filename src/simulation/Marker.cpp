@@ -10,7 +10,7 @@ namespace mae
 
 	Marker::Marker(const double p_range, const int p_id)
 		:id_(p_id), range_(p_range),
-		 inUse_(false), value_(0), drawRange_(true)
+		 inUse_(false), value_(0), drawRange_(true), highlighted_(false)
 	{
 	}
 	
@@ -33,6 +33,17 @@ namespace mae
 	{
 		drawRange_ = p_drawRange;
 		redraw();
+	}
+	
+	void Marker::setHighlighted(const bool p_highlighted)
+	{
+		highlighted_ = p_highlighted;
+		redraw();
+	}
+	
+	bool Marker::isHighlighted() const
+	{
+		return highlighted_;
 	}
 
 	int Marker::getID() const

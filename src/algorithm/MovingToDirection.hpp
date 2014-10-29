@@ -14,7 +14,7 @@ namespace mae
 		
 		Pose lastPose_;
 		double movedDistance_;
-		double turnedAngle_;
+		double remainingToTurn_;
 		bool reachedDirection_;
 		
 		void updateGeometry();

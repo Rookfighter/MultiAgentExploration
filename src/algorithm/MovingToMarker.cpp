@@ -14,7 +14,7 @@
 
 /* determines how much of marker range is
  * enough to be close enough*/
-#define DISTANCE_EPS 0.05
+#define DISTANCE_EPS 0.20
 
 /* determines how much fo marker range should
  * be moved until attempt to reach marker is
@@ -29,6 +29,7 @@ namespace mae
 		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0)
 	{
 		LOG(DEBUG) << "New MovingToMarker state.";
+		
 	}
 
 	MovingToMarker::~MovingToMarker()
@@ -50,12 +51,14 @@ namespace mae
 			properties_.robot->getMotor().stop();
 			return new DroppingMarker(properties_);
 		}
-
+		
+		if(!reachedDirection_)
+			reachedDirection_ = reachedDirection();
 		// no target reached, we still have to move
-		if(!reachedDirection())
-			turnToMarker();
-		else
+		if(reachedDirection_)
 			moveTowardsMarker();
+		else
+			turnToMarker();
 
 		return NULL;
 	}
@@ -81,7 +84,7 @@ namespace mae
 	bool MovingToMarker::reachedTarget()
 	{
 		return sameDouble(properties_.robot->getMarkerSensor().getDistanceTo(properties_.nextMarker).length(),
-		                  properties_.nextMarker->getRange(),
+		                  0,
 		                  DISTANCE_EPS);
 	}
 

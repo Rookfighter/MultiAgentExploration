@@ -11,6 +11,7 @@ namespace mae
 	{
 	private:
 		std::string name_;
+		Pose absolutePose_;
 		
 		Motor motor_;
 		Ranger ranger_;
@@ -33,6 +34,8 @@ namespace mae
 		std::string getName() const;
 
 		Marker* dropMarker();
+		
+		void update();
 	};
 
 }

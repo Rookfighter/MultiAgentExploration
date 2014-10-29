@@ -1,13 +1,13 @@
+#include <easylogging++.h>
 #include "test/NodeCountingTest.hpp"
 
 namespace mae
 {
 
-	NodeCountingTest::NodeCountingTest(PlayerClient *p_client,
-	                                   ExplorationBot *p_robot,
-	                                   Simulation *p_simulation,
-	                                   MarkerStock *p_stock)
-		:client_(p_client), nodeCounting_(p_robot,p_simulation,p_stock)
+	NodeCountingTest::NodeCountingTest(World *p_world,
+	                                   const std::string &p_robotName)
+		:world_(p_world),
+		 nodeCounting_(p_world->getRobot(p_robotName), p_world->getSimulation(), p_world->getStock())
 	{
 	}
 
@@ -18,8 +18,11 @@ namespace mae
 	void NodeCountingTest::execute()
 	{
 		while(true) {
-			client_->update();
+			world_->update();
+			watch_.start();
 			nodeCounting_.step();
+			watch_.stop();
+			//LOG(INFO) << "Step: " << watch_.str();
 		}
 	}
 

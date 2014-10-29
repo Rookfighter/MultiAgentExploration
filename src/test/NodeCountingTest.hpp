@@ -1,20 +1,21 @@
 #ifndef MAE_NODE_COUNTING_TEST_HPP
 #define MAE_NODE_COUNTING_TEST_HPP
 
+#include "simulation/World.hpp"
 #include "algorithm/NodeCounting.hpp"
+#include "common/StopWatch.hpp"
 
 namespace mae
 {
 	class NodeCountingTest
 	{
 	private:
-		PlayerClient *client_;
+		World *world_;
 		NodeCounting nodeCounting_;
+		StopWatch watch_;
 	public:
-		NodeCountingTest(PlayerClient *p_client,
-		                 ExplorationBot *p_robot,
-		                 Simulation *p_simulation,
-		                 MarkerStock *p_stock);
+		NodeCountingTest(World *p_world,
+		                 const std::string &p_robotName);
 		~NodeCountingTest();
 
 		void execute();

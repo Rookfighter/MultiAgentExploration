@@ -6,9 +6,14 @@
 
 namespace mae
 {
-	static int msecOf(const struct timeval *p_tv)
+	static unsigned int msecOf(const struct timeval *p_tv)
 	{
 		return p_tv->tv_sec * 1000 + p_tv->tv_usec / 1000;
+	}
+	
+	static unsigned long usecOf(const struct timeval *p_tv)
+	{
+		return p_tv->tv_sec * 1000000 + p_tv->tv_usec;
 	}
 
 	struct timeval get_time_diff(const struct timeval *begin, const struct timeval *end)
@@ -67,26 +72,48 @@ namespace mae
 		}
 	}
 
-	int StopWatch::getLastMsec() const
+	unsigned int StopWatch::getLastMsec() const
 	{
 		return msecOf(&last_);
 	}
 
-	int StopWatch::getWorstMsec() const
+	unsigned int StopWatch::getWorstMsec() const
 	{
 		return msecOf(&worst_);
 	}
 
-	int StopWatch::getBestMsec() const
+	unsigned int StopWatch::getBestMsec() const
 	{
 		return msecOf(&best_);
 	}
 	
-	std::string StopWatch::str() const
+	unsigned long StopWatch::getLastUsec() const
+	{
+		return usecOf(&last_);
+	}
+	unsigned long StopWatch::getWorstUsec() const
+	{
+		return usecOf(&worst_);
+	}
+	
+	unsigned long StopWatch::getBestUsec() const
+	{
+		return usecOf(&best_);
+	}
+	
+	std::string StopWatch::strMsec() const
 	{
 		std::stringstream ss;
 		
 		ss << "Last=" << getLastMsec() << "ms Best=" << getBestMsec() << "ms Worst=" << getWorstMsec() << "ms";
+		return ss.str();
+	}
+	
+	std::string StopWatch::strUsec() const
+	{
+		std::stringstream ss;
+		
+		ss << "Last=" << getLastUsec() << "us Best=" << getBestUsec() << "us Worst=" << getWorstUsec() << "us";
 		return ss.str();
 	}
 

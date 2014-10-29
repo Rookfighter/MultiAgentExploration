@@ -14,6 +14,10 @@ set(CMAKE_CXX_FLAGS "-std=c++11")
 add_definitions( -DBOOST_SIGNALS_NO_DEPRECATION_WARNING )
 include_directories("src" "${EASYLOGGING++_INCLUDE_DIR}" "${YAMLCPP_INCLUDE_DIR}")
  
+if( ${RELEASE} )
+    add_definitions( -DNDEBUG )
+endif( ${RELEASE} )
+
 # These files include macros that make building against Player easier. They provide
 # the PLAYER_ADD* macros
 include(UsePlayerC++)

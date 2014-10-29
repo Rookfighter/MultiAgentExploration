@@ -22,6 +22,8 @@ namespace mae
 		void setVelocity(const Velocity &p_velocity);
 		Velocity getVelocity() const;
 		
+		void stop();
+		
 		const Velocity& getMaxVelocity() const;
 		const Velocity& getMinVelocity() const;
 	};

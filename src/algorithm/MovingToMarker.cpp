@@ -42,10 +42,12 @@ namespace mae
 		if(reachedTarget()) {
 			// reached the marker, now select next target
 			properties_.currentMarker = properties_.nextMarker;
+			properties_.robot->getMotor().stop();
 			return new SelectingTarget(properties_);
 		}
 		if(movedEnough()) {
 			// moved far, but did not reach marker
+			properties_.robot->getMotor().stop();
 			return new DroppingMarker(properties_);
 		}
 

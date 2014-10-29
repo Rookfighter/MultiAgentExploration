@@ -18,7 +18,8 @@ namespace mae
 
 	AntState* InitialAntState::update()
 	{
-		std::vector<Marker*> markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
+		std::list<Marker*> markerInRange;
+		properties_.robot->getMarkerSensor().getMarkerInRange(markerInRange);
 		if(markerInRange.empty())
 			return new DroppingMarker(properties_);
 		else {

@@ -3,9 +3,9 @@
 namespace mae
 {
 
-	HeisenbergTest::HeisenbergTest(PlayerClient &p_client,
+	HeisenbergTest::HeisenbergTest(World &p_world,
 	                               ExplorationBot &p_bot)
-		:client_(p_client), bot_(p_bot), heisenberg_(bot_)
+		:world_(p_world), heisenberg_(p_bot)
 	{
 
 	}
@@ -18,7 +18,7 @@ namespace mae
 	void HeisenbergTest::execute()
 	{
 		while(true) {
-			client_.update();
+			world_.update();
 			heisenberg_.execute();
 		}
 	}

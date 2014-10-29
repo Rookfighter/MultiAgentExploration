@@ -39,9 +39,10 @@ namespace mae
 		if(!reachedDirection_) {
 			turn();
 		} else {
-			if(movedEnough())
+			if(movedEnough()) {
+				properties_.robot->getMotor().stop();
 				return new DroppingMarker(properties_);
-			else
+			} else
 				move();
 		}
 

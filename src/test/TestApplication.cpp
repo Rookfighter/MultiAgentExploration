@@ -12,18 +12,17 @@ namespace mae
 		                           *world_->getSimulation(),
 		                           *world_->getStock(),
 		                           *world_->getRobot("pioneer1"));
-		heisenbergTest_ = new HeisenbergTest(*world_->getClient(),
+		heisenbergTest_ = new HeisenbergTest(*world_,
 		                                     *world_->getRobot("pioneer1"));
-		wanderTest_ = new WanderTest(*world_->getClient(),
+		wanderTest_ = new WanderTest(*world_,
 		                             *world_->getRobot("pioneer1"));
-		ncTest_ = new NodeCountingTest(world_->getClient(),
-		                               world_->getRobot("pioneer1"),
-		                               world_->getSimulation(),
-		                               world_->getStock());
+		ncTest_ = new NodeCountingTest(world_, "pioneer1");
+		performanceTest_ = new PerformanceTest();
 	}
 
 	TestApplication::~TestApplication()
 	{
+		delete performanceTest_;
 		delete ncTest_;
 		delete heisenbergTest_;
 		delete wanderTest_;

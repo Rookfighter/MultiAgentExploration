@@ -1,7 +1,7 @@
 #ifndef MAE_WANDER_TEST_HPP
 #define MAE_WANDER_TEST_HPP
 
-#include "simulation/ExplorationBot.hpp"
+#include "simulation/World.hpp"
 #include "algorithm/Wander.hpp"
 
 namespace mae
@@ -10,11 +10,10 @@ namespace mae
 	class WanderTest
 	{
 	private:
-		PlayerClient &client_;
-		ExplorationBot &robot_;
+		World &world_;
 		Wander wander_;
 	public:
-		WanderTest(PlayerClient &p_client,
+		WanderTest(World &p_world,
 		           ExplorationBot &p_bot);
 		~WanderTest();
 

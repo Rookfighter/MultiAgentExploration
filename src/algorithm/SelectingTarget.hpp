@@ -2,6 +2,7 @@
 #define MAE_SELECTING_TARGET_HPP
 
 #include "algorithm/AntState.hpp"
+#include "common/StopWatch.hpp"
 
 namespace mae
 {
@@ -9,7 +10,9 @@ namespace mae
 	class SelectingTarget : public AntState
 	{
 	private:
-		std::vector<Marker*> markerInRange_;
+		std::list<Marker*> markerInRange_;
+		
+		StopWatch watch_;
 	
 		void getMarkerInRange();
 		bool checkBlankSpace();
@@ -19,7 +22,6 @@ namespace mae
 		~SelectingTarget();
 		
 		AntState* update();
-
 	};
 
 }

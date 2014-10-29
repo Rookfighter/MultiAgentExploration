@@ -47,4 +47,11 @@ namespace mae
 		
 		return NULL;
 	}
+	
+	void World::update()
+	{
+		client_->update();
+		for(ExplorationBot *robot: robots_)
+			robot->update();
+	}
 }

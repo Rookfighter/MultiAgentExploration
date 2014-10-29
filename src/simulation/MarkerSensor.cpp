@@ -3,16 +3,9 @@
 
 namespace mae
 {
-	MarkerMeasurement::MarkerMeasurement()
-	{
-	}
-
-	MarkerMeasurement::~MarkerMeasurement()
-	{
-	}
 
 	MarkerSensor::MarkerSensor(const RobotConfig& p_config)
-		:simulation_(p_config.simulation), stock_(p_config.stock), robotName_(p_config.name)
+		:simulation_(p_config.simulation), stock_(p_config.stock), robotPose_()
 	{
 
 	}
@@ -21,33 +14,21 @@ namespace mae
 	{
 
 	}
-
-	std::vector<Marker*> MarkerSensor::getMarkerInRange()
+	
+	void MarkerSensor::setRobotPose(const Pose &p_pose)
 	{
-		std::vector<Marker*> result;
-		result.reserve(stock_->getMarker().size());
-
-		for(Marker *marker : stock_->getMarker()) {
-			Vector2 distance = getDistanceTo(marker);
-			if(distance.lengthSQ() <= marker->getRange() * marker->getRange())
-				result.push_back(marker);
-		}
-
-		return result;
+		robotPose_ = p_pose;
 	}
 
-	std::vector<MarkerMeasurement> MarkerSensor::measureMarkerInRange()
+	void MarkerSensor::getMarkerInRange(std::list<Marker*> &p_result)
 	{
-		std::vector<Marker*> markerInRange  = getMarkerInRange();
-		std::vector<MarkerMeasurement> result(markerInRange.size());
-
-		for(int i = 0; i < markerInRange.size(); ++i) {
-			result[i].marker = markerInRange[i];
-			result[i].distance = getDistanceTo(result[i].marker);
-			result[i].angleDiff = getAngleTo(result[i].marker);
+		Vector2 distance;
+		
+		for(Marker *marker : stock_->getMarker()) {
+			distance = marker->getPose().position - robotPose_.position;
+			if(distance.lengthSQ() <= marker->getRange() * marker->getRange())
+				p_result.push_back(marker);
 		}
-
-		return result;
 	}
 
 	Marker* MarkerSensor::getClosestMarker()
@@ -68,7 +49,7 @@ namespace mae
 	{
 		// TODO : implement distance to marker direction with some derivation
 		Vector2 result;
-		result = p_marker->getPose().position - simulation_->getPoseOf(robotName_).position;
+		result = p_marker->getPose().position - robotPose_.position;
 		return result;
 	}
 
@@ -77,7 +58,7 @@ namespace mae
 		// TODO - is this correct simulated -- distance has error, so is it ok
 		// to use absolutePosition to determine angle offset?
 		Vector2 distance = getDistanceTo(p_marker);
-		double result = atan2(distance.y, distance.x) - normalizeRadian(simulation_->getPoseOf(robotName_).yaw);
+		double result = atan2(distance.y, distance.x) - normalizeRadian(robotPose_.yaw);
 		result = normalizeRadian(result);
 		return result;
 	}

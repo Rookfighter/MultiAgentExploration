@@ -24,7 +24,7 @@ namespace mae
 
 	Pose ExplorationBot::getAbsolutePose()
 	{
-		return simulation_->getPoseOf(name_);
+		return absolutePose_;
 	}
 
 	Motor& ExplorationBot::getMotor()
@@ -55,5 +55,11 @@ namespace mae
 		marker->setPose(markerPose);
 		
 		return marker;
+	}
+	
+	void ExplorationBot::update()
+	{
+		absolutePose_ = simulation_->getPoseOf(name_);
+		markerSensor_.setRobotPose(absolutePose_);
 	}
 }

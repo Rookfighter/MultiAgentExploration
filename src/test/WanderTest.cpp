@@ -3,9 +3,9 @@
 namespace mae
 {
 
-	WanderTest::WanderTest(PlayerClient &p_client,
+	WanderTest::WanderTest(World &p_world,
 	                       ExplorationBot &p_bot)
-		:client_(p_client), robot_(p_bot), wander_(robot_)
+		:world_(p_world), wander_(p_bot)
 	{
 	}
 
@@ -17,7 +17,7 @@ namespace mae
 	void WanderTest::execute()
 	{
 		while(true) {
-			client_.update();
+			world_.update();
 			wander_.step();
 		}
 	}

@@ -22,11 +22,16 @@ namespace mae
 		void start();
 		void stop();
 		
-		int getLastMsec() const;
-		int getWorstMsec() const;
-		int getBestMsec() const;
+		unsigned int getLastMsec() const;
+		unsigned int getWorstMsec() const;
+		unsigned int getBestMsec() const;
 		
-		std::string str() const;
+		unsigned long getLastUsec() const;
+		unsigned long getWorstUsec() const;
+		unsigned long getBestUsec() const;
+		
+		std::string strMsec() const;
+		std::string strUsec() const;
 	};
 
 }

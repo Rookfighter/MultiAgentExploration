@@ -41,6 +41,11 @@ namespace mae
 		result.angular = motor_.GetYawSpeed();
 		return result;
 	}
+	
+	void Motor::stop()
+	{
+		setVelocity(Velocity(0,0));
+	}
 
 	const Velocity& Motor::getMaxVelocity() const
 	{

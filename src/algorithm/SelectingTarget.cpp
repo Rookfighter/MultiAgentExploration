@@ -9,7 +9,7 @@ namespace mae
 {
 	typedef struct {
 		double angle;
-		int index;
+		Marker* marker;
 	} MarkerAngle;
 
 	static bool compMarkerAngle(const MarkerAngle &a, const MarkerAngle &b)
@@ -29,31 +29,33 @@ namespace mae
 
 	AntState* SelectingTarget::update()
 	{
+		watch_.start();
 		properties_.nextMarker = NULL;
 
 		getMarkerInRange();
 		if(!checkBlankSpace()) {
 			getMarkerTarget();
 		}
-
+		
+		watch_.stop();
+		
+		LOG(DEBUG) << "-- " << watch_.strMsec();
+		
 		return new UpdatingValue(properties_);
 	}
 
 	void SelectingTarget::getMarkerInRange()
 	{
 		markerInRange_.clear();
-		std::vector<Marker*> markerInRangeTmp = properties_.robot->getMarkerSensor().getMarkerInRange();
+		properties_.robot->getMarkerSensor().getMarkerInRange(markerInRange_);
 
-		if(properties_.currentMarker == NULL) {
-			LOG(DEBUG) << "-- current Marker is NULL";
-			markerInRange_ = markerInRangeTmp;
-		} else {
-			markerInRange_.reserve(markerInRangeTmp.size() - 1);
-			for(Marker *marker : markerInRangeTmp) {
-				LOG(DEBUG) << "-- comparing IDs: current=" << properties_.currentMarker->getID() << " toComp=" << marker->getID();
-				if(properties_.currentMarker->getID() != marker->getID())
-					markerInRange_.push_back(marker);
+		if(properties_.currentMarker != NULL) {
+			std::list<Marker*>::iterator it;
+			for(it = markerInRange_.begin(); it != markerInRange_.end(); ++it) {
+				if(properties_.currentMarker->getID() == (*it)->getID())
+					break;
 			}
+			markerInRange_.erase(it);
 		}
 	}
 
@@ -64,16 +66,22 @@ namespace mae
 		if(markerCount < 2) {
 			properties_.angleToTurn = 0;
 			return true;
+		} else if(markerCount >= 4) {
+			return false;
 		}
-
+		int idx;
+		
 		// get angles to all markers in range
 		// relative to robot yaw
 		MarkerAngle markerAngleInRange[markerCount];
-		for(int i = 0; i < markerCount; ++i) {
-			double angle = properties_.robot->getMarkerSensor().getAngleTo(markerInRange_[i]);
-			markerAngleInRange[i].angle = angle;
-			markerAngleInRange[i].index = i;
+		idx = 0;
+		for(Marker *marker : markerInRange_) {
+			double angle = properties_.robot->getMarkerSensor().getAngleTo(marker);
+			markerAngleInRange[idx].angle = angle;
+			markerAngleInRange[idx].marker = marker;
+			idx++;
 		}
+		
 		// sort them so we have neighbouring markers next to each other
 		std::sort(markerAngleInRange, markerAngleInRange + markerCount, compMarkerAngle);
 
@@ -83,14 +91,14 @@ namespace mae
 			int next = (i + 1) % markerCount;
 			angleDiffs[i] = markerAngleInRange[next].angle - markerAngleInRange[i].angle;
 		}
-
+		
 		// find the max difference
 		int maxDiff = -1;
 		for(int i = 0; i < markerCount; ++i) {
 			if(maxDiff == -1 || fabs(angleDiffs[i]) > fabs(angleDiffs[maxDiff]))
 				maxDiff = i;
 		}
-
+		
 		if(fabs(angleDiffs[maxDiff]) >= MAX_ANGLE_DIFF) {
 			properties_.angleToTurn = markerAngleInRange[maxDiff].angle + (angleDiffs[maxDiff] / 2);
 			return true;

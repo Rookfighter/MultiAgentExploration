@@ -41,7 +41,7 @@ define marker model
 (
     boundary 1
 
-    size [0.05 0.05 0]
+    size [0.05 0.05 0.01]
     color [1 0 0 0.2]
 
     gui_nose 0

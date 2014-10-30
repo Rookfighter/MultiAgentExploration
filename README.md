@@ -55,12 +55,12 @@ make
 sudo make install
 ```
 
-Now compile and install __Stage__:
+Now compile and install __Stage__ (used commit __f9c59ca77f203049979dcf32223e5d2b26c03bf2__):
 
 ```
-wget -O Stage-4.1.1.tar.gz https://github.com/rtv/Stage/archive/v4.1.1.tar.gz
-tar -xzf Stage-4.1.1.tar.gz
-cd Stage-4.1.1
+git clone https://github.com/rtv/Stage.git
+cd Stage
+git checkout f9c59ca77f203049979dcf32223e5d2b26c03bf2
 mkdir build
 cd build
 cmake ..
@@ -118,6 +118,22 @@ these warnings add the following line to your CMakeLists.txt:
 
 ```
 add_definitions( -DBOOST_SIGNALS_NO_DEPRECATION_WARNING )
+```
+
+To conmpile an executable with __libstage__ copy the file __stage.pc__ in the
+Stage build directory to ```/usr/lib/pkgconfig```. Now add the following lines
+to your CMakeLists.txt:
+
+```
+include(FindPkgConfig)
+pkg_search_module( STAGE REQUIRED stage )
+
+include_directories( ${STAGE_INCLUDE_DIRS} )
+link_directories( ${STAGE_LIBRARY_DIRS} )
+
+# create an executable and link libstage to each
+add_executable( ${PROJECT_NAME} ${PROJECT_SRC} )
+target_link_libraries( ${PROJECT_NAME} ${STAGE_LIBRARIES} )
 ```
 
 ### Code Lite

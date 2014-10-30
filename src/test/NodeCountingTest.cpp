@@ -18,11 +18,14 @@ namespace mae
 	void NodeCountingTest::execute()
 	{
 		while(true) {
+			watch_.start();
 			world_->update();
+			watch_.stop();
+			//LOG(INFO) << "WorldUpdate: " << watch_.strMsec();
 			watch_.start();
 			nodeCounting_.step();
 			watch_.stop();
-			//LOG(INFO) << "Step: " << watch_.str();
+			//LOG(INFO) << "NodeCounting: " << watch_.strMsec();
 		}
 	}
 

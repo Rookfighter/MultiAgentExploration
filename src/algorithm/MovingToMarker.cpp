@@ -29,7 +29,6 @@ namespace mae
 		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0)
 	{
 		LOG(DEBUG) << "New MovingToMarker state.";
-		
 	}
 
 	MovingToMarker::~MovingToMarker()

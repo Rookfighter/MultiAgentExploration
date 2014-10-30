@@ -2,6 +2,7 @@
 #define MAE_WORLD_HPP
 
 #include "simulation/ExplorationBot.hpp"
+#include "common/StopWatch.hpp"
 
 namespace mae
 {
@@ -13,6 +14,7 @@ namespace mae
 		Simulation *simulation_;
 		MarkerStock *stock_;
 		std::vector<ExplorationBot*> robots_;
+		StopWatch watch_;
 		
 		World();
 	public:

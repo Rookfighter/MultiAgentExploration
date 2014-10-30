@@ -1,4 +1,5 @@
 #include "simulation/World.hpp"
+#include <easylogging++.h>
 
 namespace mae
 {
@@ -50,8 +51,15 @@ namespace mae
 	
 	void World::update()
 	{
+		watch_.start();
 		client_->update();
+		watch_.stop();
+		LOG(INFO) << "ClientUpdate: " << watch_.strMsec();
+		
+		watch_.start();
 		for(ExplorationBot *robot: robots_)
 			robot->update();
+		watch_.stop();
+		LOG(INFO) << "RobotUpdate: " << watch_.strMsec();
 	}
 }

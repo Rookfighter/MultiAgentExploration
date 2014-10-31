@@ -2,7 +2,6 @@
 #define MAE_SELECTING_TARGET_HPP
 
 #include "algorithm/AntState.hpp"
-#include "common/StopWatch.hpp"
 
 namespace mae
 {
@@ -10,12 +9,12 @@ namespace mae
 	class SelectingTarget : public AntState
 	{
 	private:
-		std::list<Marker*> markerInRange_;
+		std::vector<MarkerMeasurement> markerInRange_;
+		double obstacleThreshold_;
 		
-		StopWatch watch_;
-	
 		void getMarkerInRange();
 		bool checkBlankSpace();
+		bool checkObstalce(const double p_beginAngle, const double p_endAngle);
 		void getMarkerTarget();
 	public:
 		SelectingTarget(const AntStateProperties &p_properties);

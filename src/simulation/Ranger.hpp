@@ -46,6 +46,7 @@ namespace mae
 
 		const RangerProperties& getProperties() const;
 		int getMeasurementCount() const;
+		
 	};
 
 }

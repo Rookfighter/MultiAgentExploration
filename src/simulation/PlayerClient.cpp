@@ -21,7 +21,7 @@ namespace mae
 	
 	void PlayerClient::update()
 	{
-		client_.ReadIfWaiting();
+		client_.Read();
 	}
 
 }

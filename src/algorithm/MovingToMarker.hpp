@@ -13,10 +13,12 @@ namespace mae
 		
 		Pose lastPose_;
 		double movedDistance_;
-		double angleToTarget_;
+		MarkerMeasurement targetMeasurement_;
+		bool foundMarker_;
 		bool reachedDirection_;
 		
 		void updateGeometry();
+		void updateTargetMeasurement();
 		bool reachedDirection();
 		bool reachedTarget();
 		bool movedEnough();

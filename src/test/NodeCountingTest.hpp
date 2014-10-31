@@ -12,7 +12,9 @@ namespace mae
 	private:
 		World *world_;
 		NodeCounting nodeCounting_;
-		StopWatch watch_;
+		StopWatch updateWatch_;
+		StopWatch logicWatch_;
+		
 	public:
 		NodeCountingTest(World *p_world,
 		                 const std::string &p_robotName);

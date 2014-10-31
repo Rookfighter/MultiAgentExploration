@@ -50,7 +50,7 @@ namespace mae
 			properties_.robot->getMotor().stop();
 			return new DroppingMarker(properties_);
 		}
-		
+
 		if(!reachedDirection_)
 			reachedDirection_ = reachedDirection();
 		// no target reached, we still have to move
@@ -70,19 +70,33 @@ namespace mae
 		lastPose_ = currentPose;
 
 		// get angle to target Marker
-		angleToTarget_ = properties_.robot->getMarkerSensor().getAngleTo(properties_.nextMarker);
+		updateTargetMeasurement();
+	}
+
+	void MovingToMarker::updateTargetMeasurement()
+	{
+		std::vector<MarkerMeasurement> markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
+
+		foundMarker_ = false;
+		for(MarkerMeasurement measurement : markerInRange) {
+			if(properties_.nextMarker->getID() == measurement.marker->getID()) {
+				targetMeasurement_ = measurement;
+				foundMarker_ = true;
+				break;
+			}
+		}
 	}
 
 	bool MovingToMarker::reachedDirection()
 	{
-		return sameDouble(angleToTarget_,
-		                  0,
-		                  ANGLE_EPS);
+		return foundMarker_ && sameDouble(targetMeasurement_.relativeDirection,
+		                                  0,
+		                                  ANGLE_EPS);
 	}
 
 	bool MovingToMarker::reachedTarget()
 	{
-		return sameDouble(properties_.robot->getMarkerSensor().getDistanceTo(properties_.nextMarker).length(),
+		return sameDouble(targetMeasurement_.relativeDistance.length(),
 		                  0,
 		                  DISTANCE_EPS);
 	}
@@ -95,7 +109,7 @@ namespace mae
 	void MovingToMarker::turnToMarker()
 	{
 		double angularVelocity;
-		if(angleToTarget_ < 0)
+		if(targetMeasurement_.relativeDirection < 0)
 			angularVelocity = TURN_FACTOR * properties_.robot->getMotor().getMinVelocity().angular;
 		else
 			angularVelocity = TURN_FACTOR * properties_.robot->getMotor().getMaxVelocity().angular;

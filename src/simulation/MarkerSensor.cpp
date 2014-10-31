@@ -14,54 +14,54 @@ namespace mae
 	{
 
 	}
-	
+
 	void MarkerSensor::setRobotPose(const Pose &p_pose)
 	{
 		robotPose_ = p_pose;
 	}
 
-	void MarkerSensor::getMarkerInRange(std::list<Marker*> &p_result)
+	std::vector<MarkerMeasurement> MarkerSensor::getMarkerInRange()
 	{
+		std::vector<MarkerMeasurement> result;
 		Vector2 distance;
-		
+
+		result.reserve(stock_->getMarker().size() / 4);
 		for(Marker *marker : stock_->getMarker()) {
 			distance = marker->getPose().position - robotPose_.position;
 			if(distance.lengthSQ() <= marker->getRange() * marker->getRange())
-				p_result.push_back(marker);
+				result.push_back(getMeasurementFor(marker));
 		}
 	}
 
-	Marker* MarkerSensor::getClosestMarker()
+	MarkerMeasurement MarkerSensor::getMeasurementFor(Marker* p_marker)
 	{
-		Marker *result = NULL;
-		for(Marker *marker : stock_->getMarker()) {
-			if(result == NULL || getDistanceTo(result).lengthSQ() > getDistanceTo(marker).lengthSQ())
-				result = marker;
+		MarkerMeasurement result;
+
+		result.marker = p_marker;
+		// TODO : implement distance to marker and direction with some derivation
+		result.relativeDistance = p_marker->getPose().position - robotPose_.position;
+		result.relativeDirection = atan2(result.relativeDistance.y, result.relativeDistance.x) -
+		                           normalizeRadian(robotPose_.yaw);
+		result.relativeDirection = normalizeRadian(result.relativeDirection);
+
+		return result;
+	}
+
+	MarkerMeasurement MarkerSensor::getClosestMarker()
+	{
+		std::vector<MarkerMeasurement> inRange = getMarkerInRange();
+
+		bool initialized = false;
+		MarkerMeasurement result;
+		for(MarkerMeasurement measurement : inRange) {
+			if(!initialized ||
+			        measurement.relativeDistance.lengthSQ() < result.relativeDistance.lengthSQ()) {
+				initialized = true;
+				result = measurement;
+			}
 		}
-
-		if(getDistanceTo(result).lengthSQ() > result->getRange() * result->getRange())
-			result = NULL;
-
+		
 		return result;
 	}
-
-	Vector2 MarkerSensor::getDistanceTo(Marker* p_marker)
-	{
-		// TODO : implement distance to marker direction with some derivation
-		Vector2 result;
-		result = p_marker->getPose().position - robotPose_.position;
-		return result;
-	}
-
-	double MarkerSensor::getAngleTo(Marker* p_marker)
-	{
-		// TODO - is this correct simulated -- distance has error, so is it ok
-		// to use absolutePosition to determine angle offset?
-		Vector2 distance = getDistanceTo(p_marker);
-		double result = atan2(distance.y, distance.x) - normalizeRadian(robotPose_.yaw);
-		result = normalizeRadian(result);
-		return result;
-	}
-
 
 }

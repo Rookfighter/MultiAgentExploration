@@ -18,14 +18,17 @@ namespace mae
 	void NodeCountingTest::execute()
 	{
 		while(true) {
-			watch_.start();
+			updateWatch_.start();
 			world_->update();
-			watch_.stop();
-			//LOG(INFO) << "WorldUpdate: " << watch_.strMsec();
-			watch_.start();
+			updateWatch_.stop();
+			if(updateWatch_.hasNewWorstCase())
+				LOG(INFO) << "UpdateLag: " << updateWatch_.getWorstMsec() << "ms";
+				
+			logicWatch_.start();
 			nodeCounting_.step();
-			watch_.stop();
-			//LOG(INFO) << "NodeCounting: " << watch_.strMsec();
+			logicWatch_.stop();
+			if(logicWatch_.hasNewWorstCase())
+				LOG(INFO) << "LogicLag: " << logicWatch_.getWorstMsec() << "ms";
 		}
 	}
 

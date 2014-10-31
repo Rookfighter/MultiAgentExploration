@@ -10,7 +10,7 @@ namespace mae
 	{
 		return p_tv->tv_sec * 1000 + p_tv->tv_usec / 1000;
 	}
-	
+
 	static unsigned long usecOf(const struct timeval *p_tv)
 	{
 		return p_tv->tv_sec * 1000000 + p_tv->tv_usec;
@@ -32,10 +32,11 @@ namespace mae
 	}
 
 	StopWatch::StopWatch()
+		:newWorstCase_(false), newBestCase_(false)
 	{
 		best_.tv_sec = 999;
 		best_.tv_usec = 999;
-		
+
 		worst_.tv_sec = 0;
 		worst_.tv_usec = 0;
 	}
@@ -52,24 +53,20 @@ namespace mae
 	{
 		struct timeval end;
 		gettimeofday(&end, NULL);
-		
+
 		last_ = get_time_diff(&begin_, &end);
-		
+
 		// check if it is new worst case
-		if(last_.tv_sec > worst_.tv_sec)
+		newWorstCase_ = last_.tv_sec > worst_.tv_sec ||
+		                (last_.tv_sec == worst_.tv_sec && last_.tv_usec > worst_.tv_usec);
+		if(newWorstCase_)
 			worst_ = last_;
-		else if(last_.tv_sec == worst_.tv_sec) {
-			if(last_.tv_usec > worst_.tv_usec)
-				worst_ = last_;
-		}
-		
+
 		// check if it is new best case
-		if(last_.tv_sec < best_.tv_sec)
+		newBestCase_ = last_.tv_sec < best_.tv_sec ||
+		               (last_.tv_sec == best_.tv_sec && last_.tv_usec < best_.tv_usec);
+		if(newBestCase_)
 			best_ = last_;
-		else if(last_.tv_sec == best_.tv_sec) {
-			if(last_.tv_usec < best_.tv_usec)
-				best_ = last_;
-		}
 	}
 
 	unsigned int StopWatch::getLastMsec() const
@@ -86,7 +83,7 @@ namespace mae
 	{
 		return msecOf(&best_);
 	}
-	
+
 	unsigned long StopWatch::getLastUsec() const
 	{
 		return usecOf(&last_);
@@ -95,24 +92,34 @@ namespace mae
 	{
 		return usecOf(&worst_);
 	}
-	
+
 	unsigned long StopWatch::getBestUsec() const
 	{
 		return usecOf(&best_);
 	}
-	
+
+	bool StopWatch::hasNewWorstCase() const
+	{
+		return newWorstCase_;
+	}
+
+	       bool StopWatch::hasNewBestCase() const
+	{
+		return newBestCase_;
+	}
+
 	std::string StopWatch::strMsec() const
 	{
 		std::stringstream ss;
-		
+
 		ss << "Last=" << getLastMsec() << "ms Best=" << getBestMsec() << "ms Worst=" << getWorstMsec() << "ms";
 		return ss.str();
 	}
-	
+
 	std::string StopWatch::strUsec() const
 	{
 		std::stringstream ss;
-		
+
 		ss << "Last=" << getLastUsec() << "us Best=" << getBestUsec() << "us Worst=" << getWorstUsec() << "us";
 		return ss.str();
 	}

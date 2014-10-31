@@ -5,27 +5,31 @@
 #include "simulation/RobotConfig.hpp"
 
 namespace mae
-{	
+{
+	struct MarkerMeasurement {
+		Vector2 relativeDistance;
+		double relativeDirection;
+		Marker* marker;
+	};
+
 	class MarkerSensor
 	{
 	private:
 		Simulation *simulation_;
 		MarkerStock *stock_;
-		
+
 		Pose robotPose_;
 		
+		MarkerMeasurement getMeasurementFor(Marker* p_marker);
 	public:
 		MarkerSensor(const RobotConfig& p_config);
 		~MarkerSensor();
-		
+
 		void setRobotPose(const Pose &p_pose);
-		
-		void getMarkerInRange(std::list<Marker*> &p_result);
-		Marker* getClosestMarker();
-		
-		Vector2 getDistanceTo(Marker* p_marker);
-		double getAngleTo(Marker* p_marker);
-		
+
+		std::vector<MarkerMeasurement> getMarkerInRange();
+		MarkerMeasurement getClosestMarker();
+
 	};
 
 }

@@ -13,6 +13,8 @@ namespace mae
 	double normalizeRadian(const double p_radian);
 	double normalizeDegree(const double p_degree);
 	
+	bool angleIsBetween(const double p_angle, const double p_begin, const double p_end);
+	
 	bool sameDouble(const double a, const double b, const double eps);
 }
 

@@ -15,6 +15,9 @@ namespace mae
 		struct timeval last_;
 		struct timeval worst_;
 		struct timeval best_;
+		
+		bool newBestCase_;
+		bool newWorstCase_;
 	public:
 		StopWatch();
 		~StopWatch();
@@ -29,6 +32,9 @@ namespace mae
 		unsigned long getLastUsec() const;
 		unsigned long getWorstUsec() const;
 		unsigned long getBestUsec() const;
+		
+		bool hasNewWorstCase() const;
+		bool hasNewBestCase() const;
 		
 		std::string strMsec() const;
 		std::string strUsec() const;

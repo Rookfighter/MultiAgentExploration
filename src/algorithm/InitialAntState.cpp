@@ -20,9 +20,9 @@ namespace mae
 	{
 		std::vector<MarkerMeasurement> markerInRange;
 		markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
-		if(markerInRange.empty())
+		if(markerInRange.empty()) {
 			return new DroppingMarker(properties_);
-		else {
+		} else {
 			properties_.nextMarker = properties_.robot->getMarkerSensor().getClosestMarker().marker;
 			return new MovingToMarker(properties_);
 		}

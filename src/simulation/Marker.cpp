@@ -1,13 +1,9 @@
 #include <sstream>
 #include "simulation/Marker.hpp"
+#include "common/Convert.hpp"
 
 namespace mae
 {
-	std::string const boolToString(bool b)
-	{
-		return b ? "true" : "false";
-	}
-
 	Marker::Marker(const double p_range, const int p_id)
 		:id_(p_id), range_(p_range),
 		 inUse_(false), value_(0), drawRange_(true), highlighted_(false)
@@ -85,7 +81,7 @@ namespace mae
 	{
 		std::stringstream ss;
 		ss.precision(2);
-		ss << "id: " << id_ << " pos=" << pose_.str() << ",rng=" << range_ << ",use=" << boolToString(inUse_) << ",val=" << value_;
+		ss << "id: " << id_ << " pos=" << pose_.str() << ",rng=" << range_ << ",use=" << boolToStr(inUse_) << ",val=" << value_;
 
 		return ss.str();
 	}

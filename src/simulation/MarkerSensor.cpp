@@ -31,6 +31,8 @@ namespace mae
 			if(distance.lengthSQ() <= marker->getRange() * marker->getRange())
 				result.push_back(getMeasurementFor(marker));
 		}
+		
+		return result;
 	}
 
 	MarkerMeasurement MarkerSensor::getMeasurementFor(Marker* p_marker)

@@ -4,25 +4,33 @@
 #include "common/Math.hpp"
 #include "common/Convert.hpp"
 
-#define FRONT_ANGLE_BEGIN (-M_PI / 6) // -30°
-#define FRONT_ANGLE_END (M_PI / 6) // 30°
-
-#define BACK_ANGLE_BEGIN (5 * M_PI / 6) // 150°
-#define BACK_ANGLE_END (-5 * M_PI / 6) // -150°
-
-#define LEFT_ANGLE_BEGIN (2 * M_PI / 6) // 60
-#define LEFT_ANGLE_END (4 * M_PI / 6) // 120°
-
-#define RIGHT_ANGLE_BEGIN (-4 * M_PI / 6) //-120°
-#define RIGHT_ANGLE_END (-2 * M_PI / 6) // -60°
+#define FRONT_IDX 0
+#define BACK_IDX 2
+#define LEFT_IDX 4
+#define RIGHT_IDX 6
 
 namespace mae
 {
+	static const double obstacleAngles[8] = {
+		-M_PI / 6, M_PI / 6, // FRONT -30°, 30°
+		5 * M_PI / 6, -5 * M_PI / 6, // BACK 150°, -150°
+		2 * M_PI / 6, 4 * M_PI / 6, // LEFT 60°, 120°
+		-4 * M_PI / 6, -2 * M_PI / 6 // RIGHT -120°, -60°
+	};
+
+	static const double markerAngles[8] = {
+		-M_PI / 4, M_PI / 4, // FRONT -45°, 45°
+		3 * M_PI / 4, -3 * M_PI / 4, // BACK 135°, -135°
+		M_PI / 4, 3 * M_PI / 4, // LEFT 45°, 135°
+		-3 * M_PI / 4, -M_PI / 4 // RIGHT -135°, -46°
+	};
+
 
 	SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
-		: AntState(p_properties), obstacleThreshold_(1.0)
+		: AntState(p_properties), obstacleThreshold_(p_properties.obstacleAvoidDistance)
 	{
 		LOG(DEBUG) << "New SelectingTarget state.";
+		LOG(DEBUG) << "ObstacleThreshold: " << obstacleThreshold_;
 	}
 
 	SelectingTarget::~SelectingTarget()
@@ -63,10 +71,10 @@ namespace mae
 	bool SelectingTarget::checkBlankSpace()
 	{
 		// check if obstacle is the direction
-		bool blockedFront = checkObstalce(FRONT_ANGLE_BEGIN, FRONT_ANGLE_END);
-		bool blockedBack = checkObstalce(BACK_ANGLE_BEGIN, BACK_ANGLE_END);
-		bool blockedLeft = checkObstalce(LEFT_ANGLE_BEGIN, LEFT_ANGLE_END);
-		bool blockedRight = checkObstalce(RIGHT_ANGLE_BEGIN, RIGHT_ANGLE_END);
+		bool blockedFront = checkObstalce(obstacleAngles[FRONT_IDX], obstacleAngles[FRONT_IDX + 1]);
+		bool blockedBack = checkObstalce(obstacleAngles[BACK_IDX], obstacleAngles[BACK_IDX + 1]);
+		bool blockedLeft = checkObstalce(obstacleAngles[LEFT_IDX], obstacleAngles[LEFT_IDX + 1]);
+		bool blockedRight = checkObstalce(obstacleAngles[RIGHT_IDX], obstacleAngles[RIGHT_IDX + 1]);
 
 		LOG(DEBUG) << "-- Obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
 		           ", L=" << boolToStr(blockedLeft) << ", R=" << boolToStr(blockedRight);
@@ -74,23 +82,23 @@ namespace mae
 		for(MarkerMeasurement measurement : markerInRange_) {
 			if(!blockedFront)
 				blockedFront = angleIsBetween(measurement.relativeDirection,
-				                              FRONT_ANGLE_BEGIN,
-				                              FRONT_ANGLE_END);
+				                              markerAngles[FRONT_IDX],
+				                              markerAngles[FRONT_IDX + 1]);
 
 			if(!blockedBack)
 				blockedBack = angleIsBetween(measurement.relativeDirection,
-				                             BACK_ANGLE_BEGIN,
-				                             BACK_ANGLE_END);
+				                             markerAngles[BACK_IDX],
+				                             markerAngles[BACK_IDX +1]);
 
 			if(!blockedLeft)
 				blockedLeft = angleIsBetween(measurement.relativeDirection,
-				                             LEFT_ANGLE_BEGIN,
-				                             LEFT_ANGLE_END);
+				                             markerAngles[LEFT_IDX],
+				                             markerAngles[LEFT_IDX + 1]);
 
 			if(!blockedRight)
 				blockedRight = angleIsBetween(measurement.relativeDirection,
-				                              RIGHT_ANGLE_BEGIN,
-				                              RIGHT_ANGLE_END);
+				                              markerAngles[RIGHT_IDX],
+				                              markerAngles[RIGHT_IDX + 1]);
 		}
 
 		if(!blockedFront)

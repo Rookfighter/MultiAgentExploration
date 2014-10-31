@@ -15,5 +15,5 @@ robots:
         graphics_index: 0
         max_velocity: [0.5, 1.57] # [m/s rad/s]
         min_velocity: [-0.5, -1.57]
-        marker_sensor_range: 2.0
+        marker_sensor_max_range: 2.0
 

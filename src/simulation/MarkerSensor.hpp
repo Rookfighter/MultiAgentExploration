@@ -20,7 +20,7 @@ namespace mae
 		Simulation *simulation_;
 		MarkerStock *stock_;
 		
-		double range_;
+		double maxRange_;
 
 		Pose robotPose_;
 		
@@ -35,7 +35,7 @@ namespace mae
 		std::vector<MarkerMeasurement> getMarkerInRange();
 		MarkerMeasurement getClosestMarker();
 		
-		double getRange() const;
+		double getMaxRange() const;
 
 	};
 

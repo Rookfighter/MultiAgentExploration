@@ -8,7 +8,7 @@ namespace mae
 		assert(p_current != NULL);
 		p_current->incrementValue();
 	}
-	
+
 	NodeCounting::NodeCounting(ExplorationBot *p_robot,
 	                           Simulation *p_simulation,
 	                           MarkerStock *p_stock)
@@ -19,7 +19,8 @@ namespace mae
 		properties.stock = p_stock;
 		properties.simulation = p_simulation;
 		properties.updateValue = updateValueNodeCounting;
-		
+		properties.obstacleAvoidDistance = 1.0;
+
 		init(new InitialAntState(properties));
 	}
 

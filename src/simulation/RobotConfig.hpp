@@ -24,7 +24,7 @@ namespace mae
 		Velocity maxVelocity;
 		Velocity minVelocity;
 		
-		double markerSensorRange;
+		double markerSensorMaxRange;
 		
 		RobotConfig() { }
 		~RobotConfig() { }

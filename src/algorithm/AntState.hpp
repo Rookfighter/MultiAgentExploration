@@ -20,6 +20,7 @@ namespace mae
 		double angleToTurn;
 		
 		updateValueFunc updateValue; 
+		double obstacleAvoidDistance;
 		
 		AntStateProperties();
 		~AntStateProperties();

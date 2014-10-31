@@ -21,7 +21,7 @@
 #define RANGER_INDEX_NODE "ranger_index"
 #define MAX_VELOCITY_NODE "max_velocity"
 #define MIN_VELOCITY_NODE "min_velocity"
-#define MARKER_SENSOR_RANGE_NODE "marker_sensor_range"
+#define MARKER_SENSOR_MAX_RANGE_NODE "marker_sensor_max_range"
 
 namespace mae
 {
@@ -78,7 +78,7 @@ namespace mae
 				robotConfigs[i].motorIndex = robotsNode[i][MOTOR_INDEX_NODE].as<int>();
 				robotConfigs[i].rangerIndex = robotsNode[i][RANGER_INDEX_NODE].as<int>();
 				robotConfigs[i].graphicsIndex = robotsNode[i][GRAPHICS_INDEX_NODE].as<int>();
-				robotConfigs[i].markerSensorRange = robotsNode[i][MARKER_SENSOR_RANGE_NODE].as<double>();
+				robotConfigs[i].markerSensorMaxRange = robotsNode[i][MARKER_SENSOR_MAX_RANGE_NODE].as<double>();
 				
 				assert(robotsNode[i][MIN_VELOCITY_NODE].IsSequence() &&
 				       robotsNode[i][MIN_VELOCITY_NODE].size() == 2);

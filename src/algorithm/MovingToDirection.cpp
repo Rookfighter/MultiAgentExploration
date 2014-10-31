@@ -18,7 +18,7 @@ namespace mae
 {
 
 	MovingToDirection::MovingToDirection(const AntStateProperties &p_properties)
-		: AntState(p_properties), wander_(*p_properties.robot),
+		: AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleAvoidDistance),
 		  lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
 		  reachedDirection_(false)
 	{
@@ -69,7 +69,7 @@ namespace mae
 	bool MovingToDirection::movedEnough()
 	{
 		assert(properties_.currentMarker != NULL);
-		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getRange();
+		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getMaxRange();
 	}
 
 	void MovingToDirection::move()

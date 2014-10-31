@@ -25,7 +25,7 @@ namespace mae
 {
 
 	MovingToMarker::MovingToMarker(const AntStateProperties &p_properties)
-		:AntState(p_properties), wander_(*p_properties.robot),
+		:AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleAvoidDistance),
 		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0)
 	{
 		LOG(DEBUG) << "New MovingToMarker state.";
@@ -103,7 +103,7 @@ namespace mae
 
 	bool MovingToMarker::movedEnough()
 	{
-		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getRange();
+		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getMaxRange();
 	}
 
 	void MovingToMarker::turnToMarker()

@@ -5,7 +5,8 @@ namespace mae
 
 	AntStateProperties::AntStateProperties()
 		:robot(NULL), simulation(NULL), stock(NULL),
-		 currentMarker(NULL), nextMarker(NULL), angleToTurn(0)
+		 currentMarker(NULL), nextMarker(NULL), angleToTurn(0),
+		 obstacleAvoidDistance(1.0)
 	{
 
 	}

@@ -12,7 +12,6 @@
 
 #define STOCK_NAME_NODE "stock_name"
 #define REFILL_COUNT_NODE "refill_count"
-#define MARKER_RANGE_NODE "marker_range"
 #define GRAPHICS_INDEX_NODE "graphics_index"
 
 #define SIMULATION_INDEX_NODE "simulation_index"
@@ -22,6 +21,7 @@
 #define RANGER_INDEX_NODE "ranger_index"
 #define MAX_VELOCITY_NODE "max_velocity"
 #define MIN_VELOCITY_NODE "min_velocity"
+#define MARKER_SENSOR_RANGE_NODE "marker_sensor_range"
 
 namespace mae
 {
@@ -63,7 +63,6 @@ namespace mae
 		stockNode = config[STOCK_NODE];
 		stockConfig.stockName = stockNode[STOCK_NAME_NODE].as<std::string>();
 		stockConfig.refillCount = stockNode[REFILL_COUNT_NODE].as<int>();
-		stockConfig.markerRange = stockNode[MARKER_RANGE_NODE].as<double>();
 		stockConfig.graphicsIndex = stockNode[GRAPHICS_INDEX_NODE].as<int>();
 		LOG(DEBUG) << "-- stock info found";
 		
@@ -78,7 +77,9 @@ namespace mae
 				robotConfigs[i].name = robotsNode[i][NAME_NODE].as<std::string>();
 				robotConfigs[i].motorIndex = robotsNode[i][MOTOR_INDEX_NODE].as<int>();
 				robotConfigs[i].rangerIndex = robotsNode[i][RANGER_INDEX_NODE].as<int>();
-
+				robotConfigs[i].graphicsIndex = robotsNode[i][GRAPHICS_INDEX_NODE].as<int>();
+				robotConfigs[i].markerSensorRange = robotsNode[i][MARKER_SENSOR_RANGE_NODE].as<double>();
+				
 				assert(robotsNode[i][MIN_VELOCITY_NODE].IsSequence() &&
 				       robotsNode[i][MIN_VELOCITY_NODE].size() == 2);
 				robotConfigs[i].minVelocity.set(robotsNode[i][MIN_VELOCITY_NODE][0].as<double>(),

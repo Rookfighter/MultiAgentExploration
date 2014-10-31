@@ -69,7 +69,7 @@ namespace mae
 	bool MovingToDirection::movedEnough()
 	{
 		assert(properties_.currentMarker != NULL);
-		return movedDistance_ >= MOVEMENT_FACTOR * properties_.currentMarker->getRange();
+		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getRange();
 	}
 
 	void MovingToDirection::move()

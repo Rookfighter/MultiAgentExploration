@@ -14,7 +14,6 @@ namespace mae
 		Simulation *simulation;
 		int graphicsIndex;
 		std::string stockName;
-		double markerRange;
 		int refillCount;
 		
 		StockConfig();

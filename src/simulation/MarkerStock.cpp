@@ -12,13 +12,6 @@ namespace mae
 	player_color_t MarkerStock::RED = {0,200,0,0};
 	player_color_t MarkerStock::GREEN = {0,100,200,100};
 	
-	static void createRegularPolygon(const double p_radius, player_point_2d_t* p_corners, const int p_cornerCount) {
-		for(int i = 0; i < p_cornerCount; ++i) {
-			p_corners[i].px = p_radius * cos((2 * M_PI * i) / p_cornerCount);
-			p_corners[i].py = p_radius * sin((2 * M_PI * i) / p_cornerCount);
-		}
-	}
-	
 	MarkerStock::MarkerStock(const StockConfig &p_config)
 		:graphics_(p_config.client->getClient(), p_config.graphicsIndex),
 		 config_(p_config), markerPool_(), marker_(), currentID_(0)
@@ -28,7 +21,6 @@ namespace mae
 		LOG(DEBUG) << "Initialized stock pose " << pose_.str() << "(" << p_config.stockName << ")";
 		refill(config_.refillCount);
 		LOG(DEBUG) << "Initialized MarkerStock: " << config_.refillCount << " Marker (" << p_config.stockName << ")";
-		createRegularPolygon(1, rangePolygon_, rangePolygonCount_);
 	}
 
 	MarkerStock::~MarkerStock()
@@ -41,7 +33,7 @@ namespace mae
 		markerPool_.resize(p_markerCount);
 
 		for(int i = 0; i < markerPool_.size(); ++i) {
-			markerPool_[i] = new Marker(config_.markerRange, currentID_);
+			markerPool_[i] = new Marker(currentID_);
 			markerPool_[i]->addObserver(this);
 			currentID_++;
 		}
@@ -100,14 +92,9 @@ namespace mae
 	void MarkerStock::redrawMarker()
 	{
 		graphics_.Clear();
+		graphics_.Color(BLACK);
 		
 		for(Marker *marker : marker_) {
-			if(marker->isHighlighted())
-				graphics_.Color(GREEN);
-			else
-				graphics_.Color(BLACK);
-			if(marker->drawRange())
-				drawMarkerRange(marker);
 			drawMarkerCenter(marker);
 		}
 	}
@@ -115,6 +102,12 @@ namespace mae
 	void MarkerStock::drawMarkerCenter(Marker *p_marker)
 	{
 		player_point_2d_t points[4];
+		player_color_t markerCol;
+		if(p_marker->isHighlighted())
+			markerCol = GREEN;
+		else
+			markerCol = RED;
+		
 		Vector2 relativePos = p_marker->getPose().position - pose_.position;
 		points[0].px = relativePos.x + MARKER_SIZE;
 		points[0].py = relativePos.y + MARKER_SIZE;
@@ -128,20 +121,7 @@ namespace mae
 		points[3].px = relativePos.x + MARKER_SIZE;
 		points[3].py = relativePos.y - MARKER_SIZE;
 		
-		graphics_.DrawPolygon(points, 4, true, RED);
-	}
-	
-	void MarkerStock::drawMarkerRange(Marker *p_marker)
-	{
-		Vector2 relativePos = p_marker->getPose().position - pose_.position;
-		
-		player_point_2d_t points[rangePolygonCount_];
-		for(int i = 0; i < rangePolygonCount_; ++i) {
-			points[i].px = p_marker->getRange() * rangePolygon_[i].px + relativePos.x;
-			points[i].py = p_marker->getRange() * rangePolygon_[i].py + relativePos.y;
-		}
-		
-		graphics_.DrawPolygon(points, rangePolygonCount_, false, RED);
+		graphics_.DrawPolygon(points, 4, true, markerCol);
 	}
 	
 }

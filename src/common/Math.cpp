@@ -44,6 +44,14 @@ namespace mae
 	{
 		return fabs(a - b) <= eps;
 	}
+	
+	void createRegularPolygon(const double p_radius, Vector2 *p_corners, const int p_cornerCount)
+	{
+		for(int i = 0; i < p_cornerCount; ++i) {
+			p_corners[i].x = p_radius * cos((2 * M_PI * i) / p_cornerCount);
+			p_corners[i].y = p_radius * sin((2 * M_PI * i) / p_cornerCount);
+		}
+	}
 
 
 }

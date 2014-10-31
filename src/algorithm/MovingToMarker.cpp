@@ -103,7 +103,7 @@ namespace mae
 
 	bool MovingToMarker::movedEnough()
 	{
-		return movedDistance_ >= MOVEMENT_FACTOR * properties_.nextMarker->getRange();
+		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getRange();
 	}
 
 	void MovingToMarker::turnToMarker()

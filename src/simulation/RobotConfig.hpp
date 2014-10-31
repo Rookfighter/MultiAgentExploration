@@ -19,12 +19,15 @@ namespace mae
 		std::string name;
 		int motorIndex;
 		int rangerIndex;
+		int graphicsIndex;
 		
 		Velocity maxVelocity;
 		Velocity minVelocity;
 		
-		RobotConfig();
-		~RobotConfig();
+		double markerSensorRange;
+		
+		RobotConfig() { }
+		~RobotConfig() { }
 	};
 
 }

@@ -15,12 +15,17 @@ namespace mae
 	class MarkerSensor
 	{
 	private:
+		PlayerCc::Graphics2dProxy graphics_;
+		
 		Simulation *simulation_;
 		MarkerStock *stock_;
+		
+		double range_;
 
 		Pose robotPose_;
 		
 		MarkerMeasurement getMeasurementFor(Marker* p_marker);
+		void drawPolygon();
 	public:
 		MarkerSensor(const RobotConfig& p_config);
 		~MarkerSensor();
@@ -29,6 +34,8 @@ namespace mae
 
 		std::vector<MarkerMeasurement> getMarkerInRange();
 		MarkerMeasurement getClosestMarker();
+		
+		double getRange() const;
 
 	};
 

@@ -1,13 +1,36 @@
+#include <easylogging++.h>
 #include "simulation/MarkerSensor.hpp"
 #include "common/Math.hpp"
 
+#define POLY_CORNER_COUNT 12
+
 namespace mae
 {
-
+	static const player_color_t GREEN = {50,0,255,0};
+	
 	MarkerSensor::MarkerSensor(const RobotConfig& p_config)
-		:simulation_(p_config.simulation), stock_(p_config.stock), robotPose_()
+		:graphics_(p_config.client->getClient(), p_config.graphicsIndex),
+		 simulation_(p_config.simulation), stock_(p_config.stock), robotPose_(),
+		 range_(p_config.markerSensorRange)
 	{
-
+		LOG(DEBUG) << "Connected GraphicsProxy: " << p_config.graphicsIndex << " (" << p_config.name << ")";
+		drawPolygon();
+	}
+	
+	void MarkerSensor::drawPolygon()
+	{
+		Vector2 points[POLY_CORNER_COUNT];
+		player_point_2d_t playerPoints[POLY_CORNER_COUNT];
+		createRegularPolygon(1, points, POLY_CORNER_COUNT);
+		
+		for(int i = 0; i < POLY_CORNER_COUNT; ++i) {
+			playerPoints[i].px = points[i].x * range_;
+			playerPoints[i].py = points[i].y * range_;
+		}
+		
+		graphics_.Clear();
+		graphics_.Color(GREEN);
+		graphics_.DrawPolygon(playerPoints, POLY_CORNER_COUNT, false, GREEN);
 	}
 
 	MarkerSensor::~MarkerSensor()
@@ -28,10 +51,10 @@ namespace mae
 		result.reserve(stock_->getMarker().size() / 4);
 		for(Marker *marker : stock_->getMarker()) {
 			distance = marker->getPose().position - robotPose_.position;
-			if(distance.lengthSQ() <= marker->getRange() * marker->getRange())
+			if(distance.lengthSQ() <= range_ * range_)
 				result.push_back(getMeasurementFor(marker));
 		}
-		
+
 		return result;
 	}
 
@@ -62,8 +85,13 @@ namespace mae
 				result = measurement;
 			}
 		}
-		
+
 		return result;
+	}
+	
+	double MarkerSensor::getRange() const
+	{
+		return range_;
 	}
 
 }

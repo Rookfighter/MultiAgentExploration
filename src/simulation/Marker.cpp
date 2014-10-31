@@ -4,9 +4,9 @@
 
 namespace mae
 {
-	Marker::Marker(const double p_range, const int p_id)
-		:id_(p_id), range_(p_range),
-		 inUse_(false), value_(0), drawRange_(true), highlighted_(false)
+	Marker::Marker( const int p_id)
+		:id_(p_id), inUse_(false),
+		value_(0), highlighted_(false)
 	{
 	}
 	
@@ -23,12 +23,6 @@ namespace mae
 	void Marker::setValue(const int p_value)
 	{
 		value_ = p_value;
-	}
-	
-	void Marker::setDrawRange(const bool p_drawRange)
-	{
-		drawRange_ = p_drawRange;
-		redraw();
 	}
 	
 	void Marker::setHighlighted(const bool p_highlighted)
@@ -52,11 +46,6 @@ namespace mae
 		return pose_;
 	}
 	
-	double Marker::getRange() const
-	{
-		return range_;
-	}
-	
 	int Marker::getValue() const
 	{
 		return value_;
@@ -65,11 +54,6 @@ namespace mae
 	bool Marker::isInUse() const
 	{
 		return inUse_;
-	}
-	
-	bool Marker::drawRange() const
-	{
-		return drawRange_;
 	}
 	
 	void Marker::incrementValue()
@@ -81,7 +65,7 @@ namespace mae
 	{
 		std::stringstream ss;
 		ss.precision(2);
-		ss << "id: " << id_ << " pos=" << pose_.str() << ",rng=" << range_ << ",use=" << boolToStr(inUse_) << ",val=" << value_;
+		ss << "id: " << id_ << " pos=" << pose_.str() << ",use=" << boolToStr(inUse_) << ",val=" << value_;
 
 		return ss.str();
 	}

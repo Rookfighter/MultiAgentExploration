@@ -11,11 +11,9 @@ namespace mae
 	class MarkerStock : public Observer
 	{
 	private:
-		static const int rangePolygonCount_ = 12;
 		static player_color_t BLACK;
 		static player_color_t RED;
 		static player_color_t GREEN;
-		player_point_2d_t rangePolygon_[rangePolygonCount_];
 	
 		PlayerCc::Graphics2dProxy graphics_;
 		StockConfig config_;
@@ -31,7 +29,6 @@ namespace mae
 		void cleanup();
 		void redrawMarker();
 		void drawMarkerCenter(Marker *p_marker);
-		void drawMarkerRange(Marker *p_marker);
 	public:
 		MarkerStock(const StockConfig &p_config);
 

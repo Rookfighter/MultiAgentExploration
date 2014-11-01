@@ -18,7 +18,7 @@ namespace mae
 {
 
 	MovingToDirection::MovingToDirection(const AntStateProperties &p_properties)
-		: AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleAvoidDistance),
+		: AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleStopDistance),
 		  lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
 		  reachedDirection_(false)
 	{

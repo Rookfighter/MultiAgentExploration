@@ -19,8 +19,9 @@ namespace mae
 		properties.stock = p_stock;
 		properties.simulation = p_simulation;
 		properties.updateValue = updateValueNodeCounting;
-		properties.obstacleAvoidDistance = 1.0;
-
+		properties.obstacleStopDistance = 0.5;
+		properties.obstacleBlockDistance = 1.0;
+		
 		init(new InitialAntState(properties));
 	}
 

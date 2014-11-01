@@ -12,8 +12,6 @@ namespace mae
 		                           *world_->getSimulation(),
 		                           *world_->getStock(),
 		                           *world_->getRobot("pioneer1"));
-		heisenbergTest_ = new HeisenbergTest(*world_,
-		                                     *world_->getRobot("pioneer1"));
 		wanderTest_ = new WanderTest(*world_,
 		                             *world_->getRobot("pioneer1"));
 		ncTest_ = new NodeCountingTest(world_, "pioneer1");
@@ -24,7 +22,6 @@ namespace mae
 	{
 		delete performanceTest_;
 		delete ncTest_;
-		delete heisenbergTest_;
 		delete wanderTest_;
 		delete world_;
 	}

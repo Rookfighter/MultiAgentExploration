@@ -19,8 +19,10 @@ namespace mae
 		Marker *nextMarker;
 		double angleToTurn;
 		
-		updateValueFunc updateValue; 
-		double obstacleAvoidDistance;
+		updateValueFunc updateValue;
+		
+		double obstacleStopDistance;
+		double obstacleBlockDistance; 
 		
 		AntStateProperties();
 		~AntStateProperties();

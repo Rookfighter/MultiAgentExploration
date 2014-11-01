@@ -6,7 +6,7 @@
 
 /* avoid moving in a direction that is farer
  * away than this (+/-). */
-#define ANGLE_EPS (M_PI / 36) // 5°
+#define ANGLE_EPS (M_PI / 18) // 10°
 
 /* determines how much of the max angular
  * velocity is used */
@@ -25,10 +25,13 @@ namespace mae
 {
 
 	MovingToMarker::MovingToMarker(const AntStateProperties &p_properties)
-		:AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleAvoidDistance),
-		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0)
+		:AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleStopDistance),
+		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
+		 avoidingObstacle_(false)
 	{
 		LOG(DEBUG) << "New MovingToMarker state.";
+		wander_.onAvoidBegin(std::bind(&MovingToMarker::onAvoidBegin,this));
+		wander_.onAvoidEnd(std::bind(&MovingToMarker::onAvoidEnd,this));
 	}
 
 	MovingToMarker::~MovingToMarker()
@@ -51,13 +54,11 @@ namespace mae
 			return new DroppingMarker(properties_);
 		}
 
-		if(!reachedDirection_)
-			reachedDirection_ = reachedDirection();
 		// no target reached, we still have to move
-		if(reachedDirection_)
-			moveTowardsMarker();
-		else
+		if(!avoidingObstacle_ && !reachedDirection())
 			turnToMarker();
+		else
+			moveTowardsMarker();
 
 		return NULL;
 	}
@@ -119,5 +120,15 @@ namespace mae
 	void MovingToMarker::moveTowardsMarker()
 	{
 		wander_.step();
+	}
+	
+	void MovingToMarker::onAvoidBegin()
+	{
+		avoidingObstacle_ = true;
+	}
+	
+	void MovingToMarker::onAvoidEnd()
+	{
+		avoidingObstacle_ = false;
 	}
 }

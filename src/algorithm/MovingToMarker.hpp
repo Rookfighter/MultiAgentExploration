@@ -15,7 +15,7 @@ namespace mae
 		double movedDistance_;
 		MarkerMeasurement targetMeasurement_;
 		bool foundMarker_;
-		bool reachedDirection_;
+		bool avoidingObstacle_;
 		
 		void updateGeometry();
 		void updateTargetMeasurement();
@@ -24,6 +24,9 @@ namespace mae
 		bool movedEnough();
 		void turnToMarker();
 		void moveTowardsMarker();
+		
+		void onAvoidBegin();
+		void onAvoidEnd();
 	public:
 		MovingToMarker(const AntStateProperties &p_properties);
 		~MovingToMarker();

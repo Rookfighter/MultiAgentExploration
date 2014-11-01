@@ -9,13 +9,18 @@ namespace mae
 	class MovingToMarker : public AntState
 	{
 	private:
+		enum State {MOVING, AVOIDING, AFTER_AVOIDING};
+		
 		Wander wander_;
 		
 		Pose lastPose_;
 		double movedDistance_;
 		MarkerMeasurement targetMeasurement_;
 		bool foundMarker_;
-		bool avoidingObstacle_;
+		
+		State state_;
+		int obstacleAvoidStep_;
+		static const int OBSTACLE_AVOID_MAX_STEP = 5;
 		
 		void updateGeometry();
 		void updateTargetMeasurement();
@@ -24,6 +29,7 @@ namespace mae
 		bool movedEnough();
 		void turnToMarker();
 		void moveTowardsMarker();
+		bool isAvoidingObstacle();
 		
 		void onAvoidBegin();
 		void onAvoidEnd();

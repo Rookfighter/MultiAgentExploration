@@ -27,7 +27,7 @@ namespace mae
 	MovingToMarker::MovingToMarker(const AntStateProperties &p_properties)
 		:AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleStopDistance),
 		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
-		 avoidingObstacle_(false)
+		 state_(MOVING), obstacleAvoidStep_(0)
 	{
 		LOG(DEBUG) << "New MovingToMarker state.";
 		wander_.onAvoidBegin(std::bind(&MovingToMarker::onAvoidBegin,this));
@@ -55,7 +55,7 @@ namespace mae
 		}
 
 		// no target reached, we still have to move
-		if(!avoidingObstacle_ && !reachedDirection())
+		if(!isAvoidingObstacle() && !reachedDirection())
 			turnToMarker();
 		else
 			moveTowardsMarker();
@@ -70,14 +70,17 @@ namespace mae
 		movedDistance_ += (currentPose.position - lastPose_.position).length();
 		lastPose_ = currentPose;
 
-		// get angle to target Marker
+		// get measurement to target Marker e.g. rel. distance, rel. direction
 		updateTargetMeasurement();
 	}
 
 	void MovingToMarker::updateTargetMeasurement()
 	{
 		std::vector<MarkerMeasurement> markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
-
+		
+		// find target marker from all available marker
+		// if marker was not found (is destroyed or not in range anymore)
+		// we just keep wandering
 		foundMarker_ = false;
 		for(MarkerMeasurement measurement : markerInRange) {
 			if(properties_.nextMarker->getID() == measurement.marker->getID()) {
@@ -120,15 +123,30 @@ namespace mae
 	void MovingToMarker::moveTowardsMarker()
 	{
 		wander_.step();
+		
+		// AFTER_AVOIDING state prohibits that obstacle avoiding
+		// and changing direction to marker flip all the time
+		// else the robot would always try to change its direction all over again
+		if(state_== AFTER_AVOIDING) {
+			obstacleAvoidStep_++;
+			if(obstacleAvoidStep_ == OBSTACLE_AVOID_MAX_STEP)
+				state_ = MOVING;
+		}
+	}
+	
+	bool MovingToMarker::isAvoidingObstacle()
+	{
+		return state_ == AVOIDING || state_ == AFTER_AVOIDING;
 	}
 	
 	void MovingToMarker::onAvoidBegin()
 	{
-		avoidingObstacle_ = true;
+		state_ = AVOIDING;
 	}
 	
 	void MovingToMarker::onAvoidEnd()
 	{
-		avoidingObstacle_ = false;
+		state_= AFTER_AVOIDING;
+		obstacleAvoidStep_ = 0;
 	}
 }

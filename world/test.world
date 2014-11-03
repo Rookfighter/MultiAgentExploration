@@ -11,8 +11,8 @@ window
 
 floorplan
 (
-    bitmap "bitmaps/kitchen.png"
-    size [10 6 1]
+    bitmap "bitmaps/obstructed_room.png"
+    size [15 15 1]
 )
 
 pioneer2dx

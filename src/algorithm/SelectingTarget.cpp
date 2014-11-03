@@ -9,6 +9,8 @@
 #define LEFT_IDX 4
 #define RIGHT_IDX 6
 
+#define MARKER_OBSTACLE_FOV (M_PI / 6) // 30°
+
 namespace mae
 {
 	static const double obstacleAngles[8] = {
@@ -27,10 +29,9 @@ namespace mae
 
 
 	SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
-		: AntState(p_properties), obstacleThreshold_(p_properties.obstacleMarkerDistance)
+		: AntState(p_properties), obstacleMarkerDistance_(p_properties.obstacleMarkerDistance)
 	{
 		LOG(DEBUG) << "New SelectingTarget state.";
-		LOG(DEBUG) << "ObstacleThreshold: " << obstacleThreshold_;
 	}
 
 	SelectingTarget::~SelectingTarget()
@@ -44,9 +45,11 @@ namespace mae
 		properties_.nextMarker = NULL;
 
 		getMarkerInRange();
+		// check if there is any direction without marker to take
 		if(!checkBlankSpace()) {
-			getMarkerTarget();
-			properties_.nextMarker->setHighlighted(true);
+			// check if we can find any marker
+			if(findNextMarker())
+				properties_.nextMarker->setHighlighted(true);
 		}
 
 		return new UpdatingValue(properties_);
@@ -71,10 +74,18 @@ namespace mae
 	bool SelectingTarget::checkBlankSpace()
 	{
 		// check if obstacle is the direction
-		bool blockedFront = checkObstalce(obstacleAngles[FRONT_IDX], obstacleAngles[FRONT_IDX + 1]);
-		bool blockedBack = checkObstalce(obstacleAngles[BACK_IDX], obstacleAngles[BACK_IDX + 1]);
-		bool blockedLeft = checkObstalce(obstacleAngles[LEFT_IDX], obstacleAngles[LEFT_IDX + 1]);
-		bool blockedRight = checkObstalce(obstacleAngles[RIGHT_IDX], obstacleAngles[RIGHT_IDX + 1]);
+		bool blockedFront = checkObstacle(obstacleAngles[FRONT_IDX],
+		                                  obstacleAngles[FRONT_IDX + 1],
+		                                  obstacleMarkerDistance_);
+		bool blockedBack = checkObstacle(obstacleAngles[BACK_IDX],
+		                                 obstacleAngles[BACK_IDX + 1],
+		                                 obstacleMarkerDistance_);
+		bool blockedLeft = checkObstacle(obstacleAngles[LEFT_IDX],
+		                                 obstacleAngles[LEFT_IDX + 1],
+		                                 obstacleMarkerDistance_);
+		bool blockedRight = checkObstacle(obstacleAngles[RIGHT_IDX],
+		                                  obstacleAngles[RIGHT_IDX + 1],
+		                                  obstacleMarkerDistance_);
 
 		LOG(DEBUG) << "-- Obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
 		           ", L=" << boolToStr(blockedLeft) << ", R=" << boolToStr(blockedRight);
@@ -114,7 +125,9 @@ namespace mae
 	}
 
 
-	bool SelectingTarget::checkObstalce(const double p_beginAngle, const double p_endAngle)
+	bool SelectingTarget::checkObstacle(const double p_beginAngle,
+	                                    const double p_endAngle,
+	                                    const double p_distance)
 	{
 		double minDistance = 1e6;
 
@@ -130,18 +143,45 @@ namespace mae
 				minDistance = distance;
 		}
 
-		return minDistance < obstacleThreshold_;
+		return minDistance < p_distance;
 	}
 
-	void SelectingTarget::getMarkerTarget()
+	bool SelectingTarget::findNextMarker()
 	{
 		assert(!markerInRange_.empty());
 
-		for(MarkerMeasurement measurement : markerInRange_) {
-			if(properties_.nextMarker == NULL ||
-			        properties_.nextMarker->getValue() > measurement.marker->getValue())
-				properties_.nextMarker = measurement.marker;
+		double checkDistance = std::min(properties_.robot->getMarkerSensor().getMaxRange(),
+		                                properties_.robot->getRanger().getProperties().getMaxRange());
+		bool foundMarker = false;
+		int nextIdx = -1;
+		bool alreadyChecked[markerInRange_.size()];
+		int checkedCount = 0;
+		
+		for(int i = 0; i < markerInRange_.size(); ++i)
+			alreadyChecked[i] = false;
+
+		while(!foundMarker && checkedCount < markerInRange_.size()) {
+			// search marker with smallest value
+			for(int i = 0; i < markerInRange_.size(); ++i) {
+				if(!alreadyChecked[i] &&
+				        (nextIdx == -1 ||
+				         markerInRange_[nextIdx].marker->getValue() > markerInRange_[i].marker->getValue()))
+					nextIdx = i;
+			}
+			// exclude this marker from future iterations
+			alreadyChecked[nextIdx] = true;
+			checkedCount++;
+			
+			// check if the way to the marker is blocked by an obstacle
+			foundMarker = checkObstacle(markerInRange_[nextIdx].relativeDirection - (MARKER_OBSTACLE_FOV / 2),
+			                            markerInRange_[nextIdx].relativeDirection + (MARKER_OBSTACLE_FOV / 2),
+			                            checkDistance);
 		}
+		
+		if(foundMarker)
+			properties_.nextMarker = markerInRange_[nextIdx].marker;
+		
+		return foundMarker;
 	}
 
 

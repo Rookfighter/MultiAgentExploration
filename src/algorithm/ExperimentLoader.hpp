@@ -8,9 +8,10 @@ namespace mae
 
 	class ExperimentLoader
 	{
-	public:
+	private:
 		ExperimentLoader();
 		~ExperimentLoader();
+	public:
 
 		static Experiment* load(const std::string &p_file);
 	};

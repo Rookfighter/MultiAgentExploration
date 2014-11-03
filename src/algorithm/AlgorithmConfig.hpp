@@ -29,4 +29,4 @@ namespace mae
 
 }
 
-#endif // MAE_ALGORITHM_CONFIG_HPP
+#endif

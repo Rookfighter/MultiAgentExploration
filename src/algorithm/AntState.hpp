@@ -21,8 +21,8 @@ namespace mae
 		
 		updateValueFunc updateValue;
 		
-		double obstacleStopDistance;
-		double obstacleBlockDistance; 
+		double obstacleAvoidDistance;
+		double obstacleMarkerDistance; 
 		
 		AntStateProperties();
 		~AntStateProperties();

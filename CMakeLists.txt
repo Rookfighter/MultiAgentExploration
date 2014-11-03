@@ -28,6 +28,7 @@ file(GLOB MULTI_AGENT_EXPLORATION_SRC
     "src/algorithm/*.cpp"
     "src/common/*.cpp"
     "src/simulation/*.cpp"
+    "src/app/*.cpp"
     "src/test/*.cpp")
 
 # add nodecounting client

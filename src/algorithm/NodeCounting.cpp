@@ -9,18 +9,16 @@ namespace mae
 		p_current->incrementValue();
 	}
 
-	NodeCounting::NodeCounting(ExplorationBot *p_robot,
-	                           Simulation *p_simulation,
-	                           MarkerStock *p_stock)
+	NodeCounting::NodeCounting(const AlgorithmConfig &p_config)
 		:AntAlgorithm()
 	{
 		AntStateProperties properties;
-		properties.robot = p_robot;
-		properties.stock = p_stock;
-		properties.simulation = p_simulation;
+		properties.robot = p_config.robot;
+		properties.stock = p_config.stock;
+		properties.simulation = p_config.simulation;
 		properties.updateValue = updateValueNodeCounting;
-		properties.obstacleStopDistance = 0.5;
-		properties.obstacleBlockDistance = 1.0;
+		properties.obstacleAvoidDistance = p_config.obstacleAvoidDistance;
+		properties.obstacleMarkerDistance = p_config.obstacleMarkerDistance;
 		
 		init(new InitialAntState(properties));
 	}

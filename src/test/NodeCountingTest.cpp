@@ -6,9 +6,15 @@ namespace mae
 
 	NodeCountingTest::NodeCountingTest(World *p_world,
 	                                   const std::string &p_robotName)
-		:world_(p_world),
-		 nodeCounting_(p_world->getRobot(p_robotName), p_world->getSimulation(), p_world->getStock())
+		:world_(p_world)
 	{
+		AlgorithmConfig config;
+		config.robot = world_->getRobot(p_robotName);
+		config.simulation = p_world->getSimulation();
+		config.stock = p_world->getStock();
+		config.obstacleAvoidDistance = 0.5;
+		config.obstacleMarkerDistance = 1.0;
+		nodeCounting_ = new NodeCounting(config);
 	}
 
 	NodeCountingTest::~NodeCountingTest()
@@ -25,7 +31,7 @@ namespace mae
 				LOG(INFO) << "UpdateLag: " << updateWatch_.getWorstMsec() << "ms";
 				
 			logicWatch_.start();
-			nodeCounting_.step();
+			nodeCounting_->step();
 			logicWatch_.stop();
 			if(logicWatch_.hasNewWorstCase())
 				LOG(INFO) << "LogicLag: " << logicWatch_.getWorstMsec() << "ms";

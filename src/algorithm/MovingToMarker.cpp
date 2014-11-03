@@ -25,7 +25,7 @@ namespace mae
 {
 
 	MovingToMarker::MovingToMarker(const AntStateProperties &p_properties)
-		:AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleStopDistance),
+		:AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleAvoidDistance),
 		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
 		 state_(MOVING), obstacleAvoidStep_(0)
 	{

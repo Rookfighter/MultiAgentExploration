@@ -1,12 +1,13 @@
 #ifndef MAE_ANT_ALGORITHM_HPP
 #define MAE_ANT_ALGORITHM_HPP
 
+#include "algorithm/Algorithm.hpp"
 #include "algorithm/AntState.hpp"
 
 namespace mae
 {
 	
-	class AntAlgorithm
+	class AntAlgorithm : public Algorithm
 	{
 	private:
 		AntState *state_;

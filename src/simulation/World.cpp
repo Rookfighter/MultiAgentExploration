@@ -1,10 +1,11 @@
-#include "simulation/World.hpp"
 #include <easylogging++.h>
+#include "simulation/World.hpp"
 
 namespace mae
 {
 
 	World::World()
+	: client_(NULL), simulation_(NULL), stock_(NULL), robots_()
 	{
 	}
 
@@ -14,9 +15,12 @@ namespace mae
 			delete robot;
 		robots_.clear();
 		
-		delete stock_;
-		delete simulation_;
-		delete client_;
+		if(stock_ != NULL)
+			delete stock_;
+		if(simulation_ != NULL)
+			delete simulation_;
+		if(client_ != NULL)
+			delete client_;
 	}
 		
 	PlayerClient* World::getClient()

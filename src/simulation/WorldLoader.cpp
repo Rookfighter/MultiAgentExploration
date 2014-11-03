@@ -1,4 +1,3 @@
-#include <yaml-cpp/yaml.h>
 #include <easylogging++.h>
 #include "simulation/WorldLoader.hpp"
 
@@ -36,41 +35,45 @@ namespace mae
 
 	World* WorldLoader::load(const std::string &p_file)
 	{
-		LOG(DEBUG) << "Loading config: " << p_file;
-		
-		YAML::Node config, clientNode, simulationNode, stockNode, robotsNode;
+		YAML::Node root;
+		LOG(INFO) << "Loading config: " << p_file;
+		root = YAML::LoadFile(p_file);
+		LOG(INFO) << "-- file found";
+		return load(root);
+	}
+	
+	World* WorldLoader::load(YAML::Node& p_root)
+	{
+		YAML::Node clientNode, simulationNode, stockNode, robotsNode;
 		std::string host;
 		int port;
 		SimulationConfig simulationConfig;
 		StockConfig stockConfig;
 		std::vector<RobotConfig> robotConfigs;
 		
-		config = YAML::LoadFile(p_file);
-		LOG(DEBUG) << "-- file found";
-		
 		// get configuration of client
-		clientNode = config[CLIENT_NODE];
+		clientNode = p_root[CLIENT_NODE];
 		host = clientNode[HOST_NODE].as<std::string>();
 		port = clientNode[PORT_NDOE].as<int>();
-		LOG(DEBUG) << "-- client info found";
+		LOG(INFO) << "-- client config found";
 		
 		// get configuration of simulation
-		simulationNode = config[SIMULATION_NODE];
+		simulationNode = p_root[SIMULATION_NODE];
 		simulationConfig.simulationIndex = simulationNode[SIMULATION_INDEX_NODE].as<int>();
-		LOG(DEBUG) << "-- simulation info found";
+		LOG(INFO) << "-- simulation config found";
 		
 		// get configuration of marker stock
-		stockNode = config[STOCK_NODE];
+		stockNode = p_root[STOCK_NODE];
 		stockConfig.stockName = stockNode[STOCK_NAME_NODE].as<std::string>();
 		stockConfig.refillCount = stockNode[REFILL_COUNT_NODE].as<int>();
 		stockConfig.graphicsIndex = stockNode[GRAPHICS_INDEX_NODE].as<int>();
-		LOG(DEBUG) << "-- stock info found";
+		LOG(INFO) << "-- stock config found";
 		
 		// get configuration for all robots
-		robotsNode = config[ROBOTS_NODE];
-		LOG(DEBUG) << "-- robot info found";
+		robotsNode = p_root[ROBOTS_NODE];
+		LOG(INFO) << "-- robot config found";
 		if(robotsNode.IsSequence()) {
-			LOG(DEBUG) << "-- is sequence: " << robotsNode.size();
+			LOG(INFO) << "-- found " << robotsNode.size() << " robot configs";
 			
 			robotConfigs.resize(robotsNode.size());
 			for(int i = 0; i < robotsNode.size(); ++i) {

@@ -11,7 +11,7 @@ namespace mae
 	{
 	private:
 		World *world_;
-		NodeCounting nodeCounting_;
+		NodeCounting *nodeCounting_;
 		StopWatch updateWatch_;
 		StopWatch logicWatch_;
 		

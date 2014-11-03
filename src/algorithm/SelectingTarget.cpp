@@ -27,7 +27,7 @@ namespace mae
 
 
 	SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
-		: AntState(p_properties), obstacleThreshold_(p_properties.obstacleBlockDistance)
+		: AntState(p_properties), obstacleThreshold_(p_properties.obstacleMarkerDistance)
 	{
 		LOG(DEBUG) << "New SelectingTarget state.";
 		LOG(DEBUG) << "ObstacleThreshold: " << obstacleThreshold_;

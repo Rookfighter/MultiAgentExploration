@@ -25,7 +25,6 @@ namespace mae
 		
 		AntState *newState = state_->update();
 		if(newState != NULL) {
-			LOG(DEBUG) << "-- Changing AntState.";
 			delete state_;
 			state_ = newState;
 		}

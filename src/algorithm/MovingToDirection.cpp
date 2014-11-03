@@ -23,7 +23,6 @@ namespace mae
 		  reachedDirection_(false)
 	{
 		LOG(DEBUG) << "New MovingToDirection state.";
-		LOG(DEBUG) << "-- angleToTurn= " << p_properties.angleToTurn;
 		remainingToTurn_ = normalizeRadian(properties_.angleToTurn);
 	}
 

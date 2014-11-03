@@ -9,7 +9,7 @@
 #define LEFT_IDX 4
 #define RIGHT_IDX 6
 
-#define MARKER_OBSTACLE_FOV (M_PI / 6) // 30°
+#define MARKER_OBSTACLE_FOV (M_PI / 4) // 45°
 
 namespace mae
 {
@@ -43,14 +43,20 @@ namespace mae
 		if(properties_.nextMarker != NULL)
 			properties_.nextMarker->setHighlighted(false);
 		properties_.nextMarker = NULL;
+		properties_.angleToTurn = 0;
 
 		getMarkerInRange();
 		// check if there is any direction without marker to take
 		if(!checkBlankSpace()) {
+			LOG(DEBUG) << "-- no blank found";
 			// check if we can find any marker
-			if(findNextMarker())
+			if(findNextMarker()) {
 				properties_.nextMarker->setHighlighted(true);
-		}
+				LOG(DEBUG) << "-- found next marker";
+			} else
+				LOG(DEBUG) << "-- no fitting next marker found";
+		} else
+			LOG(DEBUG) << "-- found blank";
 
 		return new UpdatingValue(properties_);
 	}
@@ -149,18 +155,19 @@ namespace mae
 	bool SelectingTarget::findNextMarker()
 	{
 		assert(!markerInRange_.empty());
+		assert(properties_.robot->getMarkerSensor().getMaxRange() <
+		       properties_.robot->getRanger().getProperties().getMaxRange());
 
-		double checkDistance = std::min(properties_.robot->getMarkerSensor().getMaxRange(),
-		                                properties_.robot->getRanger().getProperties().getMaxRange());
 		bool foundMarker = false;
-		int nextIdx = -1;
+		int nextIdx;
 		bool alreadyChecked[markerInRange_.size()];
 		int checkedCount = 0;
-		
+
 		for(int i = 0; i < markerInRange_.size(); ++i)
 			alreadyChecked[i] = false;
 
 		while(!foundMarker && checkedCount < markerInRange_.size()) {
+			nextIdx = -1;
 			// search marker with smallest value
 			for(int i = 0; i < markerInRange_.size(); ++i) {
 				if(!alreadyChecked[i] &&
@@ -171,16 +178,19 @@ namespace mae
 			// exclude this marker from future iterations
 			alreadyChecked[nextIdx] = true;
 			checkedCount++;
-			
+
+			LOG(DEBUG) << "-- checking marker: " <<
+			           radianToDegree(markerInRange_[nextIdx].relativeDirection) << "° " <<
+			           markerInRange_[nextIdx].relativeDistance.length() << "m";
 			// check if the way to the marker is blocked by an obstacle
-			foundMarker = checkObstacle(markerInRange_[nextIdx].relativeDirection - (MARKER_OBSTACLE_FOV / 2),
-			                            markerInRange_[nextIdx].relativeDirection + (MARKER_OBSTACLE_FOV / 2),
-			                            checkDistance);
+			foundMarker = !checkObstacle(markerInRange_[nextIdx].relativeDirection - (MARKER_OBSTACLE_FOV / 2),
+			                             markerInRange_[nextIdx].relativeDirection + (MARKER_OBSTACLE_FOV / 2),
+			                             markerInRange_[nextIdx].relativeDistance.length());
 		}
-		
+
 		if(foundMarker)
 			properties_.nextMarker = markerInRange_[nextIdx].marker;
-		
+
 		return foundMarker;
 	}
 

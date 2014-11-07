@@ -1,7 +1,6 @@
 #ifndef MAE_MOTOR_HPP
 #define MAE_MOTOR_HPP
 
-#include <stage.hh>
 #include "simulation/RobotConfig.hpp"
 
 namespace mae

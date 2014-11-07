@@ -56,13 +56,14 @@ namespace mae
 	 * Ranger
 	 *========*/
 	Ranger::Ranger(const RobotConfig &p_config)
-		:ranger_(p_config.client->getClient(), p_config.rangerIndex)
+		:ranger_(NULL)
 	{
-		LOG(DEBUG) << "Connected RangerProxy: " << p_config.rangerIndex << " (" << p_config.name << ")";
-
-		ranger_.RequestGeom();
-		ranger_.RequestConfigure();
-		LOG(DEBUG) << "Requested Geometry and Configure for RangerProxy " << p_config.rangerIndex << " (" << p_config.name << ")";
+		Stg::Model* parent = p_config.world->GetModel(p_config.name);
+		std::stringstream ss;
+		ss << "ranger:" << p_config.rangerIndex;
+		ranger_ = reinterpret_cast<Stg::ModelRanger*>(parent->getChild(ss.str()));
+		ranger_.Subscribe();
+		LOG(DEBUG) << "Connected ModelRanger: " << ss.str() << " (" << p_config.name << ")";
 
 		updateProperties();
 		LOG(DEBUG) << "Initialized MeasurementProperties " << p_config.rangerIndex << " (" << p_config.name << ")";
@@ -70,31 +71,32 @@ namespace mae
 
 	void Ranger::updateProperties()
 	{
-		properties_.setMeasurementCount(ranger_.GetElementCount());
-
-		properties_.maxRange_ = ranger_.GetMaxRange();
-		properties_.fov_ = ranger_.GetMaxAngle() - ranger_.GetMinAngle();
+		assert(ranger_.GetSensors().size() != 0);
+		properties_.setMeasurementCount(ranger_.GetSensors().size());
+		
+		properties_.maxRange_ = ranger_.GetSensors()[0].range.max;
+		properties_.fov_ = ranger_.GetSensors()[0].fov;
 
 		for(int i = 0; i < properties_.getMeasurementCount(); ++i) {
-			player_pose3d_t pose = ranger_.GetElementPose(i);
+			Stg::Pose pose = ranger_.GetSensors()[i].pose;
 
-			properties_.measurementOrigins_[i].set(pose.px, pose.py, pose.pyaw);
+			properties_.measurementOrigins_[i].set(pose.x, pose.y, pose.a);
 		}
 	}
 
 	Ranger::~Ranger()
 	{
-
+		ranger_.Unsubscribe();
 	}
 
 	double Ranger::getDistance(const int p_index) const
 	{
-		return ranger_.GetRange(p_index);
+		return ranger_.GetSensors()[p_index].ranges[0];
 	}
 
 	bool Ranger::hasValidData() const
 	{
-		return ranger_.IsValid();
+		return true;
 	}
 
 	const RangerProperties& Ranger::getProperties() const

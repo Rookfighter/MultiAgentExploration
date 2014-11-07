@@ -14,7 +14,6 @@ namespace mae
 	{
 	public:
 		Stg::World *world;
-		Simulation *simulation;
 		MarkerStock *stock;
 		
 		std::string name;

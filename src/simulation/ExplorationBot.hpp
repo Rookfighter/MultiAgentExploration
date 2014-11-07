@@ -10,6 +10,7 @@ namespace mae
 	class ExplorationBot
 	{
 	private:
+		Stg::ModelPosition position_;
 		std::string name_;
 		Pose absolutePose_;
 		
@@ -17,9 +18,7 @@ namespace mae
 		Ranger ranger_;
 		MarkerSensor markerSensor_;
 		
-		Simulation *simulation_;
 		MarkerStock *stock_;
-
 	public:
 		ExplorationBot(const RobotConfig &p_config);
 		~ExplorationBot();

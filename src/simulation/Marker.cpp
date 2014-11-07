@@ -4,20 +4,39 @@
 
 namespace mae
 {
-	Marker::Marker( const int p_id)
-		:id_(p_id),
+	Marker::Marker(const int p_id)
+		:id_(p_id),model_()
 		value_(0), highlighted_(false)
 	{
+		model_.AddBlockRect(0, 0, 0.05, 0.05, 0.01);
+		model_.SetColor(Stg::Color.red);
+		
+		model_.SetBlobReturn(false);
+		model_.SetGravityReturn(false);
+		model_.SetGripperReturn(false);
+		model_.SetObstacleReturn(false);
+		model_.SetRangerReturn(false);
+		model_.SetFiducialReturn(false);
+		model_.SetStickyReturn(false);
 	}
 	
 	Marker::~Marker()
 	{
 	}
 
+	void Marker::connect(Stg::World* p_world)
+	{
+		p_world.AddModel(&model_);
+	}
+	
+	void Marker::disconnect(Stg::World* p_world)
+	{
+		p_world.RemoveModel(&model_);
+	}
+
 	void Marker::setPose(const Pose& p_pose)
 	{
-		pose_ = p_pose;
-		redraw();
+		model_.SetGlobalPose(p_pose.position.x, pose.position.y, 0, pose.yaw);
 	}
 	
 	void Marker::setValue(const int p_value)
@@ -28,7 +47,10 @@ namespace mae
 	void Marker::setHighlighted(const bool p_highlighted)
 	{
 		highlighted_ = p_highlighted;
-		redraw();
+		if(highlighted_)
+			model_.SetColor(Stg::Color.green);
+		else
+			model_.SetColor(Stg::Color.red);
 	}
 	
 	bool Marker::isHighlighted() const
@@ -43,7 +65,8 @@ namespace mae
 	
 	const Pose& Marker::getPose() const
 	{
-		return pose_;
+		Stg::Pose pose = model_.GetGlobalPose();
+		return Pose(pose.x, pose.y, pose.a);
 	}
 	
 	int Marker::getValue() const
@@ -60,13 +83,8 @@ namespace mae
 	{
 		std::stringstream ss;
 		ss.precision(2);
-		ss << "id: " << id_ << " pos=" << pose_.str() << ",val=" << value_;
+		ss << "id: " << id_ << " pos=" << getPose().str() << ",val=" << value_;
 
 		return ss.str();
-	}
-	
-	void Marker::redraw()
-	{
-		notifyAll(NULL);
 	}
 }

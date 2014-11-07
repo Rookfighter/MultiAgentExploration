@@ -3,23 +3,24 @@
 
 #include <string>
 #include "utils/Odometry.hpp"
-#include "utils/Subject.hpp"
 
 namespace mae
 {
-	class Marker : public Subject
+	class Marker
 	{
 		friend class MarkerStock;
 	private:
+		Stg::Model model_;
 		int id_;
-		Pose pose_;
 		bool highlighted_;
 		int value_;
 		
-		void redraw();
 	public:
 		Marker(const int p_id);
 		~Marker();
+		
+		void connect(Stg::World* p_world);
+		void disconnect(Stg::World* p_world);
 		
 		void setPose(const Pose& p_pose);
 		void setValue(const int p_value);

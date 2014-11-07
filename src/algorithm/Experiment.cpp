@@ -3,6 +3,13 @@
 
 namespace mae
 {
+	static int experimentCallback(Stg::World* world, void* userarg)
+	{
+		Experiment *experiment = (Experiment*) userarg;
+		experiment->step();
+		
+		return 0;
+	}
 
 	Experiment::Experiment()
 		:world_(NULL), algorithms_()
@@ -32,6 +39,12 @@ namespace mae
 		/*LOG(DEBUG) << "Update: " << updateWatch_.getLastMsec() << "ms (" << updateWatch_.getWorstMsec() << "ms) "<<
 		           "Algorithm: " << algorithmWatch_.getLastMsec() << "ms (" << algorithmWatch_.getWorstMsec() << "ms)";*/
 	}
+	
+	void Experiment::run()
+	{
+		world_->getWorld()->AddUpdateCallback(experimentCallback, this);
+		world_->getWorld()->Run();
+	}
 
 	Algorithm* Experiment::getAlgorithmOf(const std::string &p_robotName)
 	{
@@ -48,7 +61,7 @@ namespace mae
 		return algorithms_;
 	}
 
-	World* Experiment::getWorld()
+	Simulation* Experiment::getWorld()
 	{
 		return world_;
 	}

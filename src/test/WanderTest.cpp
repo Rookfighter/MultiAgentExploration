@@ -3,7 +3,7 @@
 namespace mae
 {
 
-	WanderTest::WanderTest(World &p_world,
+	WanderTest::WanderTest(Simulation &p_world,
 	                       ExplorationBot &p_bot)
 		:world_(p_world), wander_(p_bot)
 	{

@@ -2,7 +2,7 @@
 #define MAE_EXPERIMENT_HPP
 
 #include "algorithm/Algorithm.hpp"
-#include "simulation/World.hpp"
+#include "simulation/Simulation.hpp"
 #include "utils/StopWatch.hpp"
 
 namespace mae
@@ -12,7 +12,7 @@ namespace mae
 	{
 		friend class ExperimentLoader;
 	private:
-		World *world_;
+		Simulation *world_;
 		std::vector<Algorithm*> algorithms_;
 		StopWatch updateWatch_;
 		StopWatch algorithmWatch_;
@@ -22,11 +22,12 @@ namespace mae
 		~Experiment();
 		
 		void step();
+		void run();
 		
 		Algorithm* getAlgorithmOf(const std::string &p_robotName);
 		std::vector<Algorithm*> getAlgorithms();
 		
-		World* getWorld();
+		Simulation* getWorld();
 	};
 
 }

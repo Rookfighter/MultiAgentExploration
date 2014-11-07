@@ -1,13 +1,13 @@
 #include <easylogging++.h>
 #include "test/TestApplication.hpp"
-#include "simulation/WorldLoader.hpp"
+#include "simulation/SimulationLoader.hpp"
 
 namespace mae
 {
 
 	TestApplication::TestApplication()
 	{
-		world_ = WorldLoader::load("test_simulation.yaml");
+		world_ = SimulationLoader::load("test_simulation.yaml");
 		wanderTest_ = new WanderTest(*world_,
 		                             *world_->getRobot("pioneer1"));
 		ncTest_ = new NodeCountingTest(world_, "pioneer1");

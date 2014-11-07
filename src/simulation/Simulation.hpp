@@ -5,17 +5,17 @@
 
 namespace mae
 {
-	class World
+	class Simulation
 	{
-		friend class WorldLoader;
+		friend class SimulationLoader;
 	private:
 		Stg::World *world_;
 		MarkerStock *stock_;
 		std::vector<ExplorationBot*> robots_;
 		
-		World();
+		Simulation();
 	public:
-		~World();
+		~Simulation();
 		
 		Stg::World* getWorld();
 		MarkerStock* getStock();

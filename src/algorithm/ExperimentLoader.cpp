@@ -2,7 +2,7 @@
 #include <easylogging++.h>
 #include "algorithm/ExperimentLoader.hpp"
 #include "algorithm-rt/NodeCounting.hpp"
-#include "simulation/WorldLoader.hpp"
+#include "simulation/SimulationLoader.hpp"
 #include "utils/Convert.hpp"
 
 #define ALGORITHM_NODE "algorithm"
@@ -27,7 +27,7 @@ namespace mae
 	{
 		YAML::Node root, algorithm;
 		AlgorithmConfig algorithmConfig;
-		World *world;
+		Simulation *world;
 		std::string type;
 		
 		LOG(INFO) << "Loading config: " << p_file;
@@ -41,8 +41,7 @@ namespace mae
 		algorithmConfig.obstacleAvoidDistance = algorithm[OBSTACLE_AVOID_DISTANCE_NODE].as<double>();
 		algorithmConfig.obstacleMarkerDistance = algorithm[OBSTACLE_MARKER_DISTANCE_NODE].as<double>();
 		
-		world = WorldLoader::load(root);
-		
+		world = SimulationLoader::load(root);
 		algorithmConfig.stock = world->getStock();
 		
 		Experiment *result = new Experiment();

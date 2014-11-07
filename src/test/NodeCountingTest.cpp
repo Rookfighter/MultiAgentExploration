@@ -4,7 +4,7 @@
 namespace mae
 {
 
-	NodeCountingTest::NodeCountingTest(World *p_world,
+	NodeCountingTest::NodeCountingTest(Simulation *p_world,
 	                                   const std::string &p_robotName)
 		:world_(p_world)
 	{

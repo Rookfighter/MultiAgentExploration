@@ -4,11 +4,12 @@
 
 namespace mae
 {
-
+	
 	Application::Application(int argc, char** argv)
 	{
 		assert(argc > 1);
 		
+		Stg::Init(&argc, &argv);
 		experiment_ = ExperimentLoader::load(argv[1]);
 	}
 
@@ -20,8 +21,7 @@ namespace mae
 	{
 		LOG(INFO) << "Running Application";
 		try {
-			while(true)
-				experiment_->step();
+			experiment_->run();
 		} catch(std::exception &e) {
 			LOG(WARNING) << "Catched exception: " << e.what();
 		} catch(...) {

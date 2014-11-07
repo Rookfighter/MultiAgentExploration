@@ -5,7 +5,7 @@
 #include "test/WanderTest.hpp"
 #include "test/NodeCountingTest.hpp"
 #include "test/PerformanceTest.hpp"
-#include "simulation/World.hpp"
+#include "simulation/Simulation.hpp"
 
 namespace mae
 {
@@ -13,7 +13,7 @@ namespace mae
 class TestApplication
 	{
 	private:
-		World *world_;
+		Simulation *world_;
 		WanderTest *wanderTest_;
 		NodeCountingTest *ncTest_;
 		PerformanceTest *performanceTest_;

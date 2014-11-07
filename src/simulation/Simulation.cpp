@@ -1,15 +1,15 @@
 #include <easylogging++.h>
-#include "simulation/World.hpp"
+#include "simulation/Simulation.hpp"
 
 namespace mae
 {
 
-	World::World()
+	Simulation::Simulation()
 	: world_(NULL), stock_(NULL), robots_()
 	{
 	}
 
-	World::~World()
+	Simulation::~Simulation()
 	{
 		for(ExplorationBot* robot: robots_)
 			delete robot;
@@ -19,22 +19,22 @@ namespace mae
 			delete stock_;
 	}
 		
-	Stg::World* World::getWorld()
+	Stg::World* Simulation::getWorld()
 	{
 		return world_;
 	}
 	
-	MarkerStock* World::getStock()
+	MarkerStock* Simulation::getStock()
 	{
 		return stock_;
 	}
 	
-	const std::vector<ExplorationBot*>& World::getRobots()
+	const std::vector<ExplorationBot*>& Simulation::getRobots()
 	{
 		return robots_;
 	}
 	
-	ExplorationBot* World::getRobot(const std::string& p_name)
+	ExplorationBot* Simulation::getRobot(const std::string& p_name)
 	{
 		for(ExplorationBot* robot : robots_) {
 			if(robot->getName() == p_name)
@@ -44,7 +44,7 @@ namespace mae
 		return NULL;
 	}
 	
-	void World::update()
+	void Simulation::update()
 	{
 		for(ExplorationBot *robot: robots_)
 			robot->update();

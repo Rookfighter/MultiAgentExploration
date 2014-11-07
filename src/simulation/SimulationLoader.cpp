@@ -1,5 +1,5 @@
 #include <easylogging++.h>
-#include "simulation/WorldLoader.hpp"
+#include "simulation/SimulationLoader.hpp"
 
 #define WORLD_NODE "world"
 #define WORLD_FILE_NODE "file"
@@ -21,15 +21,15 @@
 namespace mae
 {
 
-	WorldLoader::WorldLoader()
+	SimulationLoader::SimulationLoader()
 	{
 	}
 
-	WorldLoader::~WorldLoader()
+	SimulationLoader::~SimulationLoader()
 	{
 	}
 
-	World* WorldLoader::load(const std::string &p_file)
+	Simulation* SimulationLoader::load(const std::string &p_file)
 	{
 		YAML::Node root;
 		LOG(INFO) << "Loading config: " << p_file;
@@ -38,7 +38,7 @@ namespace mae
 		return load(root);
 	}
 	
-	World* WorldLoader::load(YAML::Node& p_root)
+	Simulation* SimulationLoader::load(YAML::Node& p_root)
 	{
 		YAML::Node worldNode, stockNode, robotsNode;
 		std::string worldFile;
@@ -79,7 +79,7 @@ namespace mae
 			}
 		}
 			
-		World *result = new World;
+		Simulation *result = new Simulation;
 		
 		result->world_ = new Stg::WorldGui(600, 600, "Multi Agent Exploration");
 		result->world_->Load(worldFile);

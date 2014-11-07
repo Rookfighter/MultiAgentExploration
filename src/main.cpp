@@ -6,7 +6,7 @@ _INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char **argv)
 {
-	el::Configurations conf("easylog.conf");
+	el::Configurations conf("config/easylog.conf");
 	el::Loggers::reconfigureLogger("default", conf);
 	
 	mae::Application app(argc, argv);

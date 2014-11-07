@@ -10,14 +10,6 @@ namespace mae
 		:id_(p_id), model_(),
 		 value_(0), highlighted_(false)
 	{
-		model_.AddBlockRect(0, 0, MARKER_SIZE, MARKER_SIZE, 0.01);
-		model_.SetColor(Stg::Color::red);
-
-		model_.SetBlobReturn(false);
-		model_.SetGripperReturn(false);
-		model_.SetObstacleReturn(false);
-		model_.SetRangerReturn(0.0);
-		model_.SetFiducialReturn(false);
 	}
 
 	Marker::~Marker()
@@ -27,6 +19,15 @@ namespace mae
 	void Marker::connect(Stg::World* p_world)
 	{
 		p_world->AddModel(&model_);
+		
+		model_.AddBlockRect(0, 0, MARKER_SIZE, MARKER_SIZE, 0.01);
+		model_.SetColor(Stg::Color::red);
+
+		model_.SetBlobReturn(false);
+		model_.SetGripperReturn(false);
+		model_.SetObstacleReturn(false);
+		model_.SetRangerReturn(0.0);
+		model_.SetFiducialReturn(false);
 	}
 
 	void Marker::disconnect(Stg::World* p_world)

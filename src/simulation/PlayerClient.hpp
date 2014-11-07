@@ -1,7 +1,7 @@
 #ifndef MAE_PLAYER_CLIENT_HPP
 #define MAE_PLAYER_CLIENT_HPP
 
-#include <libplayerc++/playerc++.h>
+#include <stage.hh>
 #include <string>
 
 namespace mae
@@ -10,13 +10,13 @@ namespace mae
 	class PlayerClient
 	{
 	private:
-		PlayerCc::PlayerClient client_;
+		Stg::World *world_;
 	public:
-		PlayerClient(const std::string p_host="localhost", const int p_port=6665);
+		PlayerClient(Stg::World *world_);
 		~PlayerClient();
 		
 		
-		PlayerCc::PlayerClient* getClient();
+		Stg::World* getClient();
 		void update();
 	};
 

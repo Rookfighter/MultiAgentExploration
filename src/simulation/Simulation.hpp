@@ -18,7 +18,6 @@ namespace mae
 		PlayerClient *client_;
 		PlayerCc::SimulationProxy simulation_;
 
-
 		void setProperty(const std::string &p_name,
 		                 const std::string &p_property,
 		                 void *p_value,

@@ -2,6 +2,7 @@
 #define MAE_ROBOT_CONFIG_HPP
 
 #include <string>
+#include <stage.hh>
 #include "simulation/Simulation.hpp"
 #include "simulation/MarkerStock.hpp"
 #include "utils/Odometry.hpp"
@@ -12,7 +13,7 @@ namespace mae
 	class RobotConfig
 	{
 	public:
-		PlayerClient *client;
+		Stg::World *world;
 		Simulation *simulation;
 		MarkerStock *stock;
 		

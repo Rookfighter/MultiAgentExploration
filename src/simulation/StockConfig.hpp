@@ -12,7 +12,6 @@ namespace mae
 	public:
 		Stg::World *world;
 		
-		std::string stockName;
 		int refillCount;
 		
 		StockConfig() { }

@@ -144,9 +144,7 @@ namespace mae
 			if(!angleIsBetween(rangerProperties.getMeasurementOrigins()[i].yaw, p_beginAngle, p_endAngle))
 				continue;
 			
-			LOG(DEBUG) << "Yaw: " << rangerProperties.getMeasurementOrigins()[i].yaw;
 			double distance = properties_.robot->getRanger().getDistance(i);
-			LOG(DEBUG) << "Distance: " << distance;
 			if(distance < minDistance)
 				minDistance = distance;
 		}

@@ -21,15 +21,15 @@ namespace mae
 	Pose Motor::getPose() const
 	{
 		Pose result;
-		result.position.x = motor_->GetPose().x;
-		result.position.y = motor_->GetPose().y;
-		result.yaw = motor_->GetPose().a;
+		result.position.x = motor_->est_pose.x;
+		result.position.y = motor_->est_pose.y;
+		result.yaw = motor_->est_pose.a;
 		return result;
 	}
 
 	void Motor::setVelocity(const Velocity &p_velocity)
 	{
-		motor_->SetVelocity(Stg::Velocity(p_velocity.linear, 0, 0, p_velocity.angular));
+		motor_->SetSpeed(p_velocity.linear, 0, p_velocity.angular);
 	}
 	
 	Velocity Motor::getVelocity() const
@@ -40,7 +40,7 @@ namespace mae
 	
 	void Motor::stop()
 	{
-		setVelocity(Velocity(0,0));
+		motor_->Stop();
 	}
 
 	const Velocity& Motor::getMaxVelocity() const

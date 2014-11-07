@@ -24,8 +24,6 @@ namespace mae
 				experiment_->step();
 		} catch(std::exception &e) {
 			LOG(WARNING) << "Catched exception: " << e.what();
-		} catch(PlayerCc::PlayerError &e) {
-			LOG(WARNING) << "Catched player error: " << e.GetErrorStr();
 		} catch(...) {
 			LOG(WARNING) << "Catched unkown instance.";
 		}

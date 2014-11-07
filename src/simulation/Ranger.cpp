@@ -61,8 +61,8 @@ namespace mae
 		Stg::Model* parent = p_config.world->GetModel(p_config.name);
 		std::stringstream ss;
 		ss << "ranger:" << p_config.rangerIndex;
-		ranger_ = reinterpret_cast<Stg::ModelRanger*>(parent->getChild(ss.str()));
-		ranger_.Subscribe();
+		ranger_ = reinterpret_cast<Stg::ModelRanger*>(parent->GetChild(ss.str()));
+		ranger_->Subscribe();
 		LOG(DEBUG) << "Connected ModelRanger: " << ss.str() << " (" << p_config.name << ")";
 
 		updateProperties();
@@ -71,14 +71,14 @@ namespace mae
 
 	void Ranger::updateProperties()
 	{
-		assert(ranger_.GetSensors().size() != 0);
-		properties_.setMeasurementCount(ranger_.GetSensors().size());
+		assert(ranger_->GetSensors().size() != 0);
+		properties_.setMeasurementCount(ranger_->GetSensors().size());
 		
-		properties_.maxRange_ = ranger_.GetSensors()[0].range.max;
-		properties_.fov_ = ranger_.GetSensors()[0].fov;
+		properties_.maxRange_ = ranger_->GetSensors()[0].range.max;
+		properties_.fov_ = ranger_->GetSensors()[0].fov;
 
 		for(int i = 0; i < properties_.getMeasurementCount(); ++i) {
-			Stg::Pose pose = ranger_.GetSensors()[i].pose;
+			Stg::Pose pose = ranger_->GetSensors()[i].pose;
 
 			properties_.measurementOrigins_[i].set(pose.x, pose.y, pose.a);
 		}
@@ -86,12 +86,12 @@ namespace mae
 
 	Ranger::~Ranger()
 	{
-		ranger_.Unsubscribe();
+		ranger_->Unsubscribe();
 	}
 
 	double Ranger::getDistance(const int p_index) const
 	{
-		return ranger_.GetSensors()[p_index].ranges[0];
+		return ranger_->GetSensors()[p_index].ranges[0];
 	}
 
 	bool Ranger::hasValidData() const

@@ -5,7 +5,7 @@
 namespace mae
 {
 	MarkerSensor::MarkerSensor(const RobotConfig& p_config)
-		:simulation_(p_config.simulation), stock_(p_config.stock), robotPose_(),
+		:stock_(p_config.stock), robotPose_(),
 		 maxRange_(p_config.markerSensorMaxRange)
 	{
 	}

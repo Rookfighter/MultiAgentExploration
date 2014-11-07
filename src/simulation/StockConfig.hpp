@@ -2,7 +2,7 @@
 #define MAE_STOCK_CONFIG_HPP
 
 #include <string>
-#include "simulation/Simulation.hpp"
+#include <stage.hh>
 
 namespace mae
 {

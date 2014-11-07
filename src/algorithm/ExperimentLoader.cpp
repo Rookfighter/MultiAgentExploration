@@ -43,7 +43,6 @@ namespace mae
 		
 		world = WorldLoader::load(root);
 		
-		algorithmConfig.simulation = world->getSimulation();
 		algorithmConfig.stock = world->getStock();
 		
 		Experiment *result = new Experiment();

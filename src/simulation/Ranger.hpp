@@ -32,7 +32,7 @@ namespace mae
 	class Ranger
 	{
 	private:
-		Stg::ModelRanger ranger_;
+		Stg::ModelRanger *ranger_;
 		
 		RangerProperties properties_;
 		

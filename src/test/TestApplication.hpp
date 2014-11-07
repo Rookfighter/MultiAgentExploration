@@ -2,7 +2,6 @@
 #define MA_TEST_APPLICATION_HPP
 
 #include <stdexcept>
-#include "test/BasicTest.hpp"
 #include "test/WanderTest.hpp"
 #include "test/NodeCountingTest.hpp"
 #include "test/PerformanceTest.hpp"
@@ -15,7 +14,6 @@ class TestApplication
 	{
 	private:
 		World *world_;
-		BasicTest *basicTest_;
 		WanderTest *wanderTest_;
 		NodeCountingTest *ncTest_;
 		PerformanceTest *performanceTest_;

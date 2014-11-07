@@ -10,7 +10,7 @@ namespace mae
 	class ExplorationBot
 	{
 	private:
-		Stg::ModelPosition position_;
+		Stg::Model *model_;
 		std::string name_;
 		Pose absolutePose_;
 		

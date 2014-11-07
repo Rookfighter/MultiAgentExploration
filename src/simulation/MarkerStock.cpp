@@ -9,8 +9,8 @@ namespace mae
 		:world_(p_config.world), refillCount_(p_config.refillCount),
 		markerPool_(), marker_(), currentID_(0)
 	{
-		refill(config_.refillCount);
-		LOG(DEBUG) << "Initialized MarkerStock: " << config_.refillCount << " Marker (" << p_config.stockName << ")";
+		refill(refillCount_);
+		LOG(DEBUG) << "Initialized MarkerStock: " << refillCount_ << " Marker";
 	}
 
 	MarkerStock::~MarkerStock()
@@ -49,7 +49,7 @@ namespace mae
 	Marker* MarkerStock::acquireMarker()
 	{
 		if(markerPool_.empty())
-			refill(config_.refillCount);
+			refill(refillCount_);
 			
 		Marker *marker = markerPool_.back();
 		markerPool_.pop_back();

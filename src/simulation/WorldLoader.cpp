@@ -47,7 +47,7 @@ namespace mae
 		
 		// get configuration of client
 		worldNode = p_root[WORLD_NODE];
-		worldFile = clientNode[WORLD_FILE_NODE].as<std::string>();
+		worldFile = worldNode[WORLD_FILE_NODE].as<std::string>();
 		LOG(INFO) << "-- world config found";
 		
 		// get configuration of marker stock
@@ -81,8 +81,8 @@ namespace mae
 			
 		World *result = new World;
 		
-		result->world_ = Stg::WorldGui();
-		result->world_.Load(worldFile);
+		result->world_ = new Stg::WorldGui(600, 600, "Multi Agent Exploration");
+		result->world_->Load(worldFile);
 		
 		stockConfig.world = result->world_;
 		result->stock_ = new MarkerStock(stockConfig);

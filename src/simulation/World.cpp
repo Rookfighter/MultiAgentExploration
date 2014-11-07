@@ -19,7 +19,7 @@ namespace mae
 			delete stock_;
 	}
 		
-	Stg::World* World::getWorld();
+	Stg::World* World::getWorld()
 	{
 		return world_;
 	}
@@ -48,6 +48,5 @@ namespace mae
 	{
 		for(ExplorationBot *robot: robots_)
 			robot->update();
-		client_->update();
 	}
 }

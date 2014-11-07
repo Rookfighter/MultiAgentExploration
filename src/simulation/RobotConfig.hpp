@@ -3,7 +3,6 @@
 
 #include <string>
 #include <stage.hh>
-#include "simulation/Simulation.hpp"
 #include "simulation/MarkerStock.hpp"
 #include "utils/Odometry.hpp"
 

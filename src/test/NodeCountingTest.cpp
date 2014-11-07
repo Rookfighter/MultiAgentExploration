@@ -10,7 +10,6 @@ namespace mae
 	{
 		AlgorithmConfig config;
 		config.robot = world_->getRobot(p_robotName);
-		config.simulation = p_world->getSimulation();
 		config.stock = p_world->getStock();
 		config.obstacleAvoidDistance = 0.5;
 		config.obstacleMarkerDistance = 1.0;

@@ -6,11 +6,11 @@
 namespace mae
 {
 	ExplorationBot::ExplorationBot(const RobotConfig &p_config)
-		: name_(p_config.name),
+		: name_(p_config.name), model_(NULL),
 		  motor_(p_config), ranger_(p_config), markerSensor_(p_config),
 		  stock_(p_config.stock)
 	{
-		position_ = p_config.world->GetModel(name_);
+		model_ = p_config.world->GetModel(name_);
 		LOG(DEBUG) << "Initialized Robot (" << name_ << ")";
 	}
 
@@ -20,13 +20,13 @@ namespace mae
 
 	void ExplorationBot::setPose(const Pose &p_pose)
 	{
-		position_.SetGlobalPose(Stg::Pose(p_pose.position.x, p_pose.position.y, 0, p_pose.yaw));
+		model_->SetGlobalPose(Stg::Pose(p_pose.position.x, p_pose.position.y, 0, p_pose.yaw));
 	}
 
 	Pose ExplorationBot::getAbsolutePose()
 	{
-		Stg::Pose pose = position_.GetGlobalPose();
-		return Pose(pose.x, pose.y, pose.yaw);
+		Stg::Pose pose = model_->GetGlobalPose();
+		return Pose(pose.x, pose.y, pose.a);
 	}
 
 	Motor& ExplorationBot::getMotor()

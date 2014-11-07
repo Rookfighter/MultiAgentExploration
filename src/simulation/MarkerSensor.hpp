@@ -15,7 +15,6 @@ namespace mae
 	class MarkerSensor
 	{
 	private:
-		Simulation *simulation_;
 		MarkerStock *stock_;
 		
 		double maxRange_;

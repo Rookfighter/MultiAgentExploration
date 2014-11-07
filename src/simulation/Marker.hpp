@@ -2,6 +2,7 @@
 #define MAE_ANT_MARKER_HPP
 
 #include <string>
+#include <stage.hh>
 #include "utils/Odometry.hpp"
 
 namespace mae
@@ -27,7 +28,7 @@ namespace mae
 		void setHighlighted(const bool p_highlighted);
 		
 		int getID() const;
-		const Pose& getPose() const;
+		Pose getPose() const;
 		int getValue() const;
 		bool isHighlighted() const;
 		

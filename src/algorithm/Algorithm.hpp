@@ -17,4 +17,4 @@ namespace mae
 
 }
 
-#endif // MAE_ALGORITHM_HPP
+#endif

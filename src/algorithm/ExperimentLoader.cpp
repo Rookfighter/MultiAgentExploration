@@ -37,12 +37,7 @@ namespace mae
 		algorithm = root[ALGORITHM_NODE];
 		LOG(INFO) <<  "-- algorithm config found";
 		
-		type = toLowerCase(algorithm[ALGORITHM_TYPE_NODE].as<std::string>());
-		if(type == NODECOUNTING_TYPE)
-			algorithmConfig.type = NODECOUNTING;
-		else
-			assert(false);
-			
+		algorithmConfig.type = toLowerCase(algorithm[ALGORITHM_TYPE_NODE].as<std::string>());
 		algorithmConfig.obstacleAvoidDistance = algorithm[OBSTACLE_AVOID_DISTANCE_NODE].as<double>();
 		algorithmConfig.obstacleMarkerDistance = algorithm[OBSTACLE_MARKER_DISTANCE_NODE].as<double>();
 		
@@ -58,10 +53,10 @@ namespace mae
 		for(int i = 0; i < result->algorithms_.size(); ++i) {
 			algorithmConfig.robot = world->getRobots()[i];
 			
-			switch(algorithmConfig.type) {
-				case NODECOUNTING:
-					result->algorithms_[i] = new NodeCounting(algorithmConfig);
-					break;
+			if(algorithmConfig.type == NODECOUNTING_TYPE) {
+				result->algorithms_[i] = new NodeCounting(algorithmConfig);
+			} else {
+				throw std::logic_error("invalid Algorithm type");
 			}
 		}
 		

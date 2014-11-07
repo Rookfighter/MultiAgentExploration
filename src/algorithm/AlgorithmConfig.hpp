@@ -5,8 +5,6 @@
 
 namespace mae
 {
-	enum AlgortihmType { NODECOUNTING };
-	
 	class AlgorithmConfig
 	{
 	public:
@@ -15,7 +13,7 @@ namespace mae
 		Simulation *simulation;
 		MarkerStock *stock;
 		
-		AlgortihmType type;
+		std::string type;
 		
 		double obstacleAvoidDistance;
 		double obstacleMarkerDistance;

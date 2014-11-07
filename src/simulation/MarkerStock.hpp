@@ -8,27 +8,19 @@
 
 namespace mae
 {	
-	class MarkerStock : public Observer
+	class MarkerStock
 	{
 	private:
-		static player_color_t BLACK;
-		static player_color_t RED;
-		static player_color_t GREEN;
-	
-		PlayerCc::Graphics2dProxy graphics_;
-		StockConfig config_;
+		Stg::World *world_;
+		int refillCount_;
 		
 		std::vector<Marker*> markerPool_;
 		std::vector<Marker*> marker_;
-		
-		Pose pose_;
 		
 		int currentID_;
 		
 		void refill(const int p_markerCount);
 		void cleanup();
-		void redrawMarker();
-		void drawMarkerCenter(Marker *p_marker);
 	public:
 		MarkerStock(const StockConfig &p_config);
 
@@ -38,8 +30,6 @@ namespace mae
 
 		Marker* acquireMarker();
 		void releaseMarker(Marker *p_marker);
-		
-		void notify(void *p_data);
 	};
 
 }

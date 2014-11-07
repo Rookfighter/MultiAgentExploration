@@ -10,14 +10,13 @@ namespace mae
 	class StockConfig
 	{
 	public:
-		PlayerClient *client;
-		Simulation *simulation;
-		int graphicsIndex;
+		Stg::World *world;
+		
 		std::string stockName;
 		int refillCount;
 		
-		StockConfig();
-		~StockConfig();
+		StockConfig() { }
+		~StockConfig() { }
 	};
 
 }

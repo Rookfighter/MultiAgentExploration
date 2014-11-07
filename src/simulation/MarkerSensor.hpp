@@ -15,8 +15,6 @@ namespace mae
 	class MarkerSensor
 	{
 	private:
-		PlayerCc::Graphics2dProxy graphics_;
-		
 		Simulation *simulation_;
 		MarkerStock *stock_;
 		
@@ -25,7 +23,6 @@ namespace mae
 		Pose robotPose_;
 		
 		MarkerMeasurement getMeasurementFor(Marker* p_marker);
-		void drawPolygon();
 	public:
 		MarkerSensor(const RobotConfig& p_config);
 		~MarkerSensor();

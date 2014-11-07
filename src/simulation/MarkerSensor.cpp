@@ -2,35 +2,12 @@
 #include "simulation/MarkerSensor.hpp"
 #include "utils/Math.hpp"
 
-#define POLY_CORNER_COUNT 12
-
 namespace mae
 {
-	static const player_color_t GREEN = {50,0,255,0};
-	
 	MarkerSensor::MarkerSensor(const RobotConfig& p_config)
-		:graphics_(p_config.client->getClient(), p_config.graphicsIndex),
-		 simulation_(p_config.simulation), stock_(p_config.stock), robotPose_(),
+		:simulation_(p_config.simulation), stock_(p_config.stock), robotPose_(),
 		 maxRange_(p_config.markerSensorMaxRange)
 	{
-		LOG(DEBUG) << "Connected GraphicsProxy: " << p_config.graphicsIndex << " (" << p_config.name << ")";
-		drawPolygon();
-	}
-	
-	void MarkerSensor::drawPolygon()
-	{
-		Vector2 points[POLY_CORNER_COUNT];
-		player_point_2d_t playerPoints[POLY_CORNER_COUNT];
-		createRegularPolygon(1, points, POLY_CORNER_COUNT);
-		
-		for(int i = 0; i < POLY_CORNER_COUNT; ++i) {
-			playerPoints[i].px = points[i].x * maxRange_;
-			playerPoints[i].py = points[i].y * maxRange_;
-		}
-		
-		graphics_.Clear();
-		graphics_.Color(GREEN);
-		graphics_.DrawPolygon(playerPoints, POLY_CORNER_COUNT, false, GREEN);
 	}
 
 	MarkerSensor::~MarkerSensor()

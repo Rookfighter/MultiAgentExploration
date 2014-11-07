@@ -24,6 +24,7 @@ namespace mae
 		assert(state_ != NULL);
 		
 		AntState *newState = state_->update();
+		
 		if(newState != NULL) {
 			delete state_;
 			state_ = newState;

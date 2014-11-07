@@ -3,16 +3,8 @@
 
 namespace mae
 {
-	static int experimentCallback(Stg::World* world, void* userarg)
-	{
-		Experiment *experiment = (Experiment*) userarg;
-		experiment->step();
-		
-		return 0;
-	}
-
 	Experiment::Experiment()
-		:world_(NULL), algorithms_()
+		:simulation_(NULL), algorithms_()
 	{
 	}
 
@@ -21,35 +13,30 @@ namespace mae
 		for(Algorithm* algo: algorithms_)
 			delete algo;
 		algorithms_.clear();
-		if(world_ != NULL)
-			delete world_;
+		if(simulation_ != NULL)
+			delete simulation_;
 	}
 
-	void Experiment::step()
+	void Experiment::update()
 	{
 		updateWatch_.start();
-		world_->update();
+		simulation_->update();
 		updateWatch_.stop();
 
 		algorithmWatch_.start();
 		for(Algorithm *algo : algorithms_)
 			algo->step();
+			
 		algorithmWatch_.stop();
 
 		/*LOG(DEBUG) << "Update: " << updateWatch_.getLastMsec() << "ms (" << updateWatch_.getWorstMsec() << "ms) "<<
 		           "Algorithm: " << algorithmWatch_.getLastMsec() << "ms (" << algorithmWatch_.getWorstMsec() << "ms)";*/
 	}
 	
-	void Experiment::run()
-	{
-		world_->getWorld()->AddUpdateCallback(experimentCallback, this);
-		world_->getWorld()->Run();
-	}
-
 	Algorithm* Experiment::getAlgorithmOf(const std::string &p_robotName)
 	{
-		for(int i = 0; i < world_->getRobots().size(); ++i) {
-			if(world_->getRobots()[i]->getName() == p_robotName)
+		for(int i = 0; i < simulation_->getRobots().size(); ++i) {
+			if(simulation_->getRobots()[i]->getName() == p_robotName)
 				return algorithms_[i];
 		}
 
@@ -61,8 +48,8 @@ namespace mae
 		return algorithms_;
 	}
 
-	Simulation* Experiment::getWorld()
+	Simulation* Experiment::getSimulation()
 	{
-		return world_;
+		return simulation_;
 	}
 }

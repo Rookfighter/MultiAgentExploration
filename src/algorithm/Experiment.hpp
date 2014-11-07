@@ -12,7 +12,7 @@ namespace mae
 	{
 		friend class ExperimentLoader;
 	private:
-		Simulation *world_;
+		Simulation *simulation_;
 		std::vector<Algorithm*> algorithms_;
 		StopWatch updateWatch_;
 		StopWatch algorithmWatch_;
@@ -21,13 +21,12 @@ namespace mae
 	public:
 		~Experiment();
 		
-		void step();
-		void run();
+		void update();
 		
 		Algorithm* getAlgorithmOf(const std::string &p_robotName);
 		std::vector<Algorithm*> getAlgorithms();
 		
-		Simulation* getWorld();
+		Simulation* getSimulation();
 	};
 
 }

@@ -7,7 +7,7 @@
 namespace mae
 {
 	Marker::Marker(const int p_id)
-		:id_(p_id), model_(),
+		:id_(p_id), model_(NULL),
 		 value_(0), highlighted_(false)
 	{
 	}
@@ -18,26 +18,39 @@ namespace mae
 
 	void Marker::connect(Stg::World* p_world)
 	{
-		p_world->AddModel(&model_);
+		assert(model_ == NULL);
 		
-		model_.AddBlockRect(0, 0, MARKER_SIZE, MARKER_SIZE, 0.01);
-		model_.SetColor(Stg::Color::red);
-
-		model_.SetBlobReturn(false);
-		model_.SetGripperReturn(false);
-		model_.SetObstacleReturn(false);
-		model_.SetRangerReturn(0.0);
-		model_.SetFiducialReturn(false);
+		model_ = new Stg::Model(p_world, NULL, name_);
+		//p_world->AddModel(model_);
+		
+		model_->AddBlockRect(0, 0, MARKER_SIZE, MARKER_SIZE, 0.01);
+		model_->SetColor(Stg::Color::red);
+		
+		Stg::Geom geom = model_->GetGeom();
+		geom.size = Stg::Size(MARKER_SIZE, MARKER_SIZE, 0.01);
+		model_->SetGeom(geom);
+		
+		model_->SetBlobReturn(false);
+		model_->SetGripperReturn(false);
+		model_->SetObstacleReturn(false);
+		model_->SetRangerReturn(0.0);
+		model_->SetFiducialReturn(false);
 	}
 
 	void Marker::disconnect(Stg::World* p_world)
 	{
-		p_world->RemoveModel(&model_);
+		assert(model_ != NULL);
+		
+		p_world->RemoveModel(model_);
+		delete model_;
+		model_ = NULL;
 	}
 
 	void Marker::setPose(const Pose& p_pose)
 	{
-		model_.SetGlobalPose(Stg::Pose(p_pose.position.x, p_pose.position.y, 0, p_pose.yaw));
+		assert(model_ != NULL);
+		
+		model_->SetGlobalPose(Stg::Pose(p_pose.position.x, p_pose.position.y, 0, p_pose.yaw));
 	}
 
 	void Marker::setValue(const int p_value)
@@ -47,11 +60,13 @@ namespace mae
 
 	void Marker::setHighlighted(const bool p_highlighted)
 	{
+		assert(model_ != NULL);
+		
 		highlighted_ = p_highlighted;
 		if(highlighted_)
-			model_.SetColor(Stg::Color::green);
+			model_->SetColor(Stg::Color::green);
 		else
-			model_.SetColor(Stg::Color::red);
+			model_->SetColor(Stg::Color::red);
 	}
 
 	bool Marker::isHighlighted() const
@@ -66,7 +81,9 @@ namespace mae
 
 	Pose Marker::getPose() const
 	{
-		Stg::Pose pose = model_.GetGlobalPose();
+		assert(model_ != NULL);
+		
+		Stg::Pose pose = model_->GetGlobalPose();
 		return Pose(pose.x, pose.y, pose.a);
 	}
 

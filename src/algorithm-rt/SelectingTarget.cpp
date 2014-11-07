@@ -143,8 +143,10 @@ namespace mae
 			// check if sensor is in the angles we check
 			if(!angleIsBetween(rangerProperties.getMeasurementOrigins()[i].yaw, p_beginAngle, p_endAngle))
 				continue;
-
+			
+			LOG(DEBUG) << "Yaw: " << rangerProperties.getMeasurementOrigins()[i].yaw;
 			double distance = properties_.robot->getRanger().getDistance(i);
+			LOG(DEBUG) << "Distance: " << distance;
 			if(distance < minDistance)
 				minDistance = distance;
 		}
@@ -154,9 +156,11 @@ namespace mae
 
 	bool SelectingTarget::findNextMarker()
 	{
-		assert(!markerInRange_.empty());
 		assert(properties_.robot->getMarkerSensor().getMaxRange() <
 		       properties_.robot->getRanger().getProperties().getMaxRange());
+			   
+		if(markerInRange_.empty())
+			return false;
 
 		bool foundMarker = false;
 		int nextIdx;

@@ -4,6 +4,13 @@
 
 namespace mae
 {
+	static int experimentCallback(Stg::World* world, void* userarg)
+	{
+		Experiment *experiment = (Experiment*) userarg;
+		experiment->update();
+		
+		return 0;
+	}
 	
 	Application::Application(int argc, char** argv)
 	{
@@ -11,6 +18,7 @@ namespace mae
 		
 		Stg::Init(&argc, &argv);
 		experiment_ = ExperimentLoader::load(argv[1]);
+		experiment_->getSimulation()->getWorld()->AddUpdateCallback(experimentCallback, experiment_);
 	}
 
 	Application::~Application()
@@ -21,7 +29,7 @@ namespace mae
 	{
 		LOG(INFO) << "Running Application";
 		try {
-			experiment_->run();
+			experiment_->getSimulation()->getWorld()->Run();
 		} catch(std::exception &e) {
 			LOG(WARNING) << "Catched exception: " << e.what();
 		} catch(...) {

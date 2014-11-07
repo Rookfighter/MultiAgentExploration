@@ -27,8 +27,7 @@ namespace mae
 	{
 		YAML::Node root, algorithm;
 		AlgorithmConfig algorithmConfig;
-		Simulation *world;
-		std::string type;
+		Simulation *simulation;
 		
 		LOG(INFO) << "Loading config: " << p_file;
 		root = YAML::LoadFile(p_file);
@@ -41,15 +40,15 @@ namespace mae
 		algorithmConfig.obstacleAvoidDistance = algorithm[OBSTACLE_AVOID_DISTANCE_NODE].as<double>();
 		algorithmConfig.obstacleMarkerDistance = algorithm[OBSTACLE_MARKER_DISTANCE_NODE].as<double>();
 		
-		world = SimulationLoader::load(root);
-		algorithmConfig.stock = world->getStock();
+		simulation = SimulationLoader::load(root);
+		algorithmConfig.stock = simulation->getStock();
 		
 		Experiment *result = new Experiment();
-		result->world_ = world;
+		result->simulation_ = simulation;
 		
-		result->algorithms_.resize(world->getRobots().size());
+		result->algorithms_.resize(simulation->getRobots().size());
 		for(int i = 0; i < result->algorithms_.size(); ++i) {
-			algorithmConfig.robot = world->getRobots()[i];
+			algorithmConfig.robot = simulation->getRobots()[i];
 			
 			if(algorithmConfig.type == NODECOUNTING_TYPE) {
 				result->algorithms_[i] = new NodeCounting(algorithmConfig);

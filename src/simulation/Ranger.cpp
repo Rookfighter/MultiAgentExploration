@@ -66,7 +66,7 @@ namespace mae
 		LOG(DEBUG) << "Connected ModelRanger: " << ss.str() << " (" << p_config.name << ")";
 
 		updateProperties();
-		LOG(DEBUG) << "Initialized MeasurementProperties " << p_config.rangerIndex << " (" << p_config.name << ")";
+		LOG(DEBUG) << "Initialized MeasurementProperties: " << ss.str() << "(" << p_config.name << ")";
 	}
 
 	void Ranger::updateProperties()
@@ -96,7 +96,7 @@ namespace mae
 
 	bool Ranger::hasValidData() const
 	{
-		return true;
+		return ranger_->DataIsFresh();
 	}
 
 	const RangerProperties& Ranger::getProperties() const

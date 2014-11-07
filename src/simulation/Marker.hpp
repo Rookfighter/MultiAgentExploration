@@ -11,10 +11,11 @@ namespace mae
 	{
 		friend class MarkerStock;
 	private:
-		Stg::Model model_;
+		Stg::Model *model_;
 		int id_;
 		bool highlighted_;
 		int value_;
+		std::string name_;
 		
 	public:
 		Marker(const int p_id);

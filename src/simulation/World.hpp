@@ -2,7 +2,7 @@
 #define MAE_WORLD_HPP
 
 #include "simulation/ExplorationBot.hpp"
-#include "common/StopWatch.hpp"
+#include "utils/StopWatch.hpp"
 
 namespace mae
 {

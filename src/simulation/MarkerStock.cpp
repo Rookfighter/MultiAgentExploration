@@ -64,7 +64,6 @@ namespace mae
 		markerPool_.pop_back();
 		marker_.push_back(marker);
 		marker->setValue(0);
-		marker->inUse_ = true;
 
 		return marker;
 	}
@@ -81,7 +80,6 @@ namespace mae
 		Marker *marker = (*it);
 		marker_.erase(it);
 		markerPool_.push_back(marker);
-		marker->inUse_ = false;
 	}
 	
 	void MarkerStock::notify(void *p_data)

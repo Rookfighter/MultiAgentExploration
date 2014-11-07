@@ -1,9 +1,9 @@
 #include <yaml-cpp/yaml.h>
 #include <easylogging++.h>
 #include "algorithm/ExperimentLoader.hpp"
-#include "algorithm/NodeCounting.hpp"
+#include "algorithm-rt/NodeCounting.hpp"
 #include "simulation/WorldLoader.hpp"
-#include "common/Convert.hpp"
+#include "utils/Convert.hpp"
 
 #define ALGORITHM_NODE "algorithm"
 #define ALGORITHM_TYPE_NODE "type"

@@ -1,5 +1,5 @@
-#include "algorithm/NodeCounting.hpp"
-#include "algorithm/InitialAntState.hpp"
+#include "algorithm-rt/NodeCounting.hpp"
+#include "algorithm-rt/InitialAntState.hpp"
 
 namespace mae
 {

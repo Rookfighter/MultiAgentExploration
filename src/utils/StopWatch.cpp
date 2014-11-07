@@ -1,6 +1,6 @@
 #include <cstddef>
 #include <sstream>
-#include "common/StopWatch.hpp"
+#include "utils/StopWatch.hpp"
 
 #define MICROSECONDS_PER_SECOND 1000000
 

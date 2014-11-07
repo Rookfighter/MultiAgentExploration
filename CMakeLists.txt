@@ -26,7 +26,8 @@ include(UsePlayerPlugin)
 # get shared source files
 file(GLOB MULTI_AGENT_EXPLORATION_SRC
     "src/algorithm/*.cpp"
-    "src/common/*.cpp"
+    "src/algorithm-rt/*.cpp"
+    "src/utils/*.cpp"
     "src/simulation/*.cpp"
     "src/app/*.cpp"
     "src/test/*.cpp")

@@ -2,8 +2,8 @@
 #define MAE_ANT_MARKER_HPP
 
 #include <string>
-#include "common/Odometry.hpp"
-#include "common/Subject.hpp"
+#include "utils/Odometry.hpp"
+#include "utils/Subject.hpp"
 
 namespace mae
 {
@@ -13,7 +13,6 @@ namespace mae
 	private:
 		int id_;
 		Pose pose_;
-		bool inUse_;
 		bool highlighted_;
 		int value_;
 		
@@ -29,7 +28,6 @@ namespace mae
 		int getID() const;
 		const Pose& getPose() const;
 		int getValue() const;
-		bool isInUse() const;
 		bool isHighlighted() const;
 		
 		void incrementValue();

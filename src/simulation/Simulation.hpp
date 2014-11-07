@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "simulation/PlayerClient.hpp"
-#include "common/Odometry.hpp"
+#include "utils/Odometry.hpp"
 
 namespace mae
 {

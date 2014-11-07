@@ -2,7 +2,7 @@
 #define MAE_MARKER_STOCK_HPP
 
 #include <vector>
-#include "common/Observer.hpp"
+#include "utils/Observer.hpp"
 #include "simulation/Marker.hpp"
 #include "simulation/StockConfig.hpp"
 

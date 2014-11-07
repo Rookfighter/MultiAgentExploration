@@ -1,6 +1,6 @@
 #include <easylogging++.h>
-#include "algorithm/DroppingMarker.hpp"
-#include "algorithm/SelectingTarget.hpp"
+#include "algorithm-rt/DroppingMarker.hpp"
+#include "algorithm-rt/SelectingTarget.hpp"
 
 namespace mae
 {

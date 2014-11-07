@@ -2,7 +2,7 @@
 #define MAE_MOVING_TO_DIRECTION_HPP
 
 #include "algorithm/Wander.hpp"
-#include "algorithm/AntState.hpp"
+#include "algorithm-rt/AntState.hpp"
 
 namespace mae
 {

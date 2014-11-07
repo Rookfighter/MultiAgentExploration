@@ -1,5 +1,5 @@
 #include <easylogging++.h>
-#include "algorithm/AntAlgorithm.hpp"
+#include "algorithm-rt/AntAlgorithm.hpp"
 
 namespace mae
 {

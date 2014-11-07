@@ -1,7 +1,7 @@
 #ifndef MAE_NODE_COUNTING_HPP
 #define MAE_NODE_COUNTING_HPP
 
-#include "algorithm/AntAlgorithm.hpp"
+#include "algorithm-rt/AntAlgorithm.hpp"
 #include "algorithm/AlgorithmConfig.hpp"
 
 namespace mae

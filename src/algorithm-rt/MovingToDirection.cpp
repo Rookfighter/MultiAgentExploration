@@ -1,7 +1,7 @@
 #include <easylogging++.h>
-#include "algorithm/MovingToDirection.hpp"
-#include "algorithm/DroppingMarker.hpp"
-#include "common/Math.hpp"
+#include "algorithm-rt/MovingToDirection.hpp"
+#include "algorithm-rt/DroppingMarker.hpp"
+#include "utils/Math.hpp"
 
 /* determines how much of the max angular
  * velocity is used */

@@ -1,7 +1,7 @@
 #include <easylogging++.h>
-#include "algorithm/InitialAntState.hpp"
-#include "algorithm/DroppingMarker.hpp"
-#include "algorithm/MovingToMarker.hpp"
+#include "algorithm-rt/InitialAntState.hpp"
+#include "algorithm-rt/DroppingMarker.hpp"
+#include "algorithm-rt/MovingToMarker.hpp"
 
 namespace mae
 {

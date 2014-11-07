@@ -1,7 +1,7 @@
 #include <sstream>
 #include <easylogging++.h>
 #include "simulation/ExplorationBot.hpp"
-#include "common/Math.hpp"
+#include "utils/Math.hpp"
 
 namespace mae
 {

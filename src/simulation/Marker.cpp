@@ -1,11 +1,11 @@
 #include <sstream>
 #include "simulation/Marker.hpp"
-#include "common/Convert.hpp"
+#include "utils/Convert.hpp"
 
 namespace mae
 {
 	Marker::Marker( const int p_id)
-		:id_(p_id), inUse_(false),
+		:id_(p_id),
 		value_(0), highlighted_(false)
 	{
 	}
@@ -50,11 +50,6 @@ namespace mae
 	{
 		return value_;
 	}
-
-	bool Marker::isInUse() const
-	{
-		return inUse_;
-	}
 	
 	void Marker::incrementValue()
 	{
@@ -65,7 +60,7 @@ namespace mae
 	{
 		std::stringstream ss;
 		ss.precision(2);
-		ss << "id: " << id_ << " pos=" << pose_.str() << ",use=" << boolToStr(inUse_) << ",val=" << value_;
+		ss << "id: " << id_ << " pos=" << pose_.str() << ",val=" << value_;
 
 		return ss.str();
 	}

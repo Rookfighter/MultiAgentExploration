@@ -1,5 +1,5 @@
 #include "algorithm/Wander.hpp"
-#include "common/Math.hpp"
+#include "utils/Math.hpp"
 
 #define MEASURE_BEGIN_ANGLE (M_PI / 2) // 90°
 #define MEASURE_END_ANGLE (-M_PI / 2)  // -90°

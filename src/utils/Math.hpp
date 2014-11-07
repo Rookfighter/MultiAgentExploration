@@ -2,7 +2,7 @@
 #define MAE_MATH_HPP
 
 #include <cmath>
-#include "common/Odometry.hpp"
+#include "utils/Odometry.hpp"
 
 namespace mae
 {

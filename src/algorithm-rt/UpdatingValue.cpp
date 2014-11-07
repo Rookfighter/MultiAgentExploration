@@ -1,7 +1,7 @@
 #include <easylogging++.h>
-#include "algorithm/UpdatingValue.hpp"
-#include "algorithm/MovingToDirection.hpp"
-#include "algorithm/MovingToMarker.hpp"
+#include "algorithm-rt/UpdatingValue.hpp"
+#include "algorithm-rt/MovingToDirection.hpp"
+#include "algorithm-rt/MovingToMarker.hpp"
 
 namespace mae
 {

@@ -4,7 +4,7 @@
 #include <string>
 #include "simulation/Simulation.hpp"
 #include "simulation/MarkerStock.hpp"
-#include "common/Odometry.hpp"
+#include "utils/Odometry.hpp"
 
 namespace mae
 {

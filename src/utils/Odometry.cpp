@@ -1,6 +1,6 @@
 #include <sstream>
 #include <cmath>
-#include "common/Odometry.hpp"
+#include "utils/Odometry.hpp"
 
 namespace mae
 {

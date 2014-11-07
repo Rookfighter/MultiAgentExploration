@@ -1,8 +1,8 @@
 #include <easylogging++.h>
-#include "algorithm/SelectingTarget.hpp"
-#include "algorithm/UpdatingValue.hpp"
-#include "common/Math.hpp"
-#include "common/Convert.hpp"
+#include "algorithm-rt/SelectingTarget.hpp"
+#include "algorithm-rt/UpdatingValue.hpp"
+#include "utils/Math.hpp"
+#include "utils/Convert.hpp"
 
 #define FRONT_IDX 0
 #define BACK_IDX 2

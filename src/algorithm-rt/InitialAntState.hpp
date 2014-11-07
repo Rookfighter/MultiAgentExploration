@@ -1,7 +1,7 @@
 #ifndef MAE_INITIAL_ANT_STATE_HPP
 #define MAE_INITIAL_ANT_STATE_HPP
 
-#include "algorithm/AntState.hpp"
+#include "algorithm-rt/AntState.hpp"
 
 namespace mae
 {

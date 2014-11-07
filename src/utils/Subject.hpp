@@ -2,7 +2,7 @@
 #define MAE_SUBJECT_HPP
 
 #include <vector>
-#include "common/Observer.hpp"
+#include "utils/Observer.hpp"
 
 namespace mae
 {

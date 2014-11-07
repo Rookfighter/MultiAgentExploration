@@ -1,8 +1,8 @@
 #include <easylogging++.h>
-#include "algorithm/MovingToMarker.hpp"
-#include "algorithm/SelectingTarget.hpp"
-#include "algorithm/DroppingMarker.hpp"
-#include "common/Math.hpp"
+#include "algorithm-rt/MovingToMarker.hpp"
+#include "algorithm-rt/SelectingTarget.hpp"
+#include "algorithm-rt/DroppingMarker.hpp"
+#include "utils/Math.hpp"
 
 /* avoid moving in a direction that is farer
  * away than this (+/-). */

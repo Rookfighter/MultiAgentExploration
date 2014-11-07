@@ -1,4 +1,4 @@
-#include "common/Math.hpp"
+#include "utils/Math.hpp"
 
 namespace mae
 {	

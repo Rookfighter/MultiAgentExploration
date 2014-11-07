@@ -2,8 +2,8 @@
 #define MAE_NODE_COUNTING_TEST_HPP
 
 #include "simulation/World.hpp"
-#include "algorithm/NodeCounting.hpp"
-#include "common/StopWatch.hpp"
+#include "algorithm-rt/NodeCounting.hpp"
+#include "utils/StopWatch.hpp"
 
 namespace mae
 {

@@ -2,7 +2,7 @@
 #define MAE_ANT_ALGORITHM_HPP
 
 #include "algorithm/Algorithm.hpp"
-#include "algorithm/AntState.hpp"
+#include "algorithm-rt/AntState.hpp"
 
 namespace mae
 {

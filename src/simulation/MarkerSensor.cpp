@@ -1,6 +1,6 @@
 #include <easylogging++.h>
 #include "simulation/MarkerSensor.hpp"
-#include "common/Math.hpp"
+#include "utils/Math.hpp"
 
 #define POLY_CORNER_COUNT 12
 

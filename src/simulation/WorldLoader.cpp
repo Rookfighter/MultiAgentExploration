@@ -13,7 +13,6 @@
 #define REFILL_COUNT_NODE "refill_count"
 
 #define NAME_NODE "name"
-#define MOTOR_INDEX_NODE "motor_index"
 #define RANGER_INDEX_NODE "ranger_index"
 #define MAX_VELOCITY_NODE "max_velocity"
 #define MIN_VELOCITY_NODE "min_velocity"

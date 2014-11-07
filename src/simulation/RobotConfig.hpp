@@ -17,9 +17,7 @@ namespace mae
 		MarkerStock *stock;
 		
 		std::string name;
-		int motorIndex;
 		int rangerIndex;
-		int graphicsIndex;
 		
 		Velocity maxVelocity;
 		Velocity minVelocity;

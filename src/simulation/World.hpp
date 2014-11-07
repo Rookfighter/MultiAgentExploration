@@ -2,7 +2,6 @@
 #define MAE_WORLD_HPP
 
 #include "simulation/ExplorationBot.hpp"
-#include "utils/StopWatch.hpp"
 
 namespace mae
 {
@@ -10,18 +9,15 @@ namespace mae
 	{
 		friend class WorldLoader;
 	private:
-		PlayerClient *client_;
-		Simulation *simulation_;
+		Stg::World *world_;
 		MarkerStock *stock_;
 		std::vector<ExplorationBot*> robots_;
-		StopWatch watch_;
 		
 		World();
 	public:
 		~World();
 		
-		PlayerClient* getClient();
-		Simulation* getSimulation();
+		Stg::World* getWorld();
 		MarkerStock* getStock();
 		
 		const std::vector<ExplorationBot*>& getRobots();

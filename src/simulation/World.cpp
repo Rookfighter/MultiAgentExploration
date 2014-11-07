@@ -5,7 +5,7 @@ namespace mae
 {
 
 	World::World()
-	: client_(NULL), simulation_(NULL), stock_(NULL), robots_()
+	: world_(NULL), stock_(NULL), robots_()
 	{
 	}
 
@@ -17,20 +17,11 @@ namespace mae
 		
 		if(stock_ != NULL)
 			delete stock_;
-		if(simulation_ != NULL)
-			delete simulation_;
-		if(client_ != NULL)
-			delete client_;
 	}
 		
-	PlayerClient* World::getClient()
+	Stg::World* World::getWorld();
 	{
-		return client_;
-	}
-	
-	Simulation* World::getSimulation()
-	{
-		return simulation_;
+		return world_;
 	}
 	
 	MarkerStock* World::getStock()

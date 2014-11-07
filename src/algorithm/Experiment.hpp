@@ -3,6 +3,7 @@
 
 #include "algorithm/Algorithm.hpp"
 #include "simulation/World.hpp"
+#include "utils/StopWatch.hpp"
 
 namespace mae
 {
@@ -13,6 +14,8 @@ namespace mae
 	private:
 		World *world_;
 		std::vector<Algorithm*> algorithms_;
+		StopWatch updateWatch_;
+		StopWatch algorithmWatch_;
 		
 		Experiment();
 	public:

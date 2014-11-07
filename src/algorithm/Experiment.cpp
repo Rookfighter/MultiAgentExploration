@@ -1,3 +1,4 @@
+#include <easylogging++.h>
 #include "algorithm/Experiment.hpp"
 
 namespace mae
@@ -19,9 +20,17 @@ namespace mae
 
 	void Experiment::step()
 	{
+		updateWatch_.start();
 		world_->update();
+		updateWatch_.stop();
+
+		algorithmWatch_.start();
 		for(Algorithm *algo : algorithms_)
 			algo->step();
+		algorithmWatch_.stop();
+
+		/*LOG(DEBUG) << "Update: " << updateWatch_.getLastMsec() << "ms (" << updateWatch_.getWorstMsec() << "ms) "<<
+		           "Algorithm: " << algorithmWatch_.getLastMsec() << "ms (" << algorithmWatch_.getWorstMsec() << "ms)";*/
 	}
 
 	Algorithm* Experiment::getAlgorithmOf(const std::string &p_robotName)

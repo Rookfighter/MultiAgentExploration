@@ -16,7 +16,7 @@ The following dependencies are required to run and compile the project on __Linu
 
 ### Player/Stage
 
-For Player/Stage installation the following dependencies are required:
+For Player installation the following dependencies are required:
 
 * autotools
 * libboost-thread
@@ -29,17 +29,26 @@ For Player/Stage installation the following dependencies are required:
 * libtool
 * libxmu
 * swig
-* freeglut3
 * libgtk2.0
-* libjpeg
-* libpng 12
-* libglu1-mesa
-* libfltk 1.1
 * libltdl
 * libplayerc++ 3.0
 
 ```
-sudo apt-get install autotools-dev build-essential cmake git subversion libboost-thread-dev libboost-signals-dev libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev libjpeg8-dev libtool libxmu-dev swig freeglut3 freeglut3-dev libfltk1.1 libfltk1.1-dev libgtk2.0-dev libltdl7 libltdl-dev libpng12-0 libpng12-dev libplayerc++3.0 libplayerc++3.0-dev libglu1-mesa libglu1-mesa-dev libdb5.1-stl libdb5.1-stl-dev
+sudo apt-get install autotools-dev build-essential cmake git subversion libboost-thread-dev libboost-signals-dev libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev libtool libxmu-dev swig libgtk2.0-dev libltdl7 libltdl-dev libplayerc++3.0 libplayerc++3.0-dev libdb5.1-stl libdb5.1-stl-dev
+```
+
+For Stage installation the following dependencies are required:
+
+* FLTK >=1.1
+* git
+* cmake
+* pkg-config
+* libpng
+* jpeglib
+* OpenGLU 
+
+```
+sudo apt-get install git cmake pkg-config libglu1-mesa libglu1-mesa-dev libpng12-0 libpng12-dev libjpeg8-dev libfltk1.3 libfltk1.3-dev freeglut3 freeglut3-dev
 ```
 
 Now compile and install __Player__ (used revision __9140__):
@@ -120,7 +129,7 @@ these warnings add the following line to your CMakeLists.txt:
 add_definitions( -DBOOST_SIGNALS_NO_DEPRECATION_WARNING )
 ```
 
-To conmpile an executable with __libstage__ copy the file __stage.pc__ in the
+To compile an executable with __libstage__ copy the file __stage.pc__ from the
 Stage build directory to ```/usr/lib/pkgconfig```. Now add the following lines
 to your CMakeLists.txt:
 
@@ -135,6 +144,13 @@ link_directories( ${STAGE_LIBRARY_DIRS} )
 add_executable( ${PROJECT_NAME} ${PROJECT_SRC} )
 target_link_libraries( ${PROJECT_NAME} ${STAGE_LIBRARIES} )
 ```
+
+If you are compiling with C++11 (required for this project), then ```stage.hh```
+will give you many warnings about literals. In C++11 strings should not be
+concatened like this ```"bla"m"bla"```. Instead it should be like this
+```"bla" m "bla"```.
+To get rid of these warnings open the file ```/usr/local/include/Stage4.1/stage.hh```
+and replace ```"m"``` with ```" m "```. All warnings should be gone now.
 
 ### Code Lite
 

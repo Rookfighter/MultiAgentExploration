@@ -96,7 +96,7 @@ namespace mae
 
 	bool Ranger::hasValidData() const
 	{
-		return ranger_->DataIsFresh();
+		return true;
 	}
 
 	const RangerProperties& Ranger::getProperties() const

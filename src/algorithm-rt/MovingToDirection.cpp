@@ -67,12 +67,12 @@ namespace mae
 	
 	bool MovingToDirection::movedEnough()
 	{
-		assert(properties_.currentMarker != NULL);
 		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getMaxRange();
 	}
 
 	void MovingToDirection::move()
 	{
+		LOG(DEBUG) << "-- Wandering";
 		wander_.step();
 	}
 

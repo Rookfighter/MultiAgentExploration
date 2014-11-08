@@ -9,7 +9,7 @@ namespace mae
 	InitialAntState::InitialAntState(const AntStateProperties &p_properties)
 	:AntState(p_properties)
 	{
-		LOG(DEBUG) << "New InitialAntState.";
+		LOG(DEBUG) << "Changed to InitialAntState state";
 	}
 
 	InitialAntState::~InitialAntState()

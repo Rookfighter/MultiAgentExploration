@@ -8,7 +8,7 @@ namespace mae
 	DroppingMarker::DroppingMarker(const AntStateProperties &p_properties)
 	:AntState(p_properties)
 	{
-		LOG(DEBUG) << "New DroppingMarker state.";
+		LOG(DEBUG) << "Changed to DroppingMarker state";
 	}
 
 	DroppingMarker::~DroppingMarker()

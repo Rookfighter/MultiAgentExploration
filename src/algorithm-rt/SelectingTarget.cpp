@@ -34,7 +34,7 @@ namespace mae
 	SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
 		: AntState(p_properties), obstacleMarkerDistance_(p_properties.obstacleMarkerDistance)
 	{
-		LOG(DEBUG) << "New SelectingTarget state.";
+		LOG(DEBUG) << "Changed to SelectingTarget state";
 	}
 
 	SelectingTarget::~SelectingTarget()
@@ -182,7 +182,8 @@ namespace mae
 			return result;
 
 		for(int i = 0; i < markerInRange_.size(); ++i) {
-			if(sameDouble(markerInRange_[i].marker->getValue(), minValue, MARKER_VALUE_EPS) &&
+			double markerValue = properties_.calcValue(properties_.currentMarker, markerInRange_[i].marker);
+			if(sameDouble(markerValue, minValue, MARKER_VALUE_EPS) &&
 			        !markerIsObstructed(markerInRange_[i])) {
 				result.push_back(markerInRange_[i]);
 			}
@@ -205,11 +206,16 @@ namespace mae
 			nextIdx = -1;
 			// search marker with lowest value
 			for(int i = 0; i < markerInRange_.size(); ++i) {
-				bool hasLowestValue = !alreadyChecked[i] &&
-				                      (nextIdx == -1 ||
-				                       markerInRange_[nextIdx].marker->getValue() > markerInRange_[i].marker->getValue());
-				if(hasLowestValue)
+				if(alreadyChecked[i])
+					continue;
+				if(nextIdx == -1)
 					nextIdx = i;
+				else {
+					double currentMarkerValue = properties_.calcValue(properties_.currentMarker, markerInRange_[i].marker);
+					double lowestMarkerValue = properties_.calcValue(properties_.currentMarker, markerInRange_[nextIdx].marker);
+					if(lowestMarkerValue > currentMarkerValue)
+						nextIdx = i;
+				}
 			}
 			// exclude this marker from future iterations
 			alreadyChecked[nextIdx] = true;
@@ -222,9 +228,9 @@ namespace mae
 			foundMarker = !markerIsObstructed(markerInRange_[nextIdx]);
 		}
 
-		if(foundMarker)
-			return markerInRange_[nextIdx].marker->getValue();
-		else
+		if(foundMarker) {
+			return properties_.calcValue(properties_.currentMarker, markerInRange_[nextIdx].marker);
+		} else
 			return -1;
 	}
 

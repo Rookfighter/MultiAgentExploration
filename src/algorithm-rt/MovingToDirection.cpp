@@ -22,7 +22,7 @@ namespace mae
 		  lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
 		  reachedDirection_(false)
 	{
-		LOG(DEBUG) << "New MovingToDirection state.";
+		LOG(DEBUG) << "Changed to MovingToDirection state";
 		remainingToTurn_ = normalizeRadian(properties_.angleToTurn);
 	}
 

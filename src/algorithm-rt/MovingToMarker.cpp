@@ -29,7 +29,7 @@ namespace mae
 		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
 		 state_(MOVING), obstacleAvoidStep_(0)
 	{
-		LOG(DEBUG) << "New MovingToMarker state.";
+		LOG(DEBUG) << "Changed to MovingToMarker state";
 		wander_.onAvoidBegin(std::bind(&MovingToMarker::onAvoidBegin,this));
 		wander_.onAvoidEnd(std::bind(&MovingToMarker::onAvoidEnd,this));
 	}

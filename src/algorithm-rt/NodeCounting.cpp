@@ -6,7 +6,7 @@ namespace mae
 	static void updateValueNodeCounting(Marker *p_current, Marker *p_next)
 	{
 		assert(p_current != NULL);
-		p_current->incrementValue();
+		p_current->changeValueBy(1.0);
 	}
 
 	NodeCounting::NodeCounting(const AlgorithmConfig &p_config)

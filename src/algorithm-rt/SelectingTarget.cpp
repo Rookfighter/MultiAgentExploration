@@ -12,6 +12,8 @@
 
 #define MARKER_OBSTACLE_FOV (M_PI / 4) // 45°
 
+#define MARKER_VALUE_EPS 0.01
+
 namespace mae
 {
 	static const double obstacleAngles[8] = {
@@ -176,11 +178,11 @@ namespace mae
 		std::vector<MarkerMeasurement> result;
 		int minValue = getMinNonObstructedMarkerValue();
 
-		if(minValue == -1)
+		if(minValue < 0)
 			return result;
 
 		for(int i = 0; i < markerInRange_.size(); ++i) {
-			if(markerInRange_[i].marker->getValue() == minValue &&
+			if(sameDouble(markerInRange_[i].marker->getValue(), minValue, MARKER_VALUE_EPS) &&
 			        !markerIsObstructed(markerInRange_[i])) {
 				result.push_back(markerInRange_[i]);
 			}
@@ -189,7 +191,7 @@ namespace mae
 		return result;
 	}
 
-	int SelectingTarget::getMinNonObstructedMarkerValue()
+	double SelectingTarget::getMinNonObstructedMarkerValue()
 	{
 		bool foundMarker = false;
 		int nextIdx;

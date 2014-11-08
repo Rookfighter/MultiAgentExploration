@@ -14,7 +14,7 @@ namespace mae
 		Stg::Model *model_;
 		int id_;
 		bool highlighted_;
-		int value_;
+		double value_;
 		std::string name_;
 		
 	public:
@@ -25,15 +25,17 @@ namespace mae
 		void disconnect(Stg::World* p_world);
 		
 		void setPose(const Pose& p_pose);
-		void setValue(const int p_value);
+		void setValue(const double p_value);
 		void setHighlighted(const bool p_highlighted);
 		
 		int getID() const;
 		Pose getPose() const;
-		int getValue() const;
+		double getValue() const;
 		bool isHighlighted() const;
 		
-		void incrementValue();
+		void changeValueBy(const double p_toChange);
+		
+		bool hasSameValueAs(const Marker *p_marker, const double p_eps = 0.01);
 		
 		std::string str();
 	};

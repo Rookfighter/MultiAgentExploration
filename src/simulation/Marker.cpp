@@ -1,6 +1,7 @@
 #include <sstream>
 #include "simulation/Marker.hpp"
 #include "utils/Convert.hpp"
+#include "utils/Math.hpp"
 
 #define MARKER_SIZE 0.05
 
@@ -53,7 +54,7 @@ namespace mae
 		model_->SetGlobalPose(Stg::Pose(p_pose.position.x, p_pose.position.y, 0, p_pose.yaw));
 	}
 
-	void Marker::setValue(const int p_value)
+	void Marker::setValue(const double p_value)
 	{
 		value_ = p_value;
 	}
@@ -87,14 +88,19 @@ namespace mae
 		return Pose(pose.x, pose.y, pose.a);
 	}
 
-	int Marker::getValue() const
+	double Marker::getValue() const
 	{
 		return value_;
 	}
 
-	void Marker::incrementValue()
+	void Marker::changeValueBy(const double p_toChange)
 	{
-		value_++;
+		value_ += p_toChange;
+	}
+	
+	bool Marker::hasSameValueAs(const Marker *p_marker, const double p_eps)
+	{
+		return sameDouble(getValue(), p_marker->getValue(), p_eps);
 	}
 
 	std::string Marker::str()

@@ -18,10 +18,10 @@ namespace mae
 
 	AntState* UpdatingValue::update()
 	{
-		if(properties_.currentMarker != NULL) {
-			LOG(DEBUG) << "-- cannot update value, no currentMarker";
+		if(properties_.currentMarker != NULL)
 			properties_.updateValue(properties_.currentMarker, properties_.nextMarker);
-		}
+		else
+			LOG(DEBUG) << "-- cannot update value, no currentMarker";
 		
 		if(properties_.nextMarker == NULL)
 			return new MovingToDirection(properties_);

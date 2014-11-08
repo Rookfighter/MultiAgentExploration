@@ -2,6 +2,7 @@
 #include <easylogging++.h>
 #include "algorithm/ExperimentLoader.hpp"
 #include "algorithm-rt/NodeCounting.hpp"
+#include "algorithm-rt/LRTAStar.hpp"
 #include "simulation/SimulationLoader.hpp"
 #include "utils/Convert.hpp"
 
@@ -11,6 +12,7 @@
 #define OBSTACLE_MARKER_DISTANCE_NODE "obstacle_marker_distance"
 
 #define NODECOUNTING_TYPE "nodecounting"
+#define LRTASTAR_TYPE "lrta*"
 
 namespace mae
 {
@@ -39,6 +41,7 @@ namespace mae
 		algorithmConfig.type = toLowerCase(algorithm[ALGORITHM_TYPE_NODE].as<std::string>());
 		algorithmConfig.obstacleAvoidDistance = algorithm[OBSTACLE_AVOID_DISTANCE_NODE].as<double>();
 		algorithmConfig.obstacleMarkerDistance = algorithm[OBSTACLE_MARKER_DISTANCE_NODE].as<double>();
+		LOG(INFO) <<  "-- algorithm type is " << algorithmConfig.type;
 		
 		simulation = SimulationLoader::load(root);
 		algorithmConfig.stock = simulation->getStock();
@@ -52,6 +55,8 @@ namespace mae
 			
 			if(algorithmConfig.type == NODECOUNTING_TYPE) {
 				result->algorithms_[i] = new NodeCounting(algorithmConfig);
+			} else if(algorithmConfig.type == LRTASTAR_TYPE) {
+				result->algorithms_[i] = new LRTAStar(algorithmConfig);
 			} else {
 				throw std::logic_error("invalid Algorithm type");
 			}

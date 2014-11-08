@@ -176,8 +176,9 @@ namespace mae
 	std::vector<MarkerMeasurement> SelectingTarget::getNonObstructedMarker()
 	{
 		std::vector<MarkerMeasurement> result;
-		int minValue = getMinNonObstructedMarkerValue();
-
+		double minValue = getMinNonObstructedMarkerValue();
+		LOG(DEBUG) << "-- Min value: " << minValue;
+		
 		if(minValue < 0)
 			return result;
 
@@ -221,7 +222,7 @@ namespace mae
 			alreadyChecked[nextIdx] = true;
 			checkedCount++;
 
-			LOG(DEBUG) << "-- checking marker: " <<
+			LOG(DEBUG) << "-- checking marker " << markerInRange_[nextIdx].marker->getID() << ": " <<
 			           radianToDegree(markerInRange_[nextIdx].relativeDirection) << "° " <<
 			           markerInRange_[nextIdx].relativeDistance.length() << "m";
 			// check if the way to the marker is blocked by an obstacle
@@ -231,7 +232,7 @@ namespace mae
 		if(foundMarker) {
 			return properties_.calcValue(properties_.currentMarker, markerInRange_[nextIdx].marker);
 		} else
-			return -1;
+			return -1.0;
 	}
 
 	bool SelectingTarget::markerIsObstructed(const MarkerMeasurement &p_markerMeasurement)

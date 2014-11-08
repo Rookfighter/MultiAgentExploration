@@ -42,6 +42,13 @@ namespace mae
 	{
 		updateGeometry();
 
+		if(!foundMarker_) {
+			LOG(DEBUG) << "-- signal to marker lost";
+			properties_.currentMarker = NULL;
+			properties_.robot->getMotor().stop();
+			return new SelectingTarget(properties_);
+		}
+
 		if(reachedTarget()) {
 			// reached the marker, now select next target
 			properties_.currentMarker = properties_.nextMarker;
@@ -77,7 +84,7 @@ namespace mae
 	void MovingToMarker::updateTargetMeasurement()
 	{
 		std::vector<MarkerMeasurement> markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
-		
+
 		// find target marker from all available marker
 		// if marker was not found (is destroyed or not in range anymore)
 		// we just keep wandering
@@ -93,9 +100,9 @@ namespace mae
 
 	bool MovingToMarker::reachedDirection()
 	{
-		return foundMarker_ && sameDouble(targetMeasurement_.relativeDirection,
-		                                  0,
-		                                  ANGLE_EPS);
+		return sameDouble(targetMeasurement_.relativeDirection,
+		                  0,
+		                  ANGLE_EPS);
 	}
 
 	bool MovingToMarker::reachedTarget()
@@ -123,7 +130,7 @@ namespace mae
 	void MovingToMarker::moveTowardsMarker()
 	{
 		wander_.step();
-		
+
 		// AFTER_AVOIDING state prohibits that obstacle avoiding
 		// and changing direction to marker flip all the time
 		// else the robot would always try to change its direction all over again
@@ -133,17 +140,17 @@ namespace mae
 				state_ = MOVING;
 		}
 	}
-	
+
 	bool MovingToMarker::isAvoidingObstacle()
 	{
 		return state_ == AVOIDING || state_ == AFTER_AVOIDING;
 	}
-	
+
 	void MovingToMarker::onAvoidBegin()
 	{
 		state_ = AVOIDING;
 	}
-	
+
 	void MovingToMarker::onAvoidEnd()
 	{
 		state_= AFTER_AVOIDING;

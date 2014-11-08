@@ -3,6 +3,7 @@
 #include "algorithm-rt/UpdatingValue.hpp"
 #include "utils/Math.hpp"
 #include "utils/Convert.hpp"
+#include "utils/Random.hpp"
 
 #define FRONT_IDX 0
 #define BACK_IDX 2
@@ -143,7 +144,7 @@ namespace mae
 			// check if sensor is in the angles we check
 			if(!angleIsBetween(rangerProperties.getMeasurementOrigins()[i].yaw, p_beginAngle, p_endAngle))
 				continue;
-			
+
 			double distance = properties_.robot->getRanger().getDistance(i);
 			if(distance < minDistance)
 				minDistance = distance;
@@ -156,10 +157,40 @@ namespace mae
 	{
 		assert(properties_.robot->getMarkerSensor().getMaxRange() <
 		       properties_.robot->getRanger().getProperties().getMaxRange());
-			   
+
 		if(markerInRange_.empty())
 			return false;
 
+		std::vector<MarkerMeasurement> possibleTargets = getNonObstructedMarker();
+		if(possibleTargets.empty())
+			return false;
+		Random rand;
+		int idx = rand.nextInt(possibleTargets.size());
+		properties_.nextMarker = possibleTargets[idx].marker;
+
+		return true;
+	}
+
+	std::vector<MarkerMeasurement> SelectingTarget::getNonObstructedMarker()
+	{
+		std::vector<MarkerMeasurement> result;
+		int minValue = getMinNonObstructedMarkerValue();
+
+		if(minValue == -1)
+			return result;
+
+		for(int i = 0; i < markerInRange_.size(); ++i) {
+			if(markerInRange_[i].marker->getValue() == minValue &&
+			        !markerIsObstructed(markerInRange_[i])) {
+				result.push_back(markerInRange_[i]);
+			}
+		}
+
+		return result;
+	}
+
+	int SelectingTarget::getMinNonObstructedMarkerValue()
+	{
 		bool foundMarker = false;
 		int nextIdx;
 		bool alreadyChecked[markerInRange_.size()];
@@ -170,11 +201,12 @@ namespace mae
 
 		while(!foundMarker && checkedCount < markerInRange_.size()) {
 			nextIdx = -1;
-			// search marker with smallest value
+			// search marker with lowest value
 			for(int i = 0; i < markerInRange_.size(); ++i) {
-				if(!alreadyChecked[i] &&
-				        (nextIdx == -1 ||
-				         markerInRange_[nextIdx].marker->getValue() > markerInRange_[i].marker->getValue()))
+				bool hasLowestValue = !alreadyChecked[i] &&
+				                      (nextIdx == -1 ||
+				                       markerInRange_[nextIdx].marker->getValue() > markerInRange_[i].marker->getValue());
+				if(hasLowestValue)
 					nextIdx = i;
 			}
 			// exclude this marker from future iterations
@@ -185,15 +217,20 @@ namespace mae
 			           radianToDegree(markerInRange_[nextIdx].relativeDirection) << "° " <<
 			           markerInRange_[nextIdx].relativeDistance.length() << "m";
 			// check if the way to the marker is blocked by an obstacle
-			foundMarker = !checkObstacle(markerInRange_[nextIdx].relativeDirection - (MARKER_OBSTACLE_FOV / 2),
-			                             markerInRange_[nextIdx].relativeDirection + (MARKER_OBSTACLE_FOV / 2),
-			                             markerInRange_[nextIdx].relativeDistance.length());
+			foundMarker = !markerIsObstructed(markerInRange_[nextIdx]);
 		}
 
 		if(foundMarker)
-			properties_.nextMarker = markerInRange_[nextIdx].marker;
+			return markerInRange_[nextIdx].marker->getValue();
+		else
+			return -1;
+	}
 
-		return foundMarker;
+	bool SelectingTarget::markerIsObstructed(const MarkerMeasurement &p_markerMeasurement)
+	{
+		return checkObstacle(p_markerMeasurement.relativeDirection - (MARKER_OBSTACLE_FOV / 2),
+		                     p_markerMeasurement.relativeDirection + (MARKER_OBSTACLE_FOV / 2),
+		                     p_markerMeasurement.relativeDistance.length());
 	}
 
 

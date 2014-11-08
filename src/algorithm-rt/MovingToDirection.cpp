@@ -72,7 +72,6 @@ namespace mae
 
 	void MovingToDirection::move()
 	{
-		LOG(DEBUG) << "-- Wandering";
 		wander_.step();
 	}
 

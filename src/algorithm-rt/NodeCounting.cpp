@@ -17,6 +17,10 @@ namespace mae
 		init(new InitialAntState(properties));
 	}
 	
+	NodeCounting::~NodeCounting()
+	{
+	}
+	
 	void NodeCounting::updateValue(Marker *p_current, Marker *p_next)
 	{
 		assert(p_current != NULL);
@@ -27,9 +31,5 @@ namespace mae
 	{
 		assert(p_next != NULL);
 		return p_next->getValue();
-	}
-
-	NodeCounting::~NodeCounting()
-	{
 	}
 }

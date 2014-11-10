@@ -3,6 +3,7 @@
 #include "algorithm/ExperimentLoader.hpp"
 #include "algorithm-rt/NodeCounting.hpp"
 #include "algorithm-rt/LRTAStar.hpp"
+#include "algorithm-rt/Wagner.hpp"
 #include "simulation/SimulationLoader.hpp"
 #include "utils/Convert.hpp"
 
@@ -13,6 +14,7 @@
 
 #define NODECOUNTING_TYPE "nodecounting"
 #define LRTASTAR_TYPE "lrta*"
+#define WAGNER_TYPE "wagner"
 
 namespace mae
 {
@@ -57,6 +59,8 @@ namespace mae
 				result->algorithms_[i] = new NodeCounting(algorithmConfig);
 			} else if(algorithmConfig.type == LRTASTAR_TYPE) {
 				result->algorithms_[i] = new LRTAStar(algorithmConfig);
+			} else if(algorithmConfig.type == WAGNER_TYPE){
+				result->algorithms_[i] = new Wagner(algorithmConfig);
 			} else {
 				throw std::logic_error("invalid Algorithm type");
 			}

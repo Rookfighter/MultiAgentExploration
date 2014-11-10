@@ -40,7 +40,7 @@ namespace mae
 		       const double p_frontStopDistance = 1.0);
 		~Wander();
 
-		void step();
+		void update();
 		
 		void onAvoidBegin(std::function<void(void)> p_callback);
 		void onAvoidEnd(std::function<void(void)> p_callback);

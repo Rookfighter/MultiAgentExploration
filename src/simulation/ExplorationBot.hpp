@@ -4,6 +4,7 @@
 #include "simulation/Motor.hpp"
 #include "simulation/Ranger.hpp"
 #include "simulation/MarkerSensor.hpp"
+#include "simulation/TwoBitCompass.hpp"
 
 namespace mae
 {
@@ -17,6 +18,7 @@ namespace mae
 		Motor motor_;
 		Ranger ranger_;
 		MarkerSensor markerSensor_;
+		TwoBitCompass compass_;
 		
 		MarkerStock *stock_;
 	public:
@@ -29,6 +31,7 @@ namespace mae
 		Motor& getMotor();
 		Ranger& getRanger();
 		MarkerSensor& getMarkerSensor();
+		TwoBitCompass& getCompass();
 
 		std::string getName() const;
 

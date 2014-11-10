@@ -28,7 +28,7 @@ namespace mae
 
 	}
 
-	void Wander::step()
+	void Wander::update()
 	{
 		// no valid data, so we can't use sensors
 		if(!robot_->getRanger().hasValidData()) {

@@ -19,7 +19,7 @@ namespace mae
 		state_ = p_initialState;
 	}
 
-	void AntAlgorithm::step()
+	void AntAlgorithm::update()
 	{
 		assert(state_ != NULL);
 		

@@ -12,7 +12,7 @@ namespace mae
 		virtual ~Algorithm() {
 		}
 		
-		virtual void step() = 0;
+		virtual void update() = 0;
 	};
 
 }

@@ -30,7 +30,7 @@ namespace mae
 				LOG(INFO) << "UpdateLag: " << updateWatch_.getWorstMsec() << "ms";
 				
 			logicWatch_.start();
-			nodeCounting_->step();
+			nodeCounting_->update();
 			logicWatch_.stop();
 			if(logicWatch_.hasNewWorstCase())
 				LOG(INFO) << "LogicLag: " << logicWatch_.getWorstMsec() << "ms";

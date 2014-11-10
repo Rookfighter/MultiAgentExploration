@@ -138,7 +138,7 @@ namespace mae
 
 	void MovingToMarker::wander()
 	{
-		wander_.step();
+		wander_.update();
 		
 		// we avoided the obstalce for one step
 		if(isAvoidingObstacle())

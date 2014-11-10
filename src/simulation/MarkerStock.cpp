@@ -33,7 +33,7 @@ namespace mae
 		for(int i = 0; i < markerPool_.size(); ++i)
 			delete markerPool_[i];
 		for(int i = 0; i < marker_.size(); ++i) {
-			marker_[i]->disconnect(world_);
+			marker_[i]->disconnect();
 			delete marker_[i];
 		}
 
@@ -72,7 +72,7 @@ namespace mae
 		Marker *marker = (*it);
 		marker_.erase(it);
 		markerPool_.push_back(marker);
-		marker->disconnect(world_);
+		marker->disconnect();
 	}
 	
 }

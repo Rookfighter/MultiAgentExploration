@@ -25,7 +25,7 @@ namespace mae
 
 		algorithmWatch_.start();
 		for(Algorithm *algo : algorithms_)
-			algo->step();
+			algo->update();
 			
 		algorithmWatch_.stop();
 

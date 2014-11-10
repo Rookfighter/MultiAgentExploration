@@ -83,7 +83,7 @@ namespace mae
 
 	void MovingToDirection::move()
 	{
-		wander_.step();
+		wander_.update();
 	}
 
 	void MovingToDirection::turn()

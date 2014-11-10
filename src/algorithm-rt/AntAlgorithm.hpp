@@ -17,7 +17,7 @@ namespace mae
 		AntAlgorithm();
 		virtual ~AntAlgorithm();
 		
-		void step();
+		void update();
 	};
 
 }

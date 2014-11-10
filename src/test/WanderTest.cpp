@@ -18,7 +18,7 @@ namespace mae
 	{
 		while(true) {
 			world_->update();
-			wander_.step();
+			wander_.update();
 		}
 	}
 

@@ -6,16 +6,22 @@
 namespace mae
 {
 	ExplorationBot::ExplorationBot(const RobotConfig &p_config)
-		: name_(p_config.name), model_(NULL),
-		  motor_(p_config), ranger_(p_config), markerSensor_(p_config),
-		  stock_(p_config.stock)
+		: name_(p_config.name),
+		  model_(NULL),
+		  motor_(p_config),
+		  ranger_(p_config),
+		  markerSensor_(p_config),
+		  stock_(p_config.stock),
+		  compass_()
 	{
 		model_ = p_config.world->GetModel(name_);
+		compass_.connect(model_);
 		LOG(DEBUG) << "Initialized Robot (" << name_ << ")";
 	}
 
 	ExplorationBot::~ExplorationBot()
 	{
+		compass_.disconnect();
 	}
 
 	void ExplorationBot::setPose(const Pose &p_pose)
@@ -38,10 +44,15 @@ namespace mae
 	{
 		return ranger_;
 	}
-	
+
 	MarkerSensor& ExplorationBot::getMarkerSensor()
 	{
 		return markerSensor_;
+	}
+
+	TwoBitCompass& ExplorationBot::getCompass()
+	{
+		return compass_;
 	}
 
 	std::string ExplorationBot::getName() const
@@ -55,10 +66,10 @@ namespace mae
 		markerPose.yaw = 0;
 		Marker *marker = stock_->acquireMarker();
 		marker->setPose(markerPose);
-		
+
 		return marker;
 	}
-	
+
 	void ExplorationBot::update()
 	{
 		markerSensor_.setRobotPose(getAbsolutePose());

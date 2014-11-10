@@ -1,6 +1,7 @@
 #include <yaml-cpp/yaml.h>
 #include <easylogging++.h>
 #include "algorithm/ExperimentLoader.hpp"
+#include "algorithm/RandomWalk.hpp"
 #include "algorithm-rt/NodeCounting.hpp"
 #include "algorithm-rt/LRTAStar.hpp"
 #include "algorithm-rt/Wagner.hpp"
@@ -15,6 +16,7 @@
 #define NODECOUNTING_TYPE "nodecounting"
 #define LRTASTAR_TYPE "lrta*"
 #define WAGNER_TYPE "wagner"
+#define RANDOMWALK_TYPE "randomwalk"
 
 namespace mae
 {
@@ -61,6 +63,8 @@ namespace mae
 				result->algorithms_[i] = new LRTAStar(algorithmConfig);
 			} else if(algorithmConfig.type == WAGNER_TYPE){
 				result->algorithms_[i] = new Wagner(algorithmConfig);
+			} else if (algorithmConfig.type == RANDOMWALK_TYPE) {
+				result->algorithms_[i] = new RandomWalk(algorithmConfig);
 			} else {
 				throw std::logic_error("invalid Algorithm type");
 			}

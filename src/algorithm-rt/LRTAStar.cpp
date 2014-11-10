@@ -26,8 +26,14 @@ namespace mae
 	double LRTAStar::calcValue(Marker *p_current, Marker *p_next)
 	{
 		assert(p_next != NULL);
-
-		return  p_next->getValue();
+		
+		double distance;
+		if(p_current == NULL)
+			distance = 1.0;
+		else
+			distance = (p_current->getPose().position - p_next->getPose().position).length();
+		
+		return  p_next->getValue() + distance;
 	}
 
 	void LRTAStar::updateValue(Marker *p_current, Marker *p_next)
@@ -37,8 +43,7 @@ namespace mae
 		if(p_next == NULL)
 			p_current->setValue(1.0);
 		else
-			p_current->setValue(p_next->getValue() + 1.0);
-
+			p_current->setValue(calcValue(p_current, p_next));
 	}
 
 

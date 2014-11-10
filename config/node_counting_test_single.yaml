@@ -1,7 +1,7 @@
 algorithm:
     type: nodecounting
     obstacle_avoid_distance: 0.5
-    obstacle_marker_distance: 1.0
+    obstacle_marker_distance: 1.2
 world:
     file: world/test.world
 stock:

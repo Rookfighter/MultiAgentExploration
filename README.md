@@ -48,7 +48,7 @@ For Stage installation the following dependencies are required:
 * OpenGLU 
 
 ```
-sudo apt-get install git cmake pkg-config libglu1-mesa-dev libpng12-dev libjpeg8-dev libfltk1.3-dev freeglut3 freeglut3-dev libltdl-dev
+sudo apt-get install git cmake pkg-config libglu1-mesa-dev libpng12-dev libjpeg8-dev libfltk1.3-dev libltdl-dev
 ```
 
 Now compile and install __Player__ (used revision __9140__):

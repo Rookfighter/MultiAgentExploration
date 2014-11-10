@@ -7,9 +7,6 @@
 
 namespace mae
 {
-	typedef void (*updateValueFunc)(Marker* p_current, Marker* p_next);
-	typedef double(*calcValueFunc)(Marker* p_current, Marker* p_next);
-
 	class AntStateProperties
 	{
 	public:
@@ -19,9 +16,9 @@ namespace mae
 		Marker *currentMarker;
 		Marker *nextMarker;
 		double angleToTurn;
-
-		updateValueFunc updateValue;
-		calcValueFunc calcValue;
+		
+		std::function<void(Marker*,Marker*)> updateValue;
+		std::function<double(Marker*,Marker*)> calcValue;
 
 		double obstacleAvoidDistance;
 		double obstacleMarkerDistance;

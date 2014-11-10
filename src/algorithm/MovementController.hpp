@@ -29,7 +29,6 @@ namespace mae
 		~MovementController();
 		
 		void setAngleEps(const double p_angleEps);
-		void setDistanceEps(const double p_distanceEps);
 		void setTurnFactor(const double p_factor);
 		
 		void turnBy(const double p_angle);
@@ -40,6 +39,7 @@ namespace mae
 		bool finished() const;
 		
 		void update();
+		void refreshPose();
 
 	};
 

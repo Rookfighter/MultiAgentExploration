@@ -99,4 +99,9 @@ namespace mae
 	{
 		wander_.update();
 	}
+	
+	void MovementController::refreshPose()
+	{
+		lastPose_ = robot_->getMotor().getPose();
+	}
 }

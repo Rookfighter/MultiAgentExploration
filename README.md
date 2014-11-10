@@ -10,8 +10,8 @@ The following dependencies are required to run and compile the project on __Linu
 
 * Player
 * Stage
-* yaml-cpp (__lib__ subdirectory)
-* easylogging++ (__lib__ subdirectory)
+* yaml-cpp 0.5.1 (in ```lib/```)
+* easylogging++ 9.75 (in ```lib/```)
 * gcc 4.8 or higher
 
 ### Player/Stage
@@ -48,7 +48,7 @@ For Stage installation the following dependencies are required:
 * OpenGLU 
 
 ```
-sudo apt-get install git cmake pkg-config libglu1-mesa-dev libpng12-dev libjpeg8-dev libfltk1.1-dev libltdl-dev
+sudo apt-get install build-essential git cmake pkg-config libglu1-mesa-dev libpng12-dev libjpeg8-dev libfltk1.1-dev libltdl-dev
 ```
 
 Now compile and install __Player__ (used revision __9140__):
@@ -158,4 +158,5 @@ For code completion add the following dirextory to your tag search path.
 
 ```
 /usr/local/include/player-3.1
+/usr/local/include/Stage-4.1
 ```

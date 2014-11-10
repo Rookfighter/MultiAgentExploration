@@ -38,11 +38,12 @@ namespace mae
 
 	AntState* MovingToDirection::update()
 	{
-		if(movementController_.finished() || hasFrontObstacle()) {
+		if(movementController_.reachedDirection() &&
+		        (movementController_.reachedDistance() || hasFrontObstacle())) {
 			properties_.robot->getMotor().stop();
 			return new DroppingMarker(properties_);
 		}
-		
+
 		movementController_.update();
 
 		return NULL;

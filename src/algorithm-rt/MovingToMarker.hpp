@@ -2,6 +2,7 @@
 #define MAE_MOVING_TO_MARKER_HPP
 
 #include "algorithm/Wander.hpp"
+#include "algorithm/ObstacleDetector.hpp"
 #include "algorithm-rt/AntState.hpp"
 
 namespace mae
@@ -12,6 +13,7 @@ namespace mae
 		enum State {MOVING, AVOIDING, AFTER_AVOIDING};
 		
 		Wander wander_;
+		ObstacleDetector obstacleDetector_;
 		
 		Pose lastPose_;
 		double movedDistance_;

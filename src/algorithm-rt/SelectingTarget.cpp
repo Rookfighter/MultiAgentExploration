@@ -32,7 +32,8 @@ namespace mae
 
 
 	SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
-		: AntState(p_properties), obstacleMarkerDistance_(p_properties.obstacleMarkerDistance)
+		: AntState(p_properties), obstacleMarkerDistance_(p_properties.obstacleMarkerDistance),
+		  obstacleDetector_(p_properties.robot)
 	{
 		LOG(DEBUG) << "Changed to SelectingTarget state";
 	}
@@ -83,18 +84,18 @@ namespace mae
 	bool SelectingTarget::checkBlankSpace()
 	{
 		// check if obstacle is the direction
-		bool blockedFront = checkObstacle(obstacleAngles[FRONT_IDX],
-		                                  obstacleAngles[FRONT_IDX + 1],
-		                                  obstacleMarkerDistance_);
-		bool blockedBack = checkObstacle(obstacleAngles[BACK_IDX],
-		                                 obstacleAngles[BACK_IDX + 1],
-		                                 obstacleMarkerDistance_);
-		bool blockedLeft = checkObstacle(obstacleAngles[LEFT_IDX],
-		                                 obstacleAngles[LEFT_IDX + 1],
-		                                 obstacleMarkerDistance_);
-		bool blockedRight = checkObstacle(obstacleAngles[RIGHT_IDX],
-		                                  obstacleAngles[RIGHT_IDX + 1],
-		                                  obstacleMarkerDistance_);
+		bool blockedFront = obstacleDetector_.check(obstacleAngles[FRONT_IDX],
+		                    obstacleAngles[FRONT_IDX + 1],
+		                    obstacleMarkerDistance_);
+		bool blockedBack = obstacleDetector_.check(obstacleAngles[BACK_IDX],
+		                   obstacleAngles[BACK_IDX + 1],
+		                   obstacleMarkerDistance_);
+		bool blockedLeft = obstacleDetector_.check(obstacleAngles[LEFT_IDX],
+		                   obstacleAngles[LEFT_IDX + 1],
+		                   obstacleMarkerDistance_);
+		bool blockedRight = obstacleDetector_.check(obstacleAngles[RIGHT_IDX],
+		                    obstacleAngles[RIGHT_IDX + 1],
+		                    obstacleMarkerDistance_);
 
 		LOG(DEBUG) << "-- Obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
 		           ", L=" << boolToStr(blockedLeft) << ", R=" << boolToStr(blockedRight);
@@ -133,28 +134,6 @@ namespace mae
 		return  !blockedFront || !blockedBack || !blockedLeft || !blockedRight;
 	}
 
-
-	bool SelectingTarget::checkObstacle(const double p_beginAngle,
-	                                    const double p_endAngle,
-	                                    const double p_distance)
-	{
-		double minDistance = 1e6;
-
-		const RangerProperties& rangerProperties = properties_.robot->getRanger().getProperties();
-		for(int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
-
-			// check if sensor is in the angles we check
-			if(!angleIsBetween(rangerProperties.getMeasurementOrigins()[i].yaw, p_beginAngle, p_endAngle))
-				continue;
-
-			double distance = properties_.robot->getRanger().getDistance(i);
-			if(distance < minDistance)
-				minDistance = distance;
-		}
-
-		return minDistance < p_distance;
-	}
-
 	bool SelectingTarget::findNextMarker()
 	{
 		assert(properties_.robot->getMarkerSensor().getMaxRange() <
@@ -178,7 +157,7 @@ namespace mae
 		std::vector<MarkerMeasurement> result;
 		double minValue = getMinNonObstructedMarkerValue();
 		LOG(DEBUG) << "-- Min value: " << minValue;
-		
+
 		if(minValue < 0)
 			return result;
 
@@ -237,9 +216,9 @@ namespace mae
 
 	bool SelectingTarget::markerIsObstructed(const MarkerMeasurement &p_markerMeasurement)
 	{
-		return checkObstacle(p_markerMeasurement.relativeDirection - (MARKER_OBSTACLE_FOV / 2),
-		                     p_markerMeasurement.relativeDirection + (MARKER_OBSTACLE_FOV / 2),
-		                     p_markerMeasurement.relativeDistance.length());
+		return obstacleDetector_.check(p_markerMeasurement.relativeDirection - (MARKER_OBSTACLE_FOV / 2),
+		                               p_markerMeasurement.relativeDirection + (MARKER_OBSTACLE_FOV / 2),
+		                               p_markerMeasurement.relativeDistance.length());
 	}
 
 

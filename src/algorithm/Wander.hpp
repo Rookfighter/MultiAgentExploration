@@ -2,6 +2,7 @@
 #define MAE_WANDER_HPP
 
 #include <functional>
+#include "algorithm/ObstacleDetector.hpp"
 #include "simulation/ExplorationBot.hpp"
 
 namespace mae
@@ -10,7 +11,8 @@ namespace mae
 	class Wander
 	{
 	private:
-		ExplorationBot &robot_;
+		ExplorationBot *robot_;
+		ObstacleDetector obstacleDetector_;
 		Velocity velocity_;
 
 		double minFrontDistance_;
@@ -34,7 +36,7 @@ namespace mae
 		void beginAvoiding();
 		void endAvoiding();
 	public:
-		Wander(ExplorationBot &p_robot,
+		Wander(ExplorationBot *p_robot,
 		       const double p_frontStopDistance = 1.0);
 		~Wander();
 

@@ -14,11 +14,15 @@
 /* precision of turn angle check */
 #define TURN_EPS ((M_PI / 180) * 5) // precision 5°
 
+#define FRONT_ANGLE_BEGIN (-M_PI / 6)
+#define FRONT_ANGLE_END (M_PI / 6)
+
 namespace mae
 {
 
 	MovingToDirection::MovingToDirection(const AntStateProperties &p_properties)
-		: AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleAvoidDistance),
+		: AntState(p_properties), wander_(p_properties.robot, p_properties.obstacleAvoidDistance),
+		  obstacleDetector_(p_properties.robot),
 		  lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
 		  reachedDirection_(false)
 	{
@@ -35,11 +39,11 @@ namespace mae
 		updateGeometry();
 		if(!reachedDirection_)
 			reachedDirection_ = reachedDirection();
-		
+
 		if(!reachedDirection_) {
 			turn();
 		} else {
-			if(movedEnough()) {
+			if(movedEnough() || hasFrontObstacle()) {
 				properties_.robot->getMotor().stop();
 				return new DroppingMarker(properties_);
 			} else
@@ -57,17 +61,24 @@ namespace mae
 		remainingToTurn_ -= normalizeRadian(currentPose.yaw - lastPose_.yaw);
 		lastPose_ = currentPose;
 	}
-	
+
 	bool MovingToDirection::reachedDirection()
 	{
 		return sameDouble(remainingToTurn_,
 		                  0,
 		                  TURN_EPS);
 	}
-	
+
 	bool MovingToDirection::movedEnough()
 	{
 		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getMaxRange();
+	}
+
+	bool MovingToDirection::hasFrontObstacle()
+	{
+		return obstacleDetector_.check(FRONT_ANGLE_BEGIN,
+		                               FRONT_ANGLE_END,
+		                               properties_.obstacleAvoidDistance);
 	}
 
 	void MovingToDirection::move()
@@ -82,7 +93,7 @@ namespace mae
 			angularVelocity = properties_.robot->getMotor().getMinVelocity().angular * TURN_FACTOR;
 		else
 			angularVelocity = properties_.robot->getMotor().getMaxVelocity().angular * TURN_FACTOR;
-		
+
 		properties_.robot->getMotor().setVelocity(Velocity(0, angularVelocity));
 	}
 

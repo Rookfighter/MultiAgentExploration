@@ -10,11 +10,11 @@ namespace mae
 	class WanderTest
 	{
 	private:
-		Simulation &world_;
+		Simulation *world_;
 		Wander wander_;
 	public:
-		WanderTest(Simulation &p_world,
-		           ExplorationBot &p_bot);
+		WanderTest(Simulation *p_world,
+		           ExplorationBot *p_bot);
 		~WanderTest();
 
 		void execute();

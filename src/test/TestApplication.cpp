@@ -8,8 +8,8 @@ namespace mae
 	TestApplication::TestApplication()
 	{
 		world_ = SimulationLoader::load("test_simulation.yaml");
-		wanderTest_ = new WanderTest(*world_,
-		                             *world_->getRobot("pioneer1"));
+		wanderTest_ = new WanderTest(world_,
+		                             world_->getRobot("pioneer1"));
 		ncTest_ = new NodeCountingTest(world_, "pioneer1");
 		performanceTest_ = new PerformanceTest();
 	}

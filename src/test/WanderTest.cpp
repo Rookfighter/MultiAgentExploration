@@ -3,8 +3,8 @@
 namespace mae
 {
 
-	WanderTest::WanderTest(Simulation &p_world,
-	                       ExplorationBot &p_bot)
+	WanderTest::WanderTest(Simulation *p_world,
+	                       ExplorationBot *p_bot)
 		:world_(p_world), wander_(p_bot)
 	{
 	}
@@ -17,7 +17,7 @@ namespace mae
 	void WanderTest::execute()
 	{
 		while(true) {
-			world_.update();
+			world_->update();
 			wander_.step();
 		}
 	}

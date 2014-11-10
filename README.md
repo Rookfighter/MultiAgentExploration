@@ -34,7 +34,7 @@ For Player installation the following dependencies are required:
 * libplayerc++ 3.0
 
 ```
-sudo apt-get install autotools-dev build-essential cmake git subversion libboost-thread-dev libboost-signals-dev libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev libtool libxmu-dev swig libgtk2.0-dev libltdl7 libltdl-dev libplayerc++3.0 libplayerc++3.0-dev libdb5.1-stl libdb5.1-stl-dev
+sudo apt-get install autotools-dev build-essential cmake git subversion libboost-thread-dev libboost-signals-dev libcv2.4 libcv-dev libhighgui2.4 libhighgui-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libgnomecanvas2-0 libgnomecanvas2-dev libgsl0ldbl libgsl0-dev libtool libxmu-dev swig libgtk2.0-dev libplayerc++3.0 libplayerc++3.0-dev libdb5.1-stl libdb5.1-stl-dev
 ```
 
 For Stage installation the following dependencies are required:
@@ -48,7 +48,7 @@ For Stage installation the following dependencies are required:
 * OpenGLU 
 
 ```
-sudo apt-get install git cmake pkg-config libglu1-mesa libglu1-mesa-dev libpng12-0 libpng12-dev libjpeg8-dev libfltk1.3 libfltk1.3-dev freeglut3 freeglut3-dev
+sudo apt-get install git cmake pkg-config libglu1-mesa-dev libpng12-dev libjpeg8-dev libfltk1.3-dev freeglut3 freeglut3-dev libltdl-dev
 ```
 
 Now compile and install __Player__ (used revision __9140__):

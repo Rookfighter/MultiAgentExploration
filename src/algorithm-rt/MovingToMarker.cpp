@@ -25,9 +25,13 @@ namespace mae
 {
 
 	MovingToMarker::MovingToMarker(const AntStateProperties &p_properties)
-		:AntState(p_properties), wander_(*p_properties.robot, p_properties.obstacleAvoidDistance),
-		 lastPose_(p_properties.robot->getMotor().getPose()), movedDistance_(0),
-		 state_(MOVING), obstacleAvoidStep_(0)
+		:AntState(p_properties),
+		 wander_(p_properties.robot, p_properties.obstacleAvoidDistance),
+		 obstacleDetector_(p_properties.robot),
+		 lastPose_(p_properties.robot->getMotor().getPose()),
+		 movedDistance_(0),
+		 state_(MOVING),
+		 obstacleAvoidStep_(0)
 	{
 		LOG(DEBUG) << "Changed to MovingToMarker state";
 		wander_.onAvoidBegin(std::bind(&MovingToMarker::onAvoidBegin,this));
@@ -116,6 +120,7 @@ namespace mae
 	{
 		return movedDistance_ >= MOVEMENT_FACTOR * properties_.robot->getMarkerSensor().getMaxRange();
 	}
+
 
 	void MovingToMarker::turnToMarker()
 	{

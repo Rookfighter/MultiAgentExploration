@@ -2,6 +2,7 @@
 #define MAE_MOVING_TO_DIRECTION_HPP
 
 #include "algorithm/Wander.hpp"
+#include "algorithm/ObstacleDetector.hpp"
 #include "algorithm-rt/AntState.hpp"
 
 namespace mae
@@ -11,6 +12,7 @@ namespace mae
 	{
 	private:
 		Wander wander_;
+		ObstacleDetector obstacleDetector_;
 		
 		Pose lastPose_;
 		double movedDistance_;
@@ -20,6 +22,7 @@ namespace mae
 		void updateGeometry();
 		bool reachedDirection();
 		bool movedEnough();
+		bool hasFrontObstacle();
 		void move();
 		void turn();
 	public:

@@ -2,6 +2,7 @@
 #define MAE_SELECTING_TARGET_HPP
 
 #include "algorithm-rt/AntState.hpp"
+#include "algorithm/ObstacleDetector.hpp"
 
 namespace mae
 {
@@ -10,13 +11,11 @@ namespace mae
 	{
 	private:
 		std::vector<MarkerMeasurement> markerInRange_;
+		ObstacleDetector obstacleDetector_;
 		double obstacleMarkerDistance_;
 
 		void getMarkerInRange();
 		bool checkBlankSpace();
-		bool checkObstacle(const double p_beginAngle,
-		                   const double p_endAngle,
-		                   const double p_distance);
 		bool findNextMarker();
 		std::vector<MarkerMeasurement> getNonObstructedMarker();
 		double getMinNonObstructedMarkerValue();

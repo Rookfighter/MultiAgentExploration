@@ -2,7 +2,6 @@
 #include "utils/Math.hpp"
 
 #define DEF_ANGLE_EPS ((M_PI / 180) * 5) // precision 5°
-#define DEF_DISTANCE_EPS (0.01) // precsion 1cm
 
 namespace mae
 {
@@ -15,7 +14,6 @@ namespace mae
 		 angleToTurn_(0),
 		 distanceToMove_(0),
 		 angleEps_(DEF_ANGLE_EPS),
-		 distanceEps_(DEF_DISTANCE_EPS),
 		 turnFactor_(1.0)
 	{
 	}
@@ -27,11 +25,6 @@ namespace mae
 	void MovementController::setAngleEps(const double p_angleEps)
 	{
 		angleEps_ = p_angleEps;
-	}
-	
-	void MovementController::setDistanceEps(const double p_distanceEps)
-	{
-		distanceEps_ = p_distanceEps;
 	}
 	
 	void MovementController::setTurnFactor(const double p_factor)
@@ -51,7 +44,7 @@ namespace mae
 
 	bool MovementController::reachedDistance() const
 	{
-		return sameDouble(0, distanceToMove_, distanceEps_);
+		return distanceToMove_ <= 0;
 	}
 
 	bool MovementController::reachedDirection() const

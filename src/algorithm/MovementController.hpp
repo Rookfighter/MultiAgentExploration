@@ -17,7 +17,6 @@ namespace mae
 		double distanceToMove_;
 		
 		double angleEps_;
-		double distanceEps_;
 		
 		double turnFactor_;
 		

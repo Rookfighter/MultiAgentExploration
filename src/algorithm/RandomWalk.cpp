@@ -1,7 +1,6 @@
 #include "algorithm/RandomWalk.hpp"
 
 #define ANGLE_EPS ((M_PI / 180) * 5) // precision 5°
-#define DISTANCE_EPS (0.10) // precsion 10cm
 #define TURN_FACTOR (0.8)
 
 #define TURN_GRANULARITY (4)
@@ -16,7 +15,6 @@ namespace mae
 		wanderDistance_(p_config.robot->getMarkerSensor().getMaxRange())
 	{
 		robotController_.setAngleEps(ANGLE_EPS);
-		robotController_.setDistanceEps(DISTANCE_EPS);
 		robotController_.setTurnFactor(TURN_FACTOR);
 		robotController_.wanderDistance(wanderDistance_);
 	}

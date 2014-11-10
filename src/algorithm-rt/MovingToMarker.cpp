@@ -21,6 +21,10 @@
  * cancelled */
 #define MOVEMENT_FACTOR 1.1
 
+#define OBSTACLE_DETECT_FOV (M_PI / 3) // 60°
+
+#define OBSTACLE_AVOID_MAX_STEP 5
+
 namespace mae
 {
 
@@ -30,12 +34,9 @@ namespace mae
 		 obstacleDetector_(p_properties.robot),
 		 lastPose_(p_properties.robot->getMotor().getPose()),
 		 movedDistance_(0),
-		 state_(MOVING),
 		 obstacleAvoidStep_(0)
 	{
 		LOG(DEBUG) << "Changed to MovingToMarker state";
-		wander_.onAvoidBegin(std::bind(&MovingToMarker::onAvoidBegin,this));
-		wander_.onAvoidEnd(std::bind(&MovingToMarker::onAvoidEnd,this));
 	}
 
 	MovingToMarker::~MovingToMarker()
@@ -64,12 +65,15 @@ namespace mae
 			properties_.robot->getMotor().stop();
 			return new DroppingMarker(properties_);
 		}
+		if(hasObstacleToTarget()) {
+			obstacleAvoidStep_ = OBSTACLE_AVOID_MAX_STEP;
+		}
 
 		// no target reached, we still have to move
 		if(!isAvoidingObstacle() && !reachedDirection())
 			turnToMarker();
 		else
-			moveTowardsMarker();
+			wander();
 
 		return NULL;
 	}
@@ -132,33 +136,24 @@ namespace mae
 		properties_.robot->getMotor().setVelocity(Velocity(0, angularVelocity));
 	}
 
-	void MovingToMarker::moveTowardsMarker()
+	void MovingToMarker::wander()
 	{
 		wander_.step();
-
-		// AFTER_AVOIDING state prohibits that obstacle avoiding
-		// and changing direction to marker flip all the time
-		// else the robot would always try to change its direction all over again
-		if(state_== AFTER_AVOIDING) {
-			obstacleAvoidStep_++;
-			if(obstacleAvoidStep_ == OBSTACLE_AVOID_MAX_STEP)
-				state_ = MOVING;
-		}
+		
+		// we avoided the obstalce for one step
+		if(isAvoidingObstacle())
+			obstacleAvoidStep_--;
 	}
 
 	bool MovingToMarker::isAvoidingObstacle()
 	{
-		return state_ == AVOIDING || state_ == AFTER_AVOIDING;
+		return obstacleAvoidStep_ != 0;
 	}
-
-	void MovingToMarker::onAvoidBegin()
+	
+	bool MovingToMarker::hasObstacleToTarget()
 	{
-		state_ = AVOIDING;
-	}
-
-	void MovingToMarker::onAvoidEnd()
-	{
-		state_= AFTER_AVOIDING;
-		obstacleAvoidStep_ = 0;
+		return obstacleDetector_.check(targetMeasurement_.relativeDirection - (OBSTACLE_DETECT_FOV / 2),
+		                               targetMeasurement_.relativeDirection + (OBSTACLE_DETECT_FOV / 2),
+		                               properties_.obstacleAvoidDistance);
 	}
 }

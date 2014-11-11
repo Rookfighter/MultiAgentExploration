@@ -70,7 +70,7 @@ namespace mae
 			obstacleAvoidStep_ = OBSTACLE_AVOID_MAX_STEP;
 		}
 
-		// if we are not avoiding any obstacles turn tu the target
+		// if we are not avoiding any obstacles turn to the target
 		if(!isAvoidingObstacle() && movementController_.reachedDirection() && !isFacingToTarget())
 			turnToTarget();
 

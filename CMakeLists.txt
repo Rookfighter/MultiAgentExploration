@@ -28,6 +28,7 @@ endif( ${RELEASE} )
 file(GLOB MULTI_AGENT_EXPLORATION_SRC
     "src/algorithm/*.cpp"
     "src/algorithm-rt/*.cpp"
+    "src/algorithm-compass/*.cpp"
     "src/utils/*.cpp"
     "src/simulation/*.cpp"
     "src/app/*.cpp"

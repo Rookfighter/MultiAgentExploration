@@ -9,7 +9,76 @@
 
 namespace mae
 {
-
+    static int getNorthDiffTo(const CardinalDirection p_dir)
+    {
+        switch(p_dir) {
+            case NORTH:
+                return 0;
+            case EAST:
+                return 1;
+            case WEST:
+                return -1;
+            default:
+                return 2;
+        }
+    }
+    
+    static int getSouthDiffTo(const CardinalDirection p_dir)
+    {
+        switch(p_dir) {
+            case NORTH:
+                return 2;
+            case EAST:
+                return -1;
+            case WEST:
+                return 1;
+            default:
+                return 0;
+        }
+    }
+    
+    static int getEastDiffTo(const CardinalDirection p_dir)
+    {
+        switch(p_dir) {
+            case NORTH:
+                return -1;
+            case EAST:
+                return 0;
+            case WEST:
+                return 2;
+            default:
+                return 1;
+        }
+    }
+    
+    static int getWestDiffTo(const CardinalDirection p_dir)
+    {
+        switch(p_dir) {
+            case NORTH:
+                return 1;
+            case EAST:
+                return 2;
+            case WEST:
+                return 0;
+            default:
+                return -1;
+        }
+    }
+    
+    int getDirectionDiff(const CardinalDirection p_dir1, const CardinalDirection p_dir2)
+    {
+        switch(p_dir1) {
+        case NORTH:
+            return getNorthDiffTo(p_dir2);
+        case EAST:
+            return getEastDiffTo(p_dir2);
+        case WEST:
+            return getWestDiffTo(p_dir2);
+        default:
+            return getSouthDiffTo(p_dir2);
+        }
+    }
+    
 	TwoBitCompass::TwoBitCompass()
 		:model_(NULL)
 	{

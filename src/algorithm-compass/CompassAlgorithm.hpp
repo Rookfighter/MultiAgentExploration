@@ -3,12 +3,15 @@
 
 #include "algorithm/Algorithm.hpp"
 #include "algorithm/AlgorithmConfig.hpp"
+#include "algorithm-compass/CompassState.hpp"
 
 namespace mae
 {
 
 	class CompassAlgorithm : public Algorithm
 	{
+	private:
+		CompassState *state_;
 	public:
 		CompassAlgorithm(const AlgorithmConfig &p_config);
 		~CompassAlgorithm();

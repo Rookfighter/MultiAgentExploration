@@ -11,7 +11,7 @@ namespace mae
 	AntAlgorithm::~AntAlgorithm()
 	{
 		if(state_ != NULL)
-		delete state_;
+            delete state_;
 	}
 	
 	void AntAlgorithm::init(AntState *p_initialState)

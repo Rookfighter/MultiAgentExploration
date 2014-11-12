@@ -5,6 +5,7 @@
 #include "algorithm-rt/NodeCounting.hpp"
 #include "algorithm-rt/LRTAStar.hpp"
 #include "algorithm-rt/Wagner.hpp"
+#include "algorithm-compass/CompassAlgorithm.hpp"
 #include "simulation/SimulationLoader.hpp"
 #include "utils/Convert.hpp"
 
@@ -12,11 +13,13 @@
 #define ALGORITHM_TYPE_NODE "type"
 #define OBSTACLE_AVOID_DISTANCE_NODE "obstacle_avoid_distance"
 #define OBSTACLE_MARKER_DISTANCE_NODE "obstacle_marker_distance"
+#define MARKER_DEPLOY_DISTANCE_NODE "marker_deploy_distance"
 
 #define NODECOUNTING_TYPE "nodecounting"
 #define LRTASTAR_TYPE "lrta*"
 #define WAGNER_TYPE "wagner"
 #define RANDOMWALK_TYPE "randomwalk"
+#define COMPASS_TYPE "compass"
 
 namespace mae
 {
@@ -45,6 +48,7 @@ namespace mae
 		algorithmConfig.type = toLowerCase(algorithm[ALGORITHM_TYPE_NODE].as<std::string>());
 		algorithmConfig.obstacleAvoidDistance = algorithm[OBSTACLE_AVOID_DISTANCE_NODE].as<double>();
 		algorithmConfig.obstacleMarkerDistance = algorithm[OBSTACLE_MARKER_DISTANCE_NODE].as<double>();
+        algorithmConfig.markerDeployDistance = algorithm[MARKER_DEPLOY_DISTANCE_NODE].as<double>();
 		LOG(INFO) <<  "-- algorithm type is " << algorithmConfig.type;
 		
 		simulation = SimulationLoader::load(root);
@@ -65,7 +69,9 @@ namespace mae
 				result->algorithms_[i] = new Wagner(algorithmConfig);
 			} else if (algorithmConfig.type == RANDOMWALK_TYPE) {
 				result->algorithms_[i] = new RandomWalk(algorithmConfig);
-			} else {
+			} else if(algorithmConfig.type == COMPASS_TYPE) {
+                result->algorithms_[i] = new CompassAlgorithm(algorithmConfig);
+            } else {
 				throw std::logic_error("invalid Algorithm type");
 			}
 		}

@@ -1,20 +1,12 @@
 #include "algorithm-rt/NodeCounting.hpp"
-#include "algorithm-rt/InitialAntState.hpp"
 
 namespace mae
 {
 	NodeCounting::NodeCounting(const AlgorithmConfig &p_config)
-		:AntAlgorithm()
+		:AntAlgorithm(p_config,
+                      std::bind(&NodeCounting::updateValue, this, std::placeholders::_1, std::placeholders::_2),
+                      std::bind(&NodeCounting::calcValue, this, std::placeholders::_1, std::placeholders::_2))
 	{
-		AntStateProperties properties;
-		properties.robot = p_config.robot;
-		properties.stock = p_config.stock;
-		properties.updateValue = std::bind(&NodeCounting::updateValue, this, std::placeholders::_1, std::placeholders::_2);
-		properties.calcValue = std::bind(&NodeCounting::calcValue, this, std::placeholders::_1, std::placeholders::_2);
-		properties.obstacleAvoidDistance = p_config.obstacleAvoidDistance;
-		properties.obstacleMarkerDistance = p_config.obstacleMarkerDistance;
-		
-		init(new InitialAntState(properties));
 	}
 	
 	NodeCounting::~NodeCounting()

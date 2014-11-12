@@ -3,10 +3,6 @@
 #include "algorithm-compass/AtMarker.hpp"
 #include "algorithm-compass/DeployMarker.hpp"
 
-/* determines how much of markersensor distance will
- * be moved until new marker is dropped */
-#define DISTANCE_FACTOR 1.8
-
 #define TURN_FACTOR 0.8
 
 /* precision of turn angle check */
@@ -23,7 +19,7 @@ namespace mae
         LOG(DEBUG) << "Changed to SearchMarker state";
         movementController_.setTurnFactor(TURN_FACTOR);
         movementController_.setAngleEps(ANGLE_EPS);
-        movementController_.wanderDistance(DISTANCE_FACTOR * properties_.robot->getMarkerSensor().getMaxRange());
+        movementController_.wanderDistance(properties_.markerDeployDistance);
     }
 
     SearchMarker::~SearchMarker()

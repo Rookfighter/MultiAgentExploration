@@ -7,10 +7,6 @@
  * velocity is used */
 #define TURN_FACTOR 0.8
 
-/* determines how much of marker range should
- * be moved until we place new marker */
-#define DISTANCE_FACTOR 0.8
-
 /* precision of turn angle check */
 #define ANGLE_EPS ((M_PI / 180) * 5) // precision 5°
 
@@ -29,7 +25,7 @@ namespace mae
 		movementController_.setAngleEps(ANGLE_EPS);
 		movementController_.setTurnFactor(TURN_FACTOR);
 		movementController_.turnBy(properties_.angleToTurn);
-		movementController_.wanderDistance(DISTANCE_FACTOR * properties_.robot->getMarkerSensor().getMaxRange());
+		movementController_.wanderDistance(properties_.markerDeployDistance);
 	}
 
 	MovingToDirection::~MovingToDirection()

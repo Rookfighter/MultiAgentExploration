@@ -10,13 +10,12 @@ namespace mae
 	public:
         ExplorationBot *robot;
 		Marker *currentMarker;
-		CardinalDirection nextDirection;
         
         double obstacleAvoidDistance;
-		double obstacleMarkerDistance;
+        double markerDeployDistance;
 		
 		CompassStateProperties()
-		:currentMarker(NULL), nextDirection(WEST) { }
+		:currentMarker(NULL) { }
 	};
 
 	class CompassState

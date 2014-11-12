@@ -2,6 +2,7 @@ algorithm:
     type: randomwalk
     obstacle_avoid_distance: 0.5 # m
     obstacle_marker_distance: 1.2 # m
+    marker_deploy_distance: 1.6 # m
 world:
     file: world/test.world
 stock:

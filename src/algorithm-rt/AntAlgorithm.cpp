@@ -1,35 +1,44 @@
 #include <easylogging++.h>
 #include "algorithm-rt/AntAlgorithm.hpp"
+#include "algorithm-rt/InitialAntState.hpp"
 
 namespace mae
 {
-	AntAlgorithm::AntAlgorithm()
-	:state_(NULL)
-	{
-	}
+    AntAlgorithm::AntAlgorithm(const AlgorithmConfig &p_config,
+                               std::function<void(Marker*,Marker*)> p_updateValue,
+                               std::function<double(Marker*,Marker*)> p_calcValue)
+        :Algorithm(),
+        state_(NULL)
+    {
+        AntStateProperties properties;
+        properties.robot = p_config.robot;
+        properties.stock = p_config.stock;
+        properties.updateValue = p_updateValue;
+        properties.calcValue = p_calcValue;
+        properties.obstacleAvoidDistance = p_config.obstacleAvoidDistance;
+        properties.obstacleMarkerDistance = p_config.obstacleMarkerDistance;
+        properties.markerDeployDistance = p_config.markerDeployDistance;
 
-	AntAlgorithm::~AntAlgorithm()
-	{
-		if(state_ != NULL)
+        state_ = new InitialAntState(properties);
+    }
+
+    AntAlgorithm::~AntAlgorithm()
+    {
+        if(state_ != NULL)
             delete state_;
-	}
-	
-	void AntAlgorithm::init(AntState *p_initialState)
-	{
-		state_ = p_initialState;
-	}
+    }
 
-	void AntAlgorithm::update()
-	{
-		assert(state_ != NULL);
-		
-		AntState *newState = state_->update();
-		
-		if(newState != NULL) {
-			delete state_;
-			state_ = newState;
-		}
-	}
+    void AntAlgorithm::update()
+    {
+        assert(state_ != NULL);
+
+        AntState *newState = state_->update();
+
+        if(newState != NULL) {
+            delete state_;
+            state_ = newState;
+        }
+    }
 
 
 }

@@ -16,6 +16,7 @@ namespace mae
 		
 		double obstacleAvoidDistance;
 		double obstacleMarkerDistance;
+        double markerDeployDistance;
 		
 		AlgorithmConfig() {
 		}

@@ -30,6 +30,7 @@ namespace mae
 
 		std::vector<MarkerMeasurement> getMarkerInRange();
 		MarkerMeasurement getClosestMarker();
+        MarkerMeasurement getClosestMarker(const std::vector<MarkerMeasurement> &p_marker);
 		
 		double getMaxRange() const;
 

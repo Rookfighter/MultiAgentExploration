@@ -56,6 +56,7 @@ namespace mae
         
         LOG(DEBUG) << "-- recommended: " << getDirectionStr(nextDirection);
         LOG(DEBUG) << "-- facing: " << getDirectionStr(currentDirection);
+        LOG(DEBUG) << "-- last: " << properties_.currentMarker->getDirectionLastVisit(nextDirection) << "ms";
         
         properties_.currentMarker->exploreDirection(nextDirection);
         checkingRecommendedDirection_ = true;

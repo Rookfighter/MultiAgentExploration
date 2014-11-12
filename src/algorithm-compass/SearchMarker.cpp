@@ -69,14 +69,9 @@ namespace mae
                 foundCurrent = true;
         }
         
-        if(!foundCurrent) {
+        if(!foundCurrent && !markerWithoutLast.empty()) {
             // only set new marker after we lost signal 
-            if(markerWithoutLast.size() == 1) {
-                newMarker_ = markerWithoutLast[0].marker;
-            } else if(markerWithoutLast.size() > 1) {
-                int idx = random_.nextInt(markerWithoutLast.size());
-                newMarker_ = markerWithoutLast[idx].marker;
-            }
+            newMarker_ = properties_.robot->getMarkerSensor().getClosestMarker(markerWithoutLast).marker;
         }
         
     }

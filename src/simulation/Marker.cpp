@@ -154,6 +154,16 @@ namespace mae
         
         return OPEN;
     }
+    
+    long Marker::getDirectionLastVisit(const CardinalDirection p_direction) const
+    {
+        for(DirectionInfo info : directionInfos_) {
+            if(info.direction == p_direction)
+                return info.lastMsec;
+        }
+        
+        return 0L;
+    }
 
 	void Marker::changeValueBy(const double p_toChange)
 	{

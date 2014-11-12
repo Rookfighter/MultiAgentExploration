@@ -51,11 +51,14 @@ namespace mae
 
 	MarkerMeasurement MarkerSensor::getClosestMarker()
 	{
-		std::vector<MarkerMeasurement> inRange = getMarkerInRange();
-
-		bool initialized = false;
+		return getClosestMarker(getMarkerInRange());
+	}
+    
+    MarkerMeasurement MarkerSensor::getClosestMarker(const std::vector<MarkerMeasurement> &p_marker)
+    {
+        bool initialized = false;
 		MarkerMeasurement result;
-		for(MarkerMeasurement measurement : inRange) {
+		for(MarkerMeasurement measurement : p_marker) {
 			if(!initialized ||
 			        measurement.relativeDistance.lengthSQ() < result.relativeDistance.lengthSQ()) {
 				initialized = true;
@@ -64,7 +67,7 @@ namespace mae
 		}
 
 		return result;
-	}
+    }
 	
 	double MarkerSensor::getMaxRange() const
 	{

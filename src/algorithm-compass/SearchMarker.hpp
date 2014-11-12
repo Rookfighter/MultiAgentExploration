@@ -3,7 +3,6 @@
 
 #include "algorithm/MovementController.hpp"
 #include "algorithm-compass/CompassState.hpp"
-#include "utils/Random.hpp"
 
 namespace mae
 {
@@ -14,7 +13,6 @@ namespace mae
         MovementController movementController_;
         Marker *newMarker_;
         bool lostAllSignals_;
-        Random random_;
         
         void updateNewMarker();
 	public:

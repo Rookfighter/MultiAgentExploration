@@ -48,6 +48,7 @@ namespace mae
 		const TwoBitCompass& getCompass() const;
 		CardinalDirection getRecommendedDirection() const;
         DirectionState getDirectionState(const CardinalDirection p_direction) const;
+        long getDirectionLastVisit(const CardinalDirection p_direction) const;
 		
 		void changeValueBy(const double p_toChange);
 		

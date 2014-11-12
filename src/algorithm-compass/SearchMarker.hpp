@@ -13,6 +13,7 @@ namespace mae
 	private:
         MovementController movementController_;
         Marker *newMarker_;
+        bool lostAllSignals_;
         Random random_;
         
         void updateNewMarker();

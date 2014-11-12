@@ -2,7 +2,7 @@
 #include "algorithm-compass/AtMarker.hpp"
 #include "algorithm-compass/SearchMarker.hpp"
 
-#define FRONT_OBSTACLE_FOV (M_PI / 3) // 60°
+#define FRONT_OBSTACLE_FOV (M_PI / 6) // 30°
 
 namespace mae
 {
@@ -14,6 +14,12 @@ namespace mae
          checkingRecommendedDirection_(false)
     {
         LOG(DEBUG) << "Changed to AtMarker state";
+        
+        assert(properties_.currentMarker != NULL);
+        if(properties_.lastMarker != NULL) {
+            CardinalDirection originDirection = getOppositeDirection(properties_.robot->getCompass().getFacingDirection());
+            properties_.currentMarker->exploreDirection(originDirection);
+        }
     }
 
     AtMarker::~AtMarker()
@@ -44,10 +50,14 @@ namespace mae
         
         CardinalDirection nextDirection = properties_.currentMarker->getRecommendedDirection();
         CardinalDirection currentDirection = properties_.robot->getCompass().getFacingDirection();
-
+        
         double angleToTurn = getDirectionDiff(currentDirection, nextDirection) * (M_PI / 2);
         movementController_.turnBy(angleToTurn);
-
+        
+        LOG(DEBUG) << "-- recommended: " << getDirectionStr(nextDirection);
+        LOG(DEBUG) << "-- facing: " << getDirectionStr(currentDirection);
+        
+        properties_.currentMarker->exploreDirection(nextDirection);
         checkingRecommendedDirection_ = true;
     }
 

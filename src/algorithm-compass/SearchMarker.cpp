@@ -14,12 +14,15 @@ namespace mae
     SearchMarker::SearchMarker(const CompassStateProperties &p_properties)
         :CompassState(p_properties),
          movementController_(properties_.robot, properties_.obstacleAvoidDistance),
-         newMarker_(NULL)
+         newMarker_(NULL),
+         lostAllSignals_(false)
     {
         LOG(DEBUG) << "Changed to SearchMarker state";
         movementController_.setTurnFactor(TURN_FACTOR);
         movementController_.setAngleEps(ANGLE_EPS);
         movementController_.wanderDistance(properties_.markerDeployDistance);
+        
+         properties_.lastMarker = properties_.currentMarker;
     }
 
     SearchMarker::~SearchMarker()
@@ -30,11 +33,20 @@ namespace mae
     {
         updateNewMarker();
         
-        if(newMarker_ != NULL)
+        if(lostAllSignals_) {
+            properties_.currentMarker = NULL;
+            properties_.robot->getMotor().stop();
+            return new DeployMarker(properties_);
+        }
+        
+        if(newMarker_ != NULL) {
+            properties_.currentMarker = newMarker_;
+            properties_.robot->getMotor().stop();
             return new AtMarker(properties_);
+        }
         
         if(movementController_.reachedDistance())
-            return new DeployMarker(properties_);
+            movementController_.wanderDistance(properties_.markerDeployDistance);
         
         movementController_.update();
         
@@ -44,21 +56,27 @@ namespace mae
     void SearchMarker::updateNewMarker()
     {
         std::vector<MarkerMeasurement> markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
-        std::vector<MarkerMeasurement> markerWithoutCurrent;
-        markerWithoutCurrent.reserve(markerInRange.size());
+        std::vector<MarkerMeasurement> markerWithoutLast;
+        markerWithoutLast.reserve(markerInRange.size());
+        bool foundCurrent = false;;
+        
+        lostAllSignals_ = markerInRange.empty();
         
         for(MarkerMeasurement measurement : markerInRange) {
-            if(measurement.marker->getID() != properties_.currentMarker->getID())
-                markerWithoutCurrent.push_back(measurement);
+            if(measurement.marker->getID() != properties_.lastMarker->getID())
+                markerWithoutLast.push_back(measurement);
+            else
+                foundCurrent = true;
         }
         
-        if(markerWithoutCurrent.size() == 1) {
-            newMarker_ = markerWithoutCurrent[0].marker;
-            properties_.currentMarker = newMarker_;
-        } else if(markerWithoutCurrent.size() > 1) {
-            int idx = random_.nextInt(markerWithoutCurrent.size());
-            newMarker_ = markerWithoutCurrent[idx].marker;
-            properties_.currentMarker = newMarker_;
+        if(!foundCurrent) {
+            // only set new marker after we lost signal 
+            if(markerWithoutLast.size() == 1) {
+                newMarker_ = markerWithoutLast[0].marker;
+            } else if(markerWithoutLast.size() > 1) {
+                int idx = random_.nextInt(markerWithoutLast.size());
+                newMarker_ = markerWithoutLast[idx].marker;
+            }
         }
         
     }

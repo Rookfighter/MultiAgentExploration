@@ -20,6 +20,8 @@ namespace mae
     {
         std::vector<MarkerMeasurement> markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
         
+        LOG(DEBUG) << "Received marker in range";
+        
         if(markerInRange.empty()) {
             return new DeployMarker(properties_);
         } else {

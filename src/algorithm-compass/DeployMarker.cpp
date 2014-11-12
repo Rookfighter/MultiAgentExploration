@@ -19,6 +19,11 @@ namespace mae
     {
         properties_.currentMarker = properties_.robot->dropMarker();
         
+        if(properties_.lastMarker != NULL) {
+            CardinalDirection originDirection = getOppositeDirection(properties_.robot->getCompass().getFacingDirection());
+            properties_.currentMarker->exploreDirection(originDirection);
+        }
+        
         return new AtMarker(properties_);
     }
 }

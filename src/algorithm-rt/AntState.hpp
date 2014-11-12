@@ -11,7 +11,6 @@ namespace mae
 	{
 	public:
 		ExplorationBot *robot;
-		MarkerStock *stock;
 
 		Marker *currentMarker;
 		Marker *nextMarker;

@@ -47,6 +47,7 @@ namespace mae
 		bool isHighlighted() const;
 		const TwoBitCompass& getCompass() const;
 		CardinalDirection getRecommendedDirection() const;
+        DirectionState getDirectionState(const CardinalDirection p_direction) const;
 		
 		void changeValueBy(const double p_toChange);
 		

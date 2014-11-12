@@ -8,6 +8,8 @@ namespace mae
 	enum CardinalDirection { EAST=0, NORTH, WEST, SOUTH };
 	
     int getDirectionDiff(const CardinalDirection p_dir1, const CardinalDirection p_dir2);
+    CardinalDirection getOppositeDirection(const CardinalDirection p_direction);
+    std::string getDirectionStr(const CardinalDirection p_direction);
     
 	class TwoBitCompass
 	{

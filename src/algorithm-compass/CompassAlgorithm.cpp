@@ -10,6 +10,7 @@ namespace mae
         CompassStateProperties properties;
         
         properties.currentMarker = NULL;
+        properties.robot = p_config.robot;
         properties.obstacleAvoidDistance = p_config.obstacleAvoidDistance;
         properties.markerDeployDistance = p_config.markerDeployDistance;
         

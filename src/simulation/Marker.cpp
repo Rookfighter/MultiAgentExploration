@@ -87,7 +87,7 @@ namespace mae
 	
 	void Marker::setDirectionState(const CardinalDirection p_direction, const DirectionState p_state)
 	{
-		for(DirectionInfo info : directionInfos_) {
+		for(DirectionInfo &info : directionInfos_) {
 			if(info.direction == p_direction) {
 				info.state = p_state;
 				if(info.state == EXPLORED)
@@ -144,6 +144,16 @@ namespace mae
 		
 		return directionInfos_[oldest].direction;
 	}
+    
+    DirectionState Marker::getDirectionState(const CardinalDirection p_direction) const
+    {
+        for(DirectionInfo info : directionInfos_) {
+            if(info.direction == p_direction)
+                return info.state;
+        }
+        
+        return OPEN;
+    }
 
 	void Marker::changeValueBy(const double p_toChange)
 	{

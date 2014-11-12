@@ -12,7 +12,6 @@ namespace mae
     {
         AntStateProperties properties;
         properties.robot = p_config.robot;
-        properties.stock = p_config.stock;
         properties.updateValue = p_updateValue;
         properties.calcValue = p_calcValue;
         properties.obstacleAvoidDistance = p_config.obstacleAvoidDistance;

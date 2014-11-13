@@ -7,7 +7,7 @@ namespace mae
     AntAlgorithm::AntAlgorithm(const AlgorithmConfig &p_config,
                                std::function<void(Marker*,Marker*)> p_updateValue,
                                std::function<double(Marker*,Marker*)> p_calcValue)
-        :Algorithm(),
+        :Algorithm(p_config),
         state_(NULL)
     {
         AntStateProperties properties;

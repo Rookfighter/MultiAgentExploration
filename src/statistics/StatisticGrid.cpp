@@ -4,8 +4,8 @@
 namespace mae
 {
 
-    StatisticGrid::StatisticGrid(Stg::World *p_world)
-        :world_(p_world),
+    StatisticGrid::StatisticGrid(Simulation *p_simulation)
+        :simulation_(p_simulation),
          tileSize_(0,0),
          width_(0),
          height_(0),
@@ -39,7 +39,7 @@ namespace mae
         for(int x = 0; x < width_; ++x) {
             grid_[x].resize(width_);
             for(int y = 0; y < height_; ++y) {
-                grid_[x][y].setWorld(world_);
+                grid_[x][y].setWorld(simulation_->getWorld());
             }
         }
 
@@ -96,5 +96,9 @@ namespace mae
         }
         
         return ((double) covered) / ((double) (width_ * height_));
+    }
+    
+    void StatisticGrid::update()
+    {
     }
 }

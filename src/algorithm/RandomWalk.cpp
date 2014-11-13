@@ -10,7 +10,7 @@ namespace mae
 {
 
 	RandomWalk::RandomWalk(const AlgorithmConfig &p_config)
-		:Algorithm(),
+		:Algorithm(p_config),
 		robotController_(p_config.robot, p_config.obstacleAvoidDistance),
 		wanderDistance_(p_config.robot->getMarkerSensor().getMaxRange())
 	{

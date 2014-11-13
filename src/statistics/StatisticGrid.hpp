@@ -3,6 +3,7 @@
 
 #include "utils/Odometry.hpp"
 #include "statistics/StatisticTile.hpp"
+#include "simulation/Simulation.hpp"
 
 namespace mae
 {
@@ -10,7 +11,7 @@ namespace mae
     class StatisticGrid
     {
     private:
-        Stg::World *world_;
+        Simulation *simulation_;
         Vector2 tileSize_;
         
         int width_;
@@ -19,7 +20,7 @@ namespace mae
         
         void deleteGrid();
     public:
-        StatisticGrid(Stg::World *p_world);
+        StatisticGrid(Simulation *p_simulation);
         ~StatisticGrid();
         
         void setTileSize(const Vector2 &p_tileSize);
@@ -34,6 +35,8 @@ namespace mae
         double getMeanVisitCount() const;
         Stg::usec_t getMeanTimeBetweenVisits() const;
         double getCoverage() const;
+        
+        void update();
         
     };
 

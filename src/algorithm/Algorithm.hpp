@@ -1,19 +1,28 @@
 #ifndef MAE_ALGORITHM_HPP
 #define MAE_ALGORITHM_HPP
 
+#include "algorithm/AlgorithmConfig.hpp"
+
 namespace mae
 {
 
-	class Algorithm
-	{
-	public:
-		Algorithm() {
-		}
-		virtual ~Algorithm() {
-		}
-		
-		virtual void update() = 0;
-	};
+    class Algorithm
+    {
+    protected:
+        std::string type_;
+    public:
+        Algorithm(const AlgorithmConfig &p_config)
+            :type_(p_config.type)
+        { }
+        virtual ~Algorithm()
+        { }
+
+        virtual void update() = 0;
+
+        const std::string& getType() const {
+            return type_;
+        }
+    };
 
 }
 

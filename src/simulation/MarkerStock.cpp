@@ -22,7 +22,7 @@ namespace mae
 	{
 		markerPool_.resize(p_markerCount);
 
-		for(int i = 0; i < markerPool_.size(); ++i) {
+		for(unsigned int i = 0; i < markerPool_.size(); ++i) {
 			markerPool_[i] = new Marker(currentID_);
 			currentID_++;
 		}
@@ -30,9 +30,9 @@ namespace mae
 
 	void MarkerStock::cleanup()
 	{
-		for(int i = 0; i < markerPool_.size(); ++i)
+		for(unsigned int i = 0; i < markerPool_.size(); ++i)
 			delete markerPool_[i];
-		for(int i = 0; i < marker_.size(); ++i) {
+		for(unsigned int i = 0; i < marker_.size(); ++i) {
 			marker_[i]->disconnect();
 			delete marker_[i];
 		}

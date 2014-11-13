@@ -2,7 +2,11 @@
 #define MAE_MATH_HPP
 
 #include <cmath>
+#include <sys/time.h>
 #include "utils/Odometry.hpp"
+
+#define MSEC_PER_SEC 1000
+#define USEC_PER_SEC 10000000
 
 namespace mae
 {
@@ -18,6 +22,10 @@ namespace mae
 	
 	bool sameDouble(const double a, const double b, const double eps);
 	void createRegularPolygon(const double p_radius, Vector2 *p_corners, const int p_cornerCount);
+    
+    unsigned int msecOf(const struct timeval *p_tv);
+	useconds_t usecOf(const struct timeval *p_tv);
+	struct timeval getTimevalDiff(const struct timeval *begin, const struct timeval *end);
 }
 
 #endif

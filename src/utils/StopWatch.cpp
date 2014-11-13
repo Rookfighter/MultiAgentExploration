@@ -1,38 +1,12 @@
 #include <cstddef>
 #include <sstream>
 #include "utils/StopWatch.hpp"
-
-#define MICROSECONDS_PER_SECOND 1000000
+#include "utils/Math.hpp"
 
 namespace mae
 {
-	static unsigned int msecOf(const struct timeval *p_tv)
-	{
-		return p_tv->tv_sec * 1000 + p_tv->tv_usec / 1000;
-	}
-
-	static unsigned long usecOf(const struct timeval *p_tv)
-	{
-		return p_tv->tv_sec * 1000000 + p_tv->tv_usec;
-	}
-
-	struct timeval get_time_diff(const struct timeval *begin, const struct timeval *end)
-	{
-		struct timeval tmp;
-
-		tmp.tv_sec = end->tv_sec - begin->tv_sec;
-		tmp.tv_usec = end->tv_usec - begin->tv_usec;
-
-		if(tmp.tv_usec < 0) {
-			tmp.tv_sec--;
-			tmp.tv_usec = MICROSECONDS_PER_SECOND + tmp.tv_usec;
-		}
-
-		return tmp;
-	}
-
 	StopWatch::StopWatch()
-		:newWorstCase_(false), newBestCase_(false)
+		:newBestCase_(false), newWorstCase_(false)
 	{
 		best_.tv_sec = 999;
 		best_.tv_usec = 999;
@@ -54,7 +28,7 @@ namespace mae
 		struct timeval end;
 		gettimeofday(&end, NULL);
 
-		last_ = get_time_diff(&begin_, &end);
+		last_ = getTimevalDiff(&begin_, &end);
 
 		// check if it is new worst case
 		newWorstCase_ = last_.tv_sec > worst_.tv_sec ||

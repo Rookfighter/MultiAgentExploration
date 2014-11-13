@@ -52,6 +52,31 @@ namespace mae
 			p_corners[i].y = p_radius * sin((2 * M_PI * i) / p_cornerCount);
 		}
 	}
+    
+    unsigned int msecOf(const struct timeval *p_tv)
+	{
+		return p_tv->tv_sec * MSEC_PER_SEC + p_tv->tv_usec / MSEC_PER_SEC;
+	}
+
+	useconds_t usecOf(const struct timeval *p_tv)
+	{
+		return p_tv->tv_sec * USEC_PER_SEC + p_tv->tv_usec;
+	}
+
+	struct timeval getTimevalDiff(const struct timeval *begin, const struct timeval *end)
+	{
+		struct timeval tmp;
+
+		tmp.tv_sec = end->tv_sec - begin->tv_sec;
+		tmp.tv_usec = end->tv_usec - begin->tv_usec;
+
+		if(tmp.tv_usec < 0) {
+			tmp.tv_sec--;
+			tmp.tv_usec = MSEC_PER_SEC + tmp.tv_usec;
+		}
+
+		return tmp;
+	}
 
 
 }

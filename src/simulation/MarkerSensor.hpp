@@ -16,10 +16,8 @@ namespace mae
 	{
 	private:
 		MarkerStock *stock_;
-		
-		double maxRange_;
-
 		Pose robotPose_;
+        double maxRange_;
 		
 		MarkerMeasurement getMeasurementFor(Marker* p_marker);
 	public:

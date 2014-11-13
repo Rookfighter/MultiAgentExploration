@@ -70,5 +70,6 @@ namespace mae
                                               FRONT_OBSTACLE_FOV / 2,
                                               properties_.robot->getMarkerSensor().getMaxRange());
         
+        return result;
     }
 }

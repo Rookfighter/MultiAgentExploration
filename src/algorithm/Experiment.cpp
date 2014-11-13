@@ -35,7 +35,7 @@ namespace mae
 	
 	Algorithm* Experiment::getAlgorithmOf(const std::string &p_robotName)
 	{
-		for(int i = 0; i < simulation_->getRobots().size(); ++i) {
+		for(unsigned int i = 0; i < simulation_->getRobots().size(); ++i) {
 			if(simulation_->getRobots()[i]->getName() == p_robotName)
 				return algorithms_[i];
 		}

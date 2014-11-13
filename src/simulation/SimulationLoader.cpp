@@ -62,7 +62,7 @@ namespace mae
 			LOG(INFO) << "-- found " << robotsNode.size() << " robot configs";
 			
 			robotConfigs.resize(robotsNode.size());
-			for(int i = 0; i < robotsNode.size(); ++i) {
+			for(unsigned int i = 0; i < robotsNode.size(); ++i) {
 				robotConfigs[i].name = robotsNode[i][NAME_NODE].as<std::string>();
 				robotConfigs[i].rangerIndex = robotsNode[i][RANGER_INDEX_NODE].as<int>();
 				robotConfigs[i].markerSensorMaxRange = robotsNode[i][MARKER_SENSOR_MAX_RANGE_NODE].as<double>();
@@ -88,7 +88,7 @@ namespace mae
 		result->stock_ = new MarkerStock(stockConfig);
 		
 		result->robots_.resize(robotConfigs.size());
-		for(int i = 0; i < result->robots_.size(); ++i) {
+		for(unsigned int i = 0; i < result->robots_.size(); ++i) {
 			robotConfigs[i].world = result->world_;
 			robotConfigs[i].stock = result->stock_;
 			result->robots_[i] = new ExplorationBot(robotConfigs[i]);

@@ -12,7 +12,7 @@ find_package(YamlCpp REQUIRED)
 find_package(Easylogging++ REQUIRED)
 pkg_search_module( STAGE REQUIRED stage )
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
 add_definitions( -DBOOST_SIGNALS_NO_DEPRECATION_WARNING )
 include_directories("src"
                     "${STAGE_INCLUDE_DIRS}"
@@ -26,6 +26,7 @@ endif( ${RELEASE} )
 
 # get source files
 file(GLOB MULTI_AGENT_EXPLORATION_SRC
+    "src/statistics/*.cpp"
     "src/algorithm/*.cpp"
     "src/algorithm-rt/*.cpp"
     "src/algorithm-compass/*.cpp"

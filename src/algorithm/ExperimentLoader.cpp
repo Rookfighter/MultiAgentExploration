@@ -58,7 +58,7 @@ namespace mae
 		result->simulation_ = simulation;
 		
 		result->algorithms_.resize(simulation->getRobots().size());
-		for(int i = 0; i < result->algorithms_.size(); ++i) {
+		for(unsigned int i = 0; i < result->algorithms_.size(); ++i) {
 			algorithmConfig.robot = simulation->getRobots()[i];
 			
 			if(algorithmConfig.type == NODECOUNTING_TYPE) {

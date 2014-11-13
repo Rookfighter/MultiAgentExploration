@@ -25,8 +25,8 @@ namespace mae
         
     }
 
-    void update()
+    void Statistic::update()
     {
-        
+        statisticGrid_.update();
     }
 }

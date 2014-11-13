@@ -1,7 +1,8 @@
 #ifndef MAE_STATISTIC_GRID_HPP
 #define MAE_STATISTIC_GRID_HPP
 
-#include "utils/Odometry.hpp"
+#include "utils/Vector2f.hpp"
+#include "utils/Vector2i.hpp"
 #include "statistics/StatisticTile.hpp"
 #include "simulation/Simulation.hpp"
 
@@ -12,25 +13,27 @@ namespace mae
     {
     private:
         Simulation *simulation_;
-        Vector2 tileSize_;
+        Vector2f tileSize_;
         
-        int width_;
-        int height_;
+        Vector2i size_;
         std::vector<std::vector<StatisticTile>> grid_;
+        std::vector<Vector2i> previousTilePosition_;
         
         void deleteGrid();
     public:
         StatisticGrid(Simulation *p_simulation);
         ~StatisticGrid();
         
-        void setTileSize(const Vector2 &p_tileSize);
-        void setSize(const Vector2 &size);
-        void setSize(const int p_width, const int p_height);
+        void setTileSize(const Vector2f &p_tileSize);
+        void setSize(const Vector2f &p_size);
+        void setSize(const Vector2i &p_size);
         
-        void visit(const Vector2 p_position);
-        void visit(const int x, const int y);
+        void visit(const Vector2f &p_position);
+        void visit(const Vector2i &p_position);
         
-        const StatisticTile& getTile(const int x, const int y) const;
+        Vector2i getTilePosition(const Vector2f &p_position) const;
+        const StatisticTile& getTile(const Vector2f &p_position) const;
+        const StatisticTile& getTile(const Vector2i &p_position) const;
         
         double getMeanVisitCount() const;
         Stg::usec_t getMeanTimeBetweenVisits() const;

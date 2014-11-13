@@ -10,8 +10,8 @@ namespace mae
     {
     public:
         Experiment *experiment;
-        Vector2 tileSize;
-        Vector2 gridSize;
+        Vector2f tileSize;
+        Vector2f gridSize;
     
         StatisticConfig()
         { }

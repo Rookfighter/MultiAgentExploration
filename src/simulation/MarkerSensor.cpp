@@ -24,7 +24,7 @@ namespace mae
     std::vector<MarkerMeasurement> MarkerSensor::getMarkerInRange()
     {
         std::vector<MarkerMeasurement> result;
-        Vector2 distance;
+        Vector2f distance;
 
         result.reserve(stock_->getMarker().size() / 4);
         for(Marker *marker : stock_->getMarker()) {

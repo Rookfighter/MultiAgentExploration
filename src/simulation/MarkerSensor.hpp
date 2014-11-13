@@ -7,7 +7,7 @@
 namespace mae
 {
 	struct MarkerMeasurement {
-		Vector2 relativeDistance;
+		Vector2f relativeDistance;
 		double relativeDirection;
 		Marker* marker;
 	};

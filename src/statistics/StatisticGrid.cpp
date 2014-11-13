@@ -7,98 +7,114 @@ namespace mae
     StatisticGrid::StatisticGrid(Simulation *p_simulation)
         :simulation_(p_simulation),
          tileSize_(0,0),
-         width_(0),
-         height_(0),
-         grid_()
+         size_(0,0),
+         grid_(),
+         previousTilePosition_(simulation_->getRobots().size())
     {
-
+        for(unsigned int i = 0; i < previousTilePosition_.size(); ++i)
+            previousTilePosition_[i] = getTilePosition(simulation_->getRobots()[i]->getAbsolutePose().position);
     }
 
     StatisticGrid::~StatisticGrid()
     {
     }
 
-    void StatisticGrid::setTileSize(const Vector2 &p_tileSize)
+    void StatisticGrid::setTileSize(const Vector2f &p_tileSize)
     {
         tileSize_ = p_tileSize;
     }
 
-    void StatisticGrid::setSize(const Vector2 &p_size)
+    void StatisticGrid::setSize(const Vector2f &p_size)
     {
-        setSize(ceil(p_size.x / tileSize_.x),
-                ceil(p_size.y / tileSize_.y));
+        setSize(Vector2i(ceil(p_size.x / tileSize_.x),
+                         ceil(p_size.y / tileSize_.y)));
 
     }
 
-    void StatisticGrid::setSize(const int p_width, const int p_height)
+    void StatisticGrid::setSize(const Vector2i &p_size)
     {
-        width_ = p_width;
-        height_ = p_height;
+        size_ = p_size;
 
-        grid_ .resize(width_);
-        for(int x = 0; x < width_; ++x) {
-            grid_[x].resize(width_);
-            for(int y = 0; y < height_; ++y) {
+        grid_ .resize(size_.x);
+        for(int x = 0; x < size_.x; ++x) {
+            grid_[x].resize(size_.y);
+            for(int y = 0; y < size_.y; ++y) {
                 grid_[x][y].setWorld(simulation_->getWorld());
             }
         }
-
     }
 
-    void StatisticGrid::visit(const Vector2 p_position)
+    void StatisticGrid::visit(const Vector2f &p_position)
     {
-        visit(floor(p_position.x / tileSize_.x),
-              floor(p_position.y / tileSize_.y));
+        visit(getTilePosition(p_position));
     }
 
-    void StatisticGrid::visit(const int x, const int y)
+    void StatisticGrid::visit(const Vector2i &p_position)
     {
-        grid_[x][y].visit();
+        grid_[p_position.x][p_position.y].visit();
     }
-    
-    const StatisticTile& StatisticGrid::getTile(const int x, const int y) const
+
+    Vector2i StatisticGrid::getTilePosition(const Vector2f &p_position) const
     {
-        return grid_[x][y];
+        return Vector2i(floor(p_position.x / tileSize_.x),
+                        floor(p_position.y / tileSize_.y));
+    }
+
+    const StatisticTile& StatisticGrid::getTile(const Vector2f &p_position) const
+    {
+        return getTile(getTilePosition(p_position));
+    }
+
+    const StatisticTile& StatisticGrid::getTile(const Vector2i &p_position) const
+    {
+        return grid_[p_position.x][p_position.y];
     }
 
     double StatisticGrid::getMeanVisitCount() const
     {
         double sum = 0;
 
-        for(int x = 0; x < width_; ++x) {
-            for(int y = 0; y < height_; ++y)
+        for(int x = 0; x < size_.x; ++x) {
+            for(int y = 0; y < size_.y; ++y)
                 sum += grid_[x][y].getVisitCount();
         }
 
-        return sum / ((double)(width_ * height_));
+        return sum / ((double)(size_.x * size_.y));
     }
 
     Stg::usec_t StatisticGrid::getMeanTimeBetweenVisits() const
     {
         Stg::usec_t sum = 0;
 
-        for(int x = 0; x < width_; ++x) {
-            for(int y = 0; y < height_; ++y)
+        for(int x = 0; x < size_.x; ++x) {
+            for(int y = 0; y < size_.y; ++y)
                 sum += grid_[x][y].getMeanTimeBetweenVisits();
         }
 
-        return sum / (width_ * height_);
+        return sum / (size_.x * size_.y);
     }
 
     double StatisticGrid::getCoverage() const
     {
         int covered = 0;
-        for(int x = 0; x < width_; ++x) {
-            for(int y = 0; y < height_; ++y) {
+        for(int x = 0; x < size_.x; ++x) {
+            for(int y = 0; y < size_.y; ++y) {
                 if(grid_[x][y].getVisitCount() > 0)
                     covered++;
             }
         }
-        
-        return ((double) covered) / ((double) (width_ * height_));
+
+        return ((double) covered) / ((double)(size_.x * size_.y));
     }
-    
+
     void StatisticGrid::update()
     {
+        for(unsigned int i = 0; i < previousTilePosition_.size(); ++i) {
+            Vector2i currentPosition = getTilePosition(simulation_->getRobots()[i]->getAbsolutePose().position);
+            if(currentPosition != previousTilePosition_[i]) {
+                visit(currentPosition);
+                previousTilePosition_[i] = currentPosition;
+            }
+        }
     }
 }

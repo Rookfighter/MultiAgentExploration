@@ -12,7 +12,6 @@ namespace mae
 	private:
 		Simulation *world_;
 		NodeCounting *nodeCounting_;
-		StopWatch updateWatch_;
 		StopWatch logicWatch_;
 		
 	public:

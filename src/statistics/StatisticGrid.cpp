@@ -11,20 +11,23 @@ namespace mae
          size_(0,0),
          floorplanName_(p_config.floorplanName),
          grid_(),
-         previousTilePosition_(simulation_->getRobots().size())
-         
+         previousTilePosition_(simulation_->getRobots().size()),
+         coverageTimes_()
     {
         Vector2f worldSize;
         Stg::Model *floorplan = simulation_->getWorld()->GetModel(floorplanName_);
         worldSize.set(floorplan->GetGeom().size.x, floorplan->GetGeom().size.y);
-        
+
         setTileSize(p_config.tileSize);
         LOG(INFO) << "WorldSize: " << worldSize.str();
         setWorldSize(worldSize);
-        
+
         for(unsigned int i = 0; i < previousTilePosition_.size(); ++i)
             previousTilePosition_[i] = getTilePosition(simulation_->getRobots()[i]->getAbsolutePose().position);
-            
+        
+        for(double coverageEvent : p_config.coverageEvents)
+            addCoverageEvent(coverageEvent);
+
         LOG(INFO) << "Initialized StatisticGrid";
     }
 
@@ -62,6 +65,15 @@ namespace mae
         grid_[p_position.x][p_position.y].visit();
     }
 
+    void StatisticGrid::addCoverageEvent(const double p_coverage)
+    {
+        CoverageTime time;
+        time.coverage = p_coverage;
+        time.reached = false;
+        time.timeStamp = 0;
+        coverageTimes_.push_back(time);
+    }
+
     Vector2i StatisticGrid::getTilePosition(const Vector2f &p_position) const
     {
         Vector2f position = p_position + (worldSize_ / 2);
@@ -78,6 +90,16 @@ namespace mae
     const StatisticTile& StatisticGrid::getTile(const Vector2i &p_position) const
     {
         return grid_[p_position.x][p_position.y];
+    }
+    
+    const Vector2f& StatisticGrid::getWorldSize() const
+    {
+        return worldSize_;
+    }
+    
+    const Vector2i& StatisticGrid::getGridSize() const
+    {
+        return size_;
     }
 
     double StatisticGrid::getMeanVisitCount() const
@@ -117,13 +139,35 @@ namespace mae
         return ((double) covered) / ((double)(size_.x * size_.y));
     }
 
+    const std::vector<CoverageTime>& StatisticGrid::getCoverageTimes() const
+    {
+        return coverageTimes_;
+    }
+
     void StatisticGrid::update()
     {
+        bool visitHappened = false;
         for(unsigned int i = 0; i < previousTilePosition_.size(); ++i) {
             Vector2i currentPosition = getTilePosition(simulation_->getRobots()[i]->getAbsolutePose().position);
             if(currentPosition != previousTilePosition_[i]) {
                 visit(currentPosition);
                 previousTilePosition_[i] = currentPosition;
+                visitHappened = true;
+            }
+        }
+
+        if(visitHappened)
+            updateCoverageTimes();
+    }
+
+    void StatisticGrid::updateCoverageTimes()
+    {
+        double currentCoverage = getCoverage();
+
+        for(CoverageTime &time : coverageTimes_) {
+            if(!time.reached && currentCoverage >= time.coverage) {
+                time.reached = true;
+                time.timeStamp = simulation_->getWorld()->SimTimeNow();
             }
         }
     }

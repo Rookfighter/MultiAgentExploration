@@ -27,13 +27,14 @@ namespace mae
 
     void ExplorationBot::setPose(const Pose &p_pose)
     {
-        model_->SetGlobalPose(Stg::Pose(p_pose.position.x, p_pose.position.y, 0, p_pose.yaw));
+        model_->SetGlobalPose(p_pose.asStagePose());
     }
 
     Pose ExplorationBot::getAbsolutePose()
     {
-        Stg::Pose pose = model_->GetGlobalPose();
-        return Pose(pose.x, pose.y, pose.a);
+        Pose pose;
+        pose.fromStagePose(model_->GetGlobalPose());
+        return pose;
     }
 
     Motor& ExplorationBot::getMotor()
@@ -69,10 +70,5 @@ namespace mae
         marker->setPose(markerPose);
 
         return marker;
-    }
-
-    void ExplorationBot::update()
-    {
-        markerSensor_.setRobotPose(getAbsolutePose());
     }
 }

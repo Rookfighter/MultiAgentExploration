@@ -17,6 +17,19 @@ namespace mae
 	Pose::~Pose()
 	{	}
 	
+    void Pose::fromStagePose(const Stg::Pose &p_pose)
+    {
+        position.x = p_pose.x;
+        position.y = p_pose.y;
+        yaw = p_pose.a;
+    }
+    
+    Stg::Pose Pose::asStagePose() const
+    {
+        return Stg::Pose(position.x, position.y, 0, yaw);
+        
+    }
+    
 	void Pose::set(const double p_x, const double p_y, const double p_yaw)
 	{
 		position.set(p_x, p_y);

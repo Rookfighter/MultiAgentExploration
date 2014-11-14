@@ -14,7 +14,6 @@ namespace mae
 	private:
 		Simulation *simulation_;
 		std::vector<Algorithm*> algorithms_;
-		StopWatch updateWatch_;
 		StopWatch algorithmWatch_;
 		
 		Experiment();

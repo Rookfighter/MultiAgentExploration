@@ -66,7 +66,7 @@ namespace mae
     {
         assert(model_ != NULL);
 
-        model_->SetGlobalPose(Stg::Pose(p_pose.position.x, p_pose.position.y, 0, p_pose.yaw));
+        model_->SetGlobalPose(p_pose.asStagePose());
     }
 
     void Marker::setValue(const double p_value)
@@ -114,9 +114,10 @@ namespace mae
     Pose Marker::getPose() const
     {
         assert(model_ != NULL);
-
-        Stg::Pose pose = model_->GetGlobalPose();
-        return Pose(pose.x, pose.y, pose.a);
+        
+        Pose result;
+        result.fromStagePose(model_->GetGlobalPose());
+        return result;
     }
 
     double Marker::getValue() const

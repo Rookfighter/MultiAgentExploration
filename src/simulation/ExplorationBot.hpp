@@ -36,8 +36,6 @@ namespace mae
 		std::string getName() const;
 
 		Marker* dropMarker();
-		
-		void update();
 	};
 
 }

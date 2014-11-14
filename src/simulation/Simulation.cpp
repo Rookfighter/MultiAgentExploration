@@ -17,6 +17,9 @@ namespace mae
 		
 		if(stock_ != NULL)
 			delete stock_;
+            
+        if(world_ != NULL)    
+            delete world_;
 	}
 		
 	Stg::World* Simulation::getWorld()
@@ -42,11 +45,5 @@ namespace mae
 		}
 		
 		return NULL;
-	}
-	
-	void Simulation::update()
-	{
-		for(ExplorationBot *robot: robots_)
-			robot->update();
 	}
 }

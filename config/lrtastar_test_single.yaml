@@ -2,7 +2,7 @@ statistic:
     floorplan_name: floorplan1
     tile_size: [1, 1] # [m m]
 algorithm:
-    type: lrta*
+    type: lrtastar
     obstacle_avoid_distance: 0.5 # m
     obstacle_marker_distance: 1.2 # m
     marker_deploy_distance: 1.6 # m

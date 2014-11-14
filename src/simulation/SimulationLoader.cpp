@@ -1,22 +1,6 @@
 #include <easylogging++.h>
 #include "simulation/SimulationLoader.hpp"
-
-#define WORLD_NODE "world"
-#define WORLD_FILE_NODE "file"
-
-#define STOCK_NODE "stock"
-#define ROBOTS_NODE "robots"
-
-#define HOST_NODE "host"
-#define PORT_NDOE "port"
-
-#define REFILL_COUNT_NODE "refill_count"
-
-#define NAME_NODE "name"
-#define RANGER_INDEX_NODE "ranger_index"
-#define MAX_VELOCITY_NODE "max_velocity"
-#define MIN_VELOCITY_NODE "min_velocity"
-#define MARKER_SENSOR_MAX_RANGE_NODE "marker_sensor_max_range"
+#include "utils/YamlNode.hpp"
 
 namespace mae
 {
@@ -46,36 +30,36 @@ namespace mae
 		std::vector<RobotConfig> robotConfigs;
 		
 		// get configuration of client
-		worldNode = p_root[WORLD_NODE];
-		worldFile = worldNode[WORLD_FILE_NODE].as<std::string>();
+		worldNode = p_root[YamlNode::world];
+		worldFile = worldNode[YamlNode::worldFile].as<std::string>();
 		LOG(INFO) << "-- world config found";
 		
 		// get configuration of marker stock
-		stockNode = p_root[STOCK_NODE];
-		stockConfig.refillCount = stockNode[REFILL_COUNT_NODE].as<int>();
+		stockNode = p_root[YamlNode::stock];
+		stockConfig.refillCount = stockNode[YamlNode::refillCount].as<int>();
 		LOG(INFO) << "-- stock config found";
 		
 		// get configuration for all robots
-		robotsNode = p_root[ROBOTS_NODE];
+		robotsNode = p_root[YamlNode::robots];
 		LOG(INFO) << "-- robot config found";
 		if(robotsNode.IsSequence()) {
 			LOG(INFO) << "-- found " << robotsNode.size() << " robot configs";
 			
 			robotConfigs.resize(robotsNode.size());
 			for(unsigned int i = 0; i < robotsNode.size(); ++i) {
-				robotConfigs[i].name = robotsNode[i][NAME_NODE].as<std::string>();
-				robotConfigs[i].rangerIndex = robotsNode[i][RANGER_INDEX_NODE].as<int>();
-				robotConfigs[i].markerSensorMaxRange = robotsNode[i][MARKER_SENSOR_MAX_RANGE_NODE].as<double>();
+				robotConfigs[i].name = robotsNode[i][YamlNode::name].as<std::string>();
+				robotConfigs[i].rangerIndex = robotsNode[i][YamlNode::rangerIndex].as<int>();
+				robotConfigs[i].markerSensorMaxRange = robotsNode[i][YamlNode::markerSensorMaxRange].as<double>();
 				
-				assert(robotsNode[i][MIN_VELOCITY_NODE].IsSequence() &&
-				       robotsNode[i][MIN_VELOCITY_NODE].size() == 2);
-				robotConfigs[i].minVelocity.set(robotsNode[i][MIN_VELOCITY_NODE][0].as<double>(),
-				                                 robotsNode[i][MIN_VELOCITY_NODE][1].as<double>());
+				assert(robotsNode[i][YamlNode::minVelocity].IsSequence() &&
+				       robotsNode[i][YamlNode::minVelocity].size() == 2);
+				robotConfigs[i].minVelocity.set(robotsNode[i][YamlNode::minVelocity][0].as<double>(),
+				                                 robotsNode[i][YamlNode::minVelocity][1].as<double>());
 												 
-				assert(robotsNode[i][MAX_VELOCITY_NODE].IsSequence() &&
-				       robotsNode[i][MAX_VELOCITY_NODE].size() == 2);
-				robotConfigs[i].maxVelocity.set(robotsNode[i][MAX_VELOCITY_NODE][0].as<double>(),
-				                                 robotsNode[i][MAX_VELOCITY_NODE][1].as<double>());
+				assert(robotsNode[i][YamlNode::maxVelocity].IsSequence() &&
+				       robotsNode[i][YamlNode::maxVelocity].size() == 2);
+				robotConfigs[i].maxVelocity.set(robotsNode[i][YamlNode::maxVelocity][0].as<double>(),
+				                                 robotsNode[i][YamlNode::maxVelocity][1].as<double>());
 			}
 		}
 			

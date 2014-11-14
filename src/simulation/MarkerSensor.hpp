@@ -16,15 +16,13 @@ namespace mae
 	{
 	private:
 		MarkerStock *stock_;
-		Pose robotPose_;
+        Stg::Model *model_;
         double maxRange_;
 		
 		MarkerMeasurement getMeasurementFor(Marker* p_marker);
 	public:
 		MarkerSensor(const RobotConfig& p_config);
 		~MarkerSensor();
-
-		void setRobotPose(const Pose &p_pose);
 
 		std::vector<MarkerMeasurement> getMarkerInRange();
 		MarkerMeasurement getClosestMarker();

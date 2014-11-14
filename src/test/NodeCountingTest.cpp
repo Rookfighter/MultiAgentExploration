@@ -23,12 +23,6 @@ namespace mae
 	void NodeCountingTest::execute()
 	{
 		while(true) {
-			updateWatch_.start();
-			world_->update();
-			updateWatch_.stop();
-			if(updateWatch_.hasNewWorstCase())
-				LOG(INFO) << "UpdateLag: " << updateWatch_.getWorstMsec() << "ms";
-				
 			logicWatch_.start();
 			nodeCounting_->update();
 			logicWatch_.stop();

@@ -17,7 +17,6 @@ namespace mae
 	void WanderTest::execute()
 	{
 		while(true) {
-			world_->update();
 			wander_.update();
 		}
 	}

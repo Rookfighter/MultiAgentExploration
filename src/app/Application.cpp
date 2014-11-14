@@ -1,10 +1,13 @@
 #include <easylogging++.h>
+#include <signal.h>
 #include "app/Application.hpp"
 #include "algorithm/ExperimentLoader.hpp"
 #include "statistics/StatisticLoader.hpp"
 
 namespace mae
 {
+    
+    
     static int applicationCallback(Stg::World* world, void* userarg)
     {
         Application *app = (Application*) userarg;
@@ -44,7 +47,8 @@ namespace mae
     {
         if(statistic_ != NULL)
             delete statistic_;
-        delete experiment_;
+        if(experiment_ != NULL)
+            delete experiment_;
     }
 
     void Application::update()
@@ -62,6 +66,7 @@ namespace mae
         LOG(INFO) << "Running Application";
         try {
             experiment_->getSimulation()->getWorld()->Run();
+            statistic_->saveToDirectory("./tmp");
         } catch(std::exception &e) {
             LOG(ERROR) << "Catched exception: " << e.what();
         } catch(...) {
@@ -69,5 +74,10 @@ namespace mae
         }
         LOG(INFO) << "Application terminated.";
     }
+    
+     void Application::stop()
+     {
+         experiment_->getSimulation()->getWorld()->Quit();
+     }
 
 }

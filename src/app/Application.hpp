@@ -20,6 +20,7 @@ namespace mae
 		
         void update();
 		void run();
+        void stop();
 
 	};
 

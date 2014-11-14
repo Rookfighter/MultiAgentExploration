@@ -2,6 +2,7 @@
 #define MAE_ODOMETRY_HPP
 
 #include <string>
+#include <stage.hh>
 #include "utils/Vector2f.hpp"
 
 namespace mae
@@ -16,6 +17,8 @@ namespace mae
 		Pose(const double p_x, const double p_y, const double p_yaw);
 		~Pose();
 		
+        void fromStagePose(const Stg::Pose &p_pose);
+        Stg::Pose asStagePose() const;
 		void set(const double p_x, const double p_y, const double p_yaw);
 		std::string str() const;
 		

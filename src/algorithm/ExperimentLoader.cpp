@@ -8,15 +8,10 @@
 #include "algorithm-compass/CompassAlgorithm.hpp"
 #include "simulation/SimulationLoader.hpp"
 #include "utils/Convert.hpp"
-
-#define ALGORITHM_NODE "algorithm"
-#define ALGORITHM_TYPE_NODE "type"
-#define OBSTACLE_AVOID_DISTANCE_NODE "obstacle_avoid_distance"
-#define OBSTACLE_MARKER_DISTANCE_NODE "obstacle_marker_distance"
-#define MARKER_DEPLOY_DISTANCE_NODE "marker_deploy_distance"
+#include "utils/YamlNode.hpp"
 
 #define NODECOUNTING_TYPE "nodecounting"
-#define LRTASTAR_TYPE "lrta*"
+#define LRTASTAR_TYPE "lrtastar"
 #define WAGNER_TYPE "wagner"
 #define RANDOMWALK_TYPE "randomwalk"
 #define COMPASS_TYPE "compass"
@@ -49,13 +44,13 @@ namespace mae
 		AlgorithmConfig algorithmConfig;
 		Simulation *simulation;
 		
-		algorithm = p_root[ALGORITHM_NODE];
+		algorithm = p_root[YamlNode::algorithm];
 		LOG(INFO) <<  "-- algorithm config found";
 		
-		algorithmConfig.type = toLowerCase(algorithm[ALGORITHM_TYPE_NODE].as<std::string>());
-		algorithmConfig.obstacleAvoidDistance = algorithm[OBSTACLE_AVOID_DISTANCE_NODE].as<double>();
-		algorithmConfig.obstacleMarkerDistance = algorithm[OBSTACLE_MARKER_DISTANCE_NODE].as<double>();
-        algorithmConfig.markerDeployDistance = algorithm[MARKER_DEPLOY_DISTANCE_NODE].as<double>();
+		algorithmConfig.type = toLowerCase(algorithm[YamlNode::type].as<std::string>());
+		algorithmConfig.obstacleAvoidDistance = algorithm[YamlNode::obstacleAvoidDistance].as<double>();
+		algorithmConfig.obstacleMarkerDistance = algorithm[YamlNode::obstacleMarkerDistance].as<double>();
+        algorithmConfig.markerDeployDistance = algorithm[YamlNode::markerDeployDistance].as<double>();
 		LOG(INFO) <<  "-- algorithm type is " << algorithmConfig.type;
 		
 		simulation = SimulationLoader::load(p_root);

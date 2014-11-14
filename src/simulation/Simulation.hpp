@@ -22,8 +22,6 @@ namespace mae
 		
 		const std::vector<ExplorationBot*>& getRobots();
 		ExplorationBot* getRobot(const std::string& p_name);
-		
-		void update();
 	};
 
 }

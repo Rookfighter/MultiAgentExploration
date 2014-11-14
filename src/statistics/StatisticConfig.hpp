@@ -12,6 +12,8 @@ namespace mae
         Experiment *experiment;
         Vector2f tileSize;
         std::string floorplanName;
+        std::vector<double> coverageEvents;
+        std::string algorithmType;
     
         StatisticConfig()
         { }

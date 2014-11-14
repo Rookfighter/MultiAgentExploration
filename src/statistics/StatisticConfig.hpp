@@ -11,7 +11,7 @@ namespace mae
     public:
         Experiment *experiment;
         Vector2f tileSize;
-        Vector2f gridSize;
+        std::string floorplanName;
     
         StatisticConfig()
         { }

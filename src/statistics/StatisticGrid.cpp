@@ -1,18 +1,32 @@
+#include <easylogging++.h>
 #include "statistics/StatisticGrid.hpp"
 #include "utils/Math.hpp"
 
 namespace mae
 {
 
-    StatisticGrid::StatisticGrid(Simulation *p_simulation)
-        :simulation_(p_simulation),
+    StatisticGrid::StatisticGrid(const StatisticConfig &p_config)
+        :simulation_(p_config.experiment->getSimulation()),
          tileSize_(0,0),
          size_(0,0),
+         floorplanName_(p_config.floorplanName),
          grid_(),
          previousTilePosition_(simulation_->getRobots().size())
+         
     {
+        Vector2f worldSize;
+        Stg::Model *floorplan = simulation_->getWorld()->GetModel(floorplanName_);
+        worldSize.set(floorplan->GetGeom().size.x, floorplan->GetGeom().size.y);
+        
+        setTileSize(p_config.tileSize);
+        LOG(INFO) << "WorldSize: " << worldSize.str();
+        setWorldSize(worldSize);
+        LOG(INFO) << "GridSize: " << size_.str();
+        
         for(unsigned int i = 0; i < previousTilePosition_.size(); ++i)
             previousTilePosition_[i] = getTilePosition(simulation_->getRobots()[i]->getAbsolutePose().position);
+            
+        LOG(INFO) << "Initialized StatisticGrid";
     }
 
     StatisticGrid::~StatisticGrid()
@@ -24,16 +38,11 @@ namespace mae
         tileSize_ = p_tileSize;
     }
 
-    void StatisticGrid::setSize(const Vector2f &p_size)
+    void StatisticGrid::setWorldSize(const Vector2f &p_size)
     {
-        setSize(Vector2i(ceil(p_size.x / tileSize_.x),
-                         ceil(p_size.y / tileSize_.y)));
-
-    }
-
-    void StatisticGrid::setSize(const Vector2i &p_size)
-    {
-        size_ = p_size;
+        worldSize_ = p_size;
+        size_.set(ceil(worldSize_.x / tileSize_.x),
+                  ceil(worldSize_.y / tileSize_.y));
 
         grid_ .resize(size_.x);
         for(int x = 0; x < size_.x; ++x) {
@@ -56,8 +65,10 @@ namespace mae
 
     Vector2i StatisticGrid::getTilePosition(const Vector2f &p_position) const
     {
-        return Vector2i(floor(p_position.x / tileSize_.x),
-                        floor(p_position.y / tileSize_.y));
+        Vector2f position = p_position + (worldSize_ / 2);
+        assert(position.x >= 0 && position.y >= 0);
+        return Vector2i(floor(position.x / tileSize_.x),
+                        floor(position.y / tileSize_.y));
     }
 
     const StatisticTile& StatisticGrid::getTile(const Vector2f &p_position) const

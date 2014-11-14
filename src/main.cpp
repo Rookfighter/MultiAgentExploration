@@ -10,9 +10,7 @@ int main(int argc, char **argv)
 	el::Loggers::reconfigureLogger("default", conf);
 	
 	mae::Application app(argc, argv);
-	//mae::TestApplication testApp;
-	LOG(INFO) << "App started.";
 	app.run();
-	LOG(INFO) << "App terminated.";
+    LOG(INFO) << "Exiting main";
 	return 0;
 }

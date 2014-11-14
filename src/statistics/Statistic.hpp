@@ -10,11 +10,13 @@ namespace mae
 
     class Statistic
     {
+        friend class StatisticLoader;
     private:
         Experiment *experiment_;
         StatisticGrid statisticGrid_;
-    public:
+        
         Statistic(const StatisticConfig &p_config);
+    public:
         ~Statistic();
         
         void saveToDirectory(const std::string &p_directory);

@@ -1,3 +1,6 @@
+statistic:
+    floorplan_name: floorplan1
+    tile_size: [1.0, 1.0] # [m m]
 algorithm:
     type: nodecounting
     obstacle_avoid_distance: 0.5 # m

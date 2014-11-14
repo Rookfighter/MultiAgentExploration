@@ -2,6 +2,7 @@
 #define MAE_APPLICATION_HPP
 
 #include "algorithm/Experiment.hpp"
+#include "statistics/Statistic.hpp"
 
 namespace mae
 {
@@ -10,10 +11,14 @@ namespace mae
 	{
 	private:
 		Experiment *experiment_;
+        Statistic *statistic_;
+        
+        bool run_;
 	public:
 		Application(int argc, char** argv);
 		~Application();
 		
+        void update();
 		void run();
 
 	};

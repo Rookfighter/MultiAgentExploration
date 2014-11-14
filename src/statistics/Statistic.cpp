@@ -1,28 +1,28 @@
+#include <easylogging++.h>
 #include "statistics/Statistic.hpp"
 
 namespace mae
 {
 
     Statistic::Statistic(const StatisticConfig &p_config)
-    :experiment_(p_config.experiment),
-    statisticGrid_(experiment_->getSimulation())
+        :experiment_(p_config.experiment),
+         statisticGrid_(p_config)
     {
-        statisticGrid_.setTileSize(p_config.tileSize);
-        statisticGrid_.setSize(p_config.gridSize);
+        LOG(INFO) << "Initialized Statistic";
     }
 
     Statistic::~Statistic()
     {
     }
-    
+
     void Statistic::saveToDirectory(const std::string &p_directory)
     {
-        
+
     }
-    
+
     void Statistic::printLog()
     {
-        
+
     }
 
     void Statistic::update()

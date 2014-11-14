@@ -15,7 +15,7 @@ namespace mae
 	public:
 		
 		static Simulation* load(const std::string &p_file);
-		static Simulation* load(YAML::Node& p_root);
+		static Simulation* load(YAML::Node &p_root);
 	};
 
 }

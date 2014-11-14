@@ -21,7 +21,6 @@ namespace mae
         setTileSize(p_config.tileSize);
         LOG(INFO) << "WorldSize: " << worldSize.str();
         setWorldSize(worldSize);
-        LOG(INFO) << "GridSize: " << size_.str();
         
         for(unsigned int i = 0; i < previousTilePosition_.size(); ++i)
             previousTilePosition_[i] = getTilePosition(simulation_->getRobots()[i]->getAbsolutePose().position);

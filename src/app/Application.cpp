@@ -22,8 +22,14 @@ namespace mae
 
         try {
             Stg::Init(&argc, &argv);
-            experiment_ = ExperimentLoader::load(argv[1]);
-            statistic_ = StatisticLoader::load(argv[1], experiment_);
+            
+            statistic_ = StatisticLoader::load(argv[1]);
+            if(statistic_ != NULL) {
+                experiment_ = statistic_->getExperiment();
+            } else {
+                experiment_ = ExperimentLoader::load(argv[1]);
+            }
+            
             experiment_->getSimulation()->getWorld()->AddUpdateCallback(applicationCallback, this);
         } catch(std::exception &e) {
             LOG(ERROR) << "Loading exception: " << e.what();

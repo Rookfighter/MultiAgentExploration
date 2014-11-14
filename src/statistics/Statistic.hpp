@@ -19,6 +19,8 @@ namespace mae
     public:
         ~Statistic();
         
+        Experiment* getExperiment();
+        
         void saveToDirectory(const std::string &p_directory);
         void printLog();
         

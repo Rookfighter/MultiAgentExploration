@@ -6,15 +6,14 @@
 
 namespace mae
 {
-
     class StatisticLoader
     {
     private:
         StatisticLoader() { }
         ~StatisticLoader() { }
     public:
-        static Statistic* load(const std::string &p_file, Experiment *p_experiment);
-        static Statistic* load(YAML::Node &p_root, Experiment *p_experiment);
+        static Statistic* load(const std::string &p_file);
+        static Statistic* load(YAML::Node &p_root);
     };
 
 }

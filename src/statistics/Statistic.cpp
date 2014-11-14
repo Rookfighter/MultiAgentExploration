@@ -14,7 +14,12 @@ namespace mae
     Statistic::~Statistic()
     {
     }
-
+    
+    Experiment* Statistic::getExperiment()
+    {
+        return experiment_;
+    }
+    
     void Statistic::saveToDirectory(const std::string &p_directory)
     {
 

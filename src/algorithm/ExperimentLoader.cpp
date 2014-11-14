@@ -34,15 +34,22 @@ namespace mae
 
 	Experiment* ExperimentLoader::load(const std::string &p_file)
 	{
-		YAML::Node root, algorithm;
-		AlgorithmConfig algorithmConfig;
-		Simulation *simulation;
+		YAML::Node root;
 		
 		LOG(INFO) << "Loading config: " << p_file;
 		root = YAML::LoadFile(p_file);
 		LOG(INFO) << "-- file found";
 		
-		algorithm = root[ALGORITHM_NODE];
+		return load(root);
+	}
+    
+    Experiment* ExperimentLoader::load(YAML::Node &p_root)
+    {
+        YAML::Node algorithm;
+		AlgorithmConfig algorithmConfig;
+		Simulation *simulation;
+		
+		algorithm = p_root[ALGORITHM_NODE];
 		LOG(INFO) <<  "-- algorithm config found";
 		
 		algorithmConfig.type = toLowerCase(algorithm[ALGORITHM_TYPE_NODE].as<std::string>());
@@ -51,7 +58,7 @@ namespace mae
         algorithmConfig.markerDeployDistance = algorithm[MARKER_DEPLOY_DISTANCE_NODE].as<double>();
 		LOG(INFO) <<  "-- algorithm type is " << algorithmConfig.type;
 		
-		simulation = SimulationLoader::load(root);
+		simulation = SimulationLoader::load(p_root);
 		algorithmConfig.stock = simulation->getStock();
 		
 		Experiment *result = new Experiment();
@@ -77,6 +84,5 @@ namespace mae
 		}
 		
 		return result;
-			
-	}
+    }
 }

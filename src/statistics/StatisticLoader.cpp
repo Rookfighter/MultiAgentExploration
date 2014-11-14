@@ -1,5 +1,6 @@
 #include <easylogging++.h>
 #include "statistics/StatisticLoader.hpp"
+#include "algorithm/ExperimentLoader.hpp"
 
 #define STATISTIC_NODE "statistic"
 #define FLOORPLAN_NAME "floorplan_name"
@@ -7,16 +8,16 @@
 
 namespace mae
 {
-    Statistic* StatisticLoader::load(const std::string &p_file, Experiment *p_experiment)
+    Statistic* StatisticLoader::load(const std::string &p_file)
     {
         YAML::Node root;
         LOG(INFO) << "Loading config: " << p_file;
 		root = YAML::LoadFile(p_file);
 		LOG(INFO) << "-- file found";
-        return load(root, p_experiment);
+        return load(root);
     }
 
-    Statistic* StatisticLoader::load(YAML::Node &p_root, Experiment *p_experiment)
+    Statistic* StatisticLoader::load(YAML::Node &p_root)
     {
         YAML::Node statisticNode;
         StatisticConfig config;
@@ -33,7 +34,7 @@ namespace mae
                             statisticNode[TILE_SIZE_NODE][1].as<double>());
         config.floorplanName = statisticNode[FLOORPLAN_NAME].as<std::string>();
         
-        config.experiment = p_experiment;
+        config.experiment = ExperimentLoader::load(p_root);
         
         return new Statistic(config);
     }

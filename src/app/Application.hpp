@@ -14,11 +14,18 @@ namespace mae
         Statistic *statistic_;
         
         bool run_;
+        volatile bool keepRunning_;
+        
+        void saveStatistics();
+        
+        void loop();
+        void loopNonGUI();
+        void loopGUI();
 	public:
 		Application(int argc, char** argv);
 		~Application();
 		
-        void update();
+        int update();
 		void run();
         void stop();
 

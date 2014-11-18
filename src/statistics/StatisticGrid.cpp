@@ -22,8 +22,10 @@ namespace mae
         LOG(INFO) << "WorldSize: " << worldSize.str();
         setWorldSize(worldSize);
 
-        for(unsigned int i = 0; i < previousTilePosition_.size(); ++i)
+        for(unsigned int i = 0; i < previousTilePosition_.size(); ++i) {
             previousTilePosition_[i] = getTilePosition(simulation_->getRobots()[i]->getAbsolutePose().position);
+            visit(previousTilePosition_[i]);
+        }
         
         for(double coverageEvent : p_config.coverageEvents)
             addCoverageEvent(coverageEvent);

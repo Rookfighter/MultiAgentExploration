@@ -4,5 +4,11 @@
 build/
 log/
 lib/
+plot/nodecounting
+plot/wagner
+plot/lartastar
+plot/randomwalk
+plot/compass
 .codelite/
 compile_commands.json
+

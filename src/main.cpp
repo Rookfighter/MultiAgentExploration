@@ -18,6 +18,7 @@ int main(int argc, char **argv)
     el::Loggers::reconfigureLogger("default", conf);
 
     app = new mae::Application(argc, argv);
+    signal(SIGTERM, sig_handler);
     signal(SIGINT, sig_handler);
     signal(SIGKILL, sig_handler);
     app->run();

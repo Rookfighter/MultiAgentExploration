@@ -26,12 +26,14 @@ namespace mae
 	{
 		YAML::Node worldNode, stockNode, robotsNode;
 		std::string worldFile;
+        bool worldGui;
 		StockConfig stockConfig;
 		std::vector<RobotConfig> robotConfigs;
 		
 		// get configuration of client
 		worldNode = p_root[YamlNode::world];
 		worldFile = worldNode[YamlNode::worldFile].as<std::string>();
+        worldGui = worldNode[YamlNode::worldGui].as<bool>();
 		LOG(INFO) << "-- world config found";
 		
 		// get configuration of marker stock
@@ -65,7 +67,10 @@ namespace mae
 			
 		Simulation *result = new Simulation;
 		
-		result->world_ = new Stg::WorldGui(600, 600, "Multi Agent Exploration");
+        if(worldGui)
+            result->world_ = new Stg::WorldGui(600, 600, "Multi Agent Exploration");
+        else
+            result->world_ = new Stg::World("Multi Agent Exploration");
 		result->world_->Load(worldFile);
 		
 		stockConfig.world = result->world_;

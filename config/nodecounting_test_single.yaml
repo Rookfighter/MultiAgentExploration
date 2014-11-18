@@ -8,6 +8,7 @@ algorithm:
     obstacle_marker_distance: 1.2 # m
     marker_deploy_distance: 1.6 # m
 world:
+    gui: true
     file: world/test.world
 stock:
     refill_count: 10

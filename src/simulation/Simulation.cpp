@@ -14,12 +14,14 @@ namespace mae
 		for(ExplorationBot* robot: robots_)
 			delete robot;
 		robots_.clear();
-		
+        
 		if(stock_ != NULL)
 			delete stock_;
-            
-        if(world_ != NULL)    
-            delete world_;
+        
+        // TODO deleting the world causes segfault
+        // is it meant not to be deleted?
+        //if(world_ != NULL)    
+            //delete world_;
 	}
 		
 	Stg::World* Simulation::getWorld()

@@ -10,9 +10,12 @@ namespace mae
     {
         const std::string world = "world";
         const std::string worldFile = "file";
+        const std::string worldGui = "gui";
+        
         const std::string stock = "stock";
-        const std::string robots = "robots";
         const std::string refillCount = "refill_count";
+        
+        const std::string robots = "robots";
         const std::string name = "name";
         const std::string rangerIndex = "ranger_index";
         const std::string maxVelocity = "max_velocity";

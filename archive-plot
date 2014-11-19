@@ -1,0 +1,5 @@
+#!/bin/sh
+
+python plot/plot.py
+TIMESTAMP=$(date +"%Y-%m-%d-%H-%M-%S")
+tar -czf "plot-$TIMESTAMP.tar.gz" plot

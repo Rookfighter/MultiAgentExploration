@@ -101,3 +101,10 @@ For code completion add the following directory to your tag search path.
 ```
 /usr/local/include/Stage-4.1
 ```
+
+### Gnuplot
+
+For plotting the received data Gnuplot is used.
+
+```
+sudo apt-get install gnuplot gnuplot-x11

@@ -5,10 +5,10 @@
 #include "statistics/Statistic.hpp"
 #include "utils/File.hpp"
 
-#define VISITS_FILE "visits.dat"
-#define MEAN_VISITS_FILE "mean-visits.dat"
-#define TILE_MEAN_TIME_BEWTEEN_VISITS_FILE "tile-mean-time-between-visits.dat"
-#define GRID_MEAN_TIME_BEWTEEN_VISITS_FILE "grid-mean-time-between-visits.dat"
+#define TILE_VISITS_FILE "tile-visits.dat"
+#define MEAN_GRID_VISITS_FILE "mean-grid-visits.dat"
+#define MEAN_TILE_TIME_BEWTEEN_VISITS_FILE "mean-tile-time-between-visits.dat"
+#define MEAN_GRID_TIME_BEWTEEN_VISITS_FILE "mean-grid-time-between-visits.dat"
 #define COVERAGE_EVENTS_FILE "coverage-events.dat"
 #define FINAL_COVERAGE_FILE "final-coverage.dat"
 
@@ -80,7 +80,7 @@ namespace mae
     void Statistic::saveVisits()
     {
         std::stringstream ss;
-        ss << saveDirectory_ << "/" << VISITS_FILE;
+        ss << saveDirectory_ << "/" << TILE_VISITS_FILE;
 
         // save all visitCounts of each tile
         std::ofstream file;
@@ -94,7 +94,7 @@ namespace mae
 
         // save mean meanVisitCount of whole grid
         ss.str(std::string());
-        ss << saveDirectory_ << "/" << MEAN_VISITS_FILE;
+        ss << saveDirectory_ << "/" << MEAN_GRID_VISITS_FILE;
         file.open(ss.str());
         file << "# shows mean visitCount of whole map" << std::endl;
         file << "# [meanVisitCount]";
@@ -108,7 +108,7 @@ namespace mae
         std::ofstream file;
 
         // save all meanTimeBetweenVisits of each tile
-        ss << saveDirectory_ << "/" << TILE_MEAN_TIME_BEWTEEN_VISITS_FILE;
+        ss << saveDirectory_ << "/" << MEAN_TILE_TIME_BEWTEEN_VISITS_FILE;
         file.open(ss.str());
         file << "# shows meanTimeBetweenVisits of each tile" << std::endl;
         file << "# [x y meanTimeBetweenVisits(usec)]";
@@ -119,7 +119,7 @@ namespace mae
 
         // save mean meanTimeBetweenVisits of whole grid
         ss.str(std::string());
-        ss << saveDirectory_ << "/" << GRID_MEAN_TIME_BEWTEEN_VISITS_FILE;
+        ss << saveDirectory_ << "/" << MEAN_GRID_TIME_BEWTEEN_VISITS_FILE;
         file.open(ss.str());
         file << "# shows mean TimeBetweenVisits of whole map" << std::endl;
         file << "# [meanTimeBetweenVisits(usec)]";
@@ -136,10 +136,10 @@ namespace mae
         ss << saveDirectory_ << "/" << COVERAGE_EVENTS_FILE;
         file.open(ss.str());
         file << "# shows coverageEvents" << std::endl;
-        file << "# [timeStamp(usec) coverage]";
+        file << "# [coverage timeStamp(usec)]";
         for(const CoverageTime &time : statisticGrid_.getCoverageTimes()) {
             if(time.reached)
-                file << std::endl << time.timeStamp << " " << time.coverage;
+                file << std::endl << time.coverage << " " << time.timeStamp;
         }
         file.close();
 
@@ -148,8 +148,8 @@ namespace mae
         ss << saveDirectory_ << "/" << FINAL_COVERAGE_FILE;
         file.open(ss.str());
         file << "# shows final coverage" << std::endl;
-        file << "# [timeStamp(usec) coverage]";
-        file << std::endl << experiment_->getSimulation()->getWorld()->SimTimeNow() << " " << statisticGrid_.getCoverage();
+        file << "# [coverage timeStamp(usec)]";
+        file << statisticGrid_.getCoverage() << " " << std::endl << experiment_->getSimulation()->getWorld()->SimTimeNow();
         file.close();
     }
 

@@ -27,6 +27,7 @@ namespace mae
 
 		void setPose(const Pose &p_pose);
 		Pose getAbsolutePose();
+        bool collidedWithObstacle() const;
 		
 		Motor& getMotor();
 		Ranger& getRanger();

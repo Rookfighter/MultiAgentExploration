@@ -36,6 +36,11 @@ namespace mae
         pose.fromStagePose(model_->GetGlobalPose());
         return pose;
     }
+    
+     bool ExplorationBot::collidedWithObstacle() const
+     {
+         return model_->Stalled();
+     }
 
     Motor& ExplorationBot::getMotor()
     {

@@ -18,7 +18,8 @@ namespace mae
 		
 		std::function<void(Marker*,Marker*)> updateValue;
 		std::function<double(Marker*,Marker*)> calcValue;
-
+        
+        double obstacleStopDistance;
 		double obstacleAvoidDistance;
 		double obstacleMarkerDistance;
         double markerDeployDistance;

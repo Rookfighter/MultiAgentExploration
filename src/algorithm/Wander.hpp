@@ -20,6 +20,7 @@ namespace mae
 		double minRightDistance_;
 
 		double frontStopDistance_;
+        double avoidDistance_;
 		
 		bool stopRobot_;
 		
@@ -30,14 +31,17 @@ namespace mae
 		std::function<void(void)> avoidEndCallback_;
 		
 		void checkObstacle();
-		void avoidObstacle();
+		void stopAndAvoidObstacle();
+        void avoidNearbyObstacle();
+        bool hasNearbyObstacle();
 		void cruise();
 		
 		void beginAvoiding();
 		void endAvoiding();
 	public:
 		Wander(ExplorationBot *p_robot,
-		       const double p_frontStopDistance = 1.0);
+		       const double p_frontStopDistance,
+               const double p_avoidDistance);
 		~Wander();
 
 		void update();

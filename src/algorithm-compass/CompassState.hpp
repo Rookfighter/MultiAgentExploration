@@ -12,6 +12,7 @@ namespace mae
 		Marker *currentMarker;
         Marker *lastMarker;
         
+        double obstacleStopDistance;
         double obstacleAvoidDistance;
         double markerDeployDistance;
 		

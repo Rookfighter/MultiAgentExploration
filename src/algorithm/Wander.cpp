@@ -1,7 +1,6 @@
 #include "algorithm/Wander.hpp"
 #include "utils/Math.hpp"
 
-
 #define LEFT_ANGLE_BEGIN (M_PI / 6) // 30°
 #define LEFT_ANGLE_END (M_PI / 2) // 90°
 #define RIGHT_ANGLE_BEGIN (-M_PI / 2) // -90°
@@ -14,10 +13,12 @@
 namespace mae
 {
 	Wander::Wander(ExplorationBot *p_robot,
-	               const double p_frontStopDistance)
+	               const double p_frontStopDistance,
+                   const double p_avoidDistance)
 		:robot_(p_robot),
 		 obstacleDetector_(p_robot),
 		 frontStopDistance_(p_frontStopDistance),
+         avoidDistance_(p_avoidDistance),
 		 stopRobot_(false),
 		 avoidStep_(0)
 	{
@@ -39,7 +40,9 @@ namespace mae
 		checkObstacle();
 
 		if(stopRobot_)
-			avoidObstacle();
+			stopAndAvoidObstacle();
+        else if(hasNearbyObstacle())
+            avoidNearbyObstacle();
 		else
 			cruise();
 
@@ -60,7 +63,7 @@ namespace mae
 		stopRobot_ = tmpStopRobot;
 	}
 
-	void Wander::avoidObstacle()
+	void Wander::stopAndAvoidObstacle()
 	{
 		// only change behavior after a certain interval
 		// prohibits that robots keeps changing direction every step
@@ -76,6 +79,34 @@ namespace mae
 
 		avoidStep_++;
 	}
+    
+    bool Wander::hasNearbyObstacle()
+    {
+        return minLeftDistance_ <= avoidDistance_ || minRightDistance_ <= avoidDistance_;
+    }
+    
+    void Wander::avoidNearbyObstacle()
+    {
+        int measureCount = 0;
+        double leftRightDiff = 0;
+        
+        if(minLeftDistance_ <= avoidDistance_) {
+            leftRightDiff += (1.0 - (minLeftDistance_ / avoidDistance_));
+            measureCount++;
+        }
+        if(minRightDistance_ <= avoidDistance_) {
+            leftRightDiff -= (1.0 - (minRightDistance_ / avoidDistance_));
+            measureCount++;
+        }
+        leftRightDiff /= measureCount;
+        
+        if(leftRightDiff > 0)
+            velocity_.angular = abs(leftRightDiff) * robot_->getMotor().getMaxVelocity().angular;
+        else
+            velocity_.angular = abs(leftRightDiff) * robot_->getMotor().getMinVelocity().angular;
+            
+        velocity_.linear = (1.0 - abs(leftRightDiff)) * robot_->getMotor().getMaxVelocity().linear;
+    }
 
 	void Wander::cruise()
 	{

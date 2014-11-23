@@ -24,6 +24,7 @@ namespace mae
         
         const std::string algorithm = "algorithm";
         const std::string type = "type";
+        const std::string obstacleStopDistance = "obstacle_stop_distance";
         const std::string obstacleAvoidDistance = "obstacle_avoid_distance";
         const std::string obstacleMarkerDistance = "obstacle_marker_distance";
         const std::string markerDeployDistance = "marker_deploy_distance";

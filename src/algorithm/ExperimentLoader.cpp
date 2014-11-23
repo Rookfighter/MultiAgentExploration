@@ -48,6 +48,7 @@ namespace mae
 		LOG(INFO) <<  "-- algorithm config found";
 		
 		algorithmConfig.type = toLowerCase(algorithm[YamlNode::type].as<std::string>());
+        algorithmConfig.obstacleStopDistance = algorithm[YamlNode::obstacleStopDistance].as<double>();
 		algorithmConfig.obstacleAvoidDistance = algorithm[YamlNode::obstacleAvoidDistance].as<double>();
 		algorithmConfig.obstacleMarkerDistance = algorithm[YamlNode::obstacleMarkerDistance].as<double>();
         algorithmConfig.markerDeployDistance = algorithm[YamlNode::markerDeployDistance].as<double>();

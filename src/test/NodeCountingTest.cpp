@@ -11,8 +11,9 @@ namespace mae
 		AlgorithmConfig config;
 		config.robot = world_->getRobot(p_robotName);
 		config.stock = p_world->getStock();
-		config.obstacleAvoidDistance = 0.5;
-		config.obstacleMarkerDistance = 1.0;
+        config.obstacleStopDistance = 0.5;
+		config.obstacleAvoidDistance = 1.0;
+		config.obstacleMarkerDistance = 1.2;
 		nodeCounting_ = new NodeCounting(config);
 	}
 

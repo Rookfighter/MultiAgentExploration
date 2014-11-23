@@ -12,6 +12,7 @@ namespace mae
 
         properties.currentMarker = NULL;
         properties.robot = p_config.robot;
+        properties.obstacleStopDistance = p_config.obstacleStopDistance;
         properties.obstacleAvoidDistance = p_config.obstacleAvoidDistance;
         properties.markerDeployDistance = p_config.markerDeployDistance;
 

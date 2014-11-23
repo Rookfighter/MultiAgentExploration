@@ -14,6 +14,7 @@ namespace mae
 		
 		std::string type;
 		
+        double obstacleStopDistance;
 		double obstacleAvoidDistance;
 		double obstacleMarkerDistance;
         double markerDeployDistance;

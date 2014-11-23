@@ -9,12 +9,14 @@ namespace mae
 
     AtMarker::AtMarker(const CompassStateProperties &p_properties)
         :CompassState(p_properties),
-         movementController_(properties_.robot, properties_.obstacleAvoidDistance),
+         movementController_(properties_.robot,
+                             properties_.obstacleStopDistance,
+                             properties_.obstacleAvoidDistance),
          obstacleDetector_(properties_.robot),
          checkingRecommendedDirection_(false)
     {
         LOG(DEBUG) << "Changed to AtMarker state";
-        
+
         assert(properties_.currentMarker != NULL);
         if(properties_.lastMarker != NULL) {
             CardinalDirection originDirection = getOppositeDirection(properties_.robot->getCompass().getFacingDirection());
@@ -47,17 +49,17 @@ namespace mae
     void AtMarker::setRecommendedDirection()
     {
         assert(properties_.currentMarker != NULL);
-        
+
         CardinalDirection nextDirection = properties_.currentMarker->getRecommendedDirection();
         CardinalDirection currentDirection = properties_.robot->getCompass().getFacingDirection();
-        
+
         double angleToTurn = getDirectionDiff(currentDirection, nextDirection) * (M_PI / 2);
         movementController_.turnBy(angleToTurn);
-        
+
         LOG(DEBUG) << "-- recommended: " << getDirectionStr(nextDirection);
         LOG(DEBUG) << "-- facing: " << getDirectionStr(currentDirection);
         LOG(DEBUG) << "-- last: " << properties_.currentMarker->getDirectionLastVisit(nextDirection) << "ms";
-        
+
         properties_.currentMarker->exploreDirection(nextDirection);
         checkingRecommendedDirection_ = true;
     }
@@ -69,7 +71,7 @@ namespace mae
         bool result = obstacleDetector_.check(-FRONT_OBSTACLE_FOV / 2,
                                               FRONT_OBSTACLE_FOV / 2,
                                               properties_.robot->getMarkerSensor().getMaxRange());
-        
+
         return result;
     }
 }

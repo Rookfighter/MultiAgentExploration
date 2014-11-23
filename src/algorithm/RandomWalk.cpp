@@ -9,34 +9,36 @@
 namespace mae
 {
 
-	RandomWalk::RandomWalk(const AlgorithmConfig &p_config)
-		:Algorithm(p_config),
-		robotController_(p_config.robot, p_config.obstacleAvoidDistance),
-		wanderDistance_(p_config.robot->getMarkerSensor().getMaxRange())
-	{
-		robotController_.setAngleEps(ANGLE_EPS);
-		robotController_.setTurnFactor(TURN_FACTOR);
-		robotController_.wanderDistance(wanderDistance_);
-	}
+    RandomWalk::RandomWalk(const AlgorithmConfig &p_config)
+        :Algorithm(p_config),
+         robotController_(p_config.robot,
+                          p_config.obstacleStopDistance,
+                          p_config.obstacleAvoidDistance),
+         wanderDistance_(p_config.robot->getMarkerSensor().getMaxRange())
+    {
+        robotController_.setAngleEps(ANGLE_EPS);
+        robotController_.setTurnFactor(TURN_FACTOR);
+        robotController_.wanderDistance(wanderDistance_);
+    }
 
-	RandomWalk::~RandomWalk()
-	{
-	}
+    RandomWalk::~RandomWalk()
+    {
+    }
 
-	void RandomWalk::update()
-	{
-		if(robotController_.finished())
-			chooseRandomDirection();
-		else
-			robotController_.update();
-	}
-	
-	void RandomWalk::chooseRandomDirection()
-	{
-		double direction = random_.nextInt(TURN_GRANULARITY) * TURN_ANGLE;
-		
-		robotController_.turnBy(direction);
-		robotController_.wanderDistance(wanderDistance_);
-	}
-	
+    void RandomWalk::update()
+    {
+        if(robotController_.finished())
+            chooseRandomDirection();
+        else
+            robotController_.update();
+    }
+
+    void RandomWalk::chooseRandomDirection()
+    {
+        double direction = random_.nextInt(TURN_GRANULARITY) * TURN_ANGLE;
+
+        robotController_.turnBy(direction);
+        robotController_.wanderDistance(wanderDistance_);
+    }
+
 }

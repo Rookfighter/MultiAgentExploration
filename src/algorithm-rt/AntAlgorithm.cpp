@@ -14,6 +14,7 @@ namespace mae
         properties.robot = p_config.robot;
         properties.updateValue = p_updateValue;
         properties.calcValue = p_calcValue;
+        properties.obstacleStopDistance = p_config.obstacleStopDistance;
         properties.obstacleAvoidDistance = p_config.obstacleAvoidDistance;
         properties.obstacleMarkerDistance = p_config.obstacleMarkerDistance;
         properties.markerDeployDistance = p_config.markerDeployDistance;

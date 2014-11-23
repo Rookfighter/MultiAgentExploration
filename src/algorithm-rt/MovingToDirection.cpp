@@ -16,40 +16,42 @@
 namespace mae
 {
 
-	MovingToDirection::MovingToDirection(const AntStateProperties &p_properties)
-		: AntState(p_properties),
-		  movementController_(p_properties.robot, p_properties.obstacleAvoidDistance),
-		  obstacleDetector_(p_properties.robot)
-	{
-		LOG(DEBUG) << "Changed to MovingToDirection state";
-		movementController_.setAngleEps(ANGLE_EPS);
-		movementController_.setTurnFactor(TURN_FACTOR);
-		movementController_.turnBy(properties_.angleToTurn);
-		movementController_.wanderDistance(properties_.markerDeployDistance);
-	}
+    MovingToDirection::MovingToDirection(const AntStateProperties &p_properties)
+        : AntState(p_properties),
+          movementController_(p_properties.robot,
+                              p_properties.obstacleStopDistance,
+                              p_properties.obstacleAvoidDistance),
+          obstacleDetector_(p_properties.robot)
+    {
+        LOG(DEBUG) << "Changed to MovingToDirection state";
+        movementController_.setAngleEps(ANGLE_EPS);
+        movementController_.setTurnFactor(TURN_FACTOR);
+        movementController_.turnBy(properties_.angleToTurn);
+        movementController_.wanderDistance(properties_.markerDeployDistance);
+    }
 
-	MovingToDirection::~MovingToDirection()
-	{
-	}
+    MovingToDirection::~MovingToDirection()
+    {
+    }
 
-	AntState* MovingToDirection::update()
-	{
-		if(movementController_.reachedDirection() &&
-		        (movementController_.reachedDistance() || hasFrontObstacle())) {
-			properties_.robot->getMotor().stop();
-			return new DroppingMarker(properties_);
-		}
+    AntState* MovingToDirection::update()
+    {
+        if(movementController_.reachedDirection() &&
+                (movementController_.reachedDistance() || hasFrontObstacle())) {
+            properties_.robot->getMotor().stop();
+            return new DroppingMarker(properties_);
+        }
 
-		movementController_.update();
+        movementController_.update();
 
-		return NULL;
-	}
+        return NULL;
+    }
 
-	bool MovingToDirection::hasFrontObstacle()
-	{
-		return obstacleDetector_.check(FRONT_ANGLE_BEGIN,
-		                               FRONT_ANGLE_END,
-		                               properties_.obstacleAvoidDistance);
-	}
+    bool MovingToDirection::hasFrontObstacle()
+    {
+        return obstacleDetector_.check(FRONT_ANGLE_BEGIN,
+                                       FRONT_ANGLE_END,
+                                       properties_.obstacleStopDistance);
+    }
 
 }

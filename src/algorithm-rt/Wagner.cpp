@@ -41,6 +41,4 @@ namespace mae
 
         return  p_next->getValue() + distance;
     }
-
-
 }

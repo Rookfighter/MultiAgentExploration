@@ -19,7 +19,7 @@ include_directories("src"
                     "${EASYLOGGING++_INCLUDE_DIR}"
                     "${YAMLCPP_INCLUDE_DIR}")
 link_directories("${STAGE_LIBRARY_DIRS}")
- 
+
 if( ${RELEASE} )
     add_definitions( -DNDEBUG )
 endif( ${RELEASE} )

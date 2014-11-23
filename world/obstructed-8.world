@@ -1,0 +1,89 @@
+include "include/obstructed-world.inc"
+
+pioneer2dx
+(
+    name "pioneer1"
+    pose [ -3 -2 0 0 ]
+
+    localization "odom"
+    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
+                                   	    # (Uniform random distribution)
+    color "blue"
+)
+
+pioneer2dx
+(
+    name "pioneer2"
+    pose [ 2.5 2 0 0 ]
+
+    localization "odom"
+    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
+                                   	    # (Uniform random distribution)
+    color "red"
+)
+
+pioneer2dx
+(
+    name "pioneer3"
+    pose [ -3 2 0 0 ]
+
+    localization "odom"
+    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
+                                   	    # (Uniform random distribution)
+    color "green"
+)
+
+pioneer2dx
+(
+    name "pioneer4"
+    pose [ 2.5 -2 0 0 ]
+
+    localization "odom"
+    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
+                                   	    # (Uniform random distribution)
+    color "orange"
+)
+
+pioneer2dx
+(
+    name "pioneer5"
+    pose [ -4.5 -4.5 0 0 ]
+
+    localization "odom"
+    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
+                                   	    # (Uniform random distribution)
+    color "purple"
+)
+
+pioneer2dx
+(
+    name "pioneer6"
+    pose [ 4.5 5 0 0 ]
+
+    localization "odom"
+    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
+                                   	    # (Uniform random distribution)
+    color "magenta"
+)
+
+pioneer2dx
+(
+    name "pioneer7"
+    pose [ -4.5 5 0 0 ]
+
+    localization "odom"
+    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
+                                   	    # (Uniform random distribution)
+    color "black"
+)
+
+pioneer2dx
+(
+    name "pioneer8"
+    pose [ 4.5 -4.5 0 0 ]
+
+    localization "odom"
+    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
+                                   	    # (Uniform random distribution)
+    color "cyan"
+)

@@ -27,14 +27,3 @@ floorplan
     bitmap "bitmaps/obstructed_room.png"
     size [15 15 1]
 )
-
-pioneer2dx
-(
-    name "pioneer1"
-    pose [ -3 -2 0 0 ]
-
-    localization "odom"
-    odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
-                                   	    # (Uniform random distribution)
-    color "blue"
-)

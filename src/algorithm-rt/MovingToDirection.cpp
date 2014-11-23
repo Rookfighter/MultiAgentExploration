@@ -23,11 +23,12 @@ namespace mae
                               p_properties.obstacleAvoidDistance),
           obstacleDetector_(p_properties.robot)
     {
-        LOG(DEBUG) << "Changed to MovingToDirection state";
+        LOG(DEBUG) << "Changed to MovingToDirection state (" << properties_.robot->getName() << ")";
         movementController_.setAngleEps(ANGLE_EPS);
         movementController_.setTurnFactor(TURN_FACTOR);
         movementController_.turnBy(properties_.angleToTurn);
         movementController_.wanderDistance(properties_.markerDeployDistance);
+        LOG(DEBUG) << "-- moving " << properties_.markerDeployDistance << "m (" << properties_.robot->getName() << ")";
     }
 
     MovingToDirection::~MovingToDirection()
@@ -38,6 +39,8 @@ namespace mae
     {
         if(movementController_.reachedDirection() &&
                 (movementController_.reachedDistance() || hasFrontObstacle())) {
+            LOG(DEBUG) << "-- reached distance or had obstacle (" << properties_.robot->getName() << ")";        
+            
             properties_.robot->getMotor().stop();
             return new DroppingMarker(properties_);
         }

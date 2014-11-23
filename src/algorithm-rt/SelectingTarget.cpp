@@ -38,7 +38,11 @@ namespace mae
           obstacleMarkerDistance_(p_properties.obstacleMarkerDistance)
 
     {
-        LOG(DEBUG) << "Changed to SelectingTarget state";
+        LOG(DEBUG) << "Changed to SelectingTarget state (" << properties_.robot->getName() << ")";
+        if(properties_.currentMarker != NULL)
+            LOG(DEBUG) << "-- current marker " << properties_.currentMarker->getID() << " (" << properties_.robot->getName() << ")";
+        else
+            LOG(DEBUG) << "-- current marker is NULL (" << properties_.robot->getName() << ")";
     }
 
     SelectingTarget::~SelectingTarget()
@@ -55,15 +59,15 @@ namespace mae
         getMarkerInRange();
         // check if there is any direction without marker to take
         if(!checkBlankSpace()) {
-            LOG(DEBUG) << "-- no blank found";
+            LOG(DEBUG) << "-- no blank found (" << properties_.robot->getName() << ")";
             // check if we can find any marker
             if(findNextMarker()) {
                 properties_.nextMarker->setHighlighted(true);
-                LOG(DEBUG) << "-- found next marker";
+                LOG(DEBUG) << "-- found next marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
             } else
-                LOG(DEBUG) << "-- no fitting next marker found";
+                LOG(DEBUG) << "-- no fitting next marker found (" << properties_.robot->getName() << ")";
         } else
-            LOG(DEBUG) << "-- found blank";
+            LOG(DEBUG) << "-- found blank (" << properties_.robot->getName() << ")";
 
         return new UpdatingValue(properties_);
     }
@@ -77,11 +81,17 @@ namespace mae
         if(properties_.currentMarker != NULL) {
             std::vector<MarkerMeasurement>::iterator it;
             for(it = markerInRange_.begin(); it != markerInRange_.end(); ++it) {
-                if(properties_.currentMarker->getID() == it->marker->getID())
+                if(properties_.currentMarker->getID() == it->marker->getID()) {
+                    LOG(DEBUG) << "-- found current marker " << properties_.currentMarker->getID() << " in range (" << properties_.robot->getName() << ")";
                     break;
+                }
             }
             markerInRange_.erase(it);
         }
+        
+        LOG(DEBUG) << "-- found " << markerInRange_.size() << " marker in range (" << properties_.robot->getName() << ")";
+        for(MarkerMeasurement measurement : markerInRange_)
+            LOG(DEBUG) << "--> id: " << measurement.marker->getID() << " value: " << measurement.marker->getValue() << " (" << properties_.robot->getName() << ")";
     }
 
     bool SelectingTarget::checkBlankSpace()
@@ -100,7 +110,7 @@ namespace mae
                             obstacleAngles[RIGHT_IDX + 1],
                             obstacleMarkerDistance_);
 
-        LOG(DEBUG) << "-- Obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
+        LOG(DEBUG) << "-- obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
                    ", L=" << boolToStr(blockedLeft) << ", R=" << boolToStr(blockedRight);
         // check if there is already a marker in that direction
         for(MarkerMeasurement measurement : markerInRange_) {
@@ -124,7 +134,10 @@ namespace mae
                                               markerAngles[RIGHT_IDX],
                                               markerAngles[RIGHT_IDX + 1]);
         }
-
+        
+        LOG(DEBUG) << "-- marker & obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
+                   ", L=" << boolToStr(blockedLeft) << ", R=" << boolToStr(blockedRight);
+        
         if(!blockedFront)
             properties_.angleToTurn = 0; // move forward
         else if(!blockedLeft)
@@ -146,6 +159,7 @@ namespace mae
             return false;
 
         std::vector<MarkerMeasurement> possibleTargets = getNonObstructedMarker();
+        
         if(possibleTargets.empty())
             return false;
         Random rand;
@@ -159,15 +173,17 @@ namespace mae
     {
         std::vector<MarkerMeasurement> result;
         double minValue = getMinNonObstructedMarkerValue();
-        LOG(DEBUG) << "-- Min value: " << minValue;
+        LOG(DEBUG) << "-- min marker value: " << minValue << " (" << properties_.robot->getName() << ")";
 
         if(minValue < 0)
             return result;
 
         for(unsigned int i = 0; i < markerInRange_.size(); ++i) {
             double markerValue = properties_.calcValue(properties_.currentMarker, markerInRange_[i].marker);
+            LOG(DEBUG) << "-- algo value of marker " << markerInRange_[i].marker->getID() << ": " << markerValue << " (" << properties_.robot->getName() << ")";
             if(sameDouble(markerValue, minValue, MARKER_VALUE_EPS) &&
                     !markerIsObstructed(markerInRange_[i])) {
+                LOG(DEBUG) << "-- marker " << markerInRange_[i].marker->getID() << " is possible target (" << properties_.robot->getName() << ")";
                 result.push_back(markerInRange_[i]);
             }
         }
@@ -204,9 +220,6 @@ namespace mae
             alreadyChecked[nextIdx] = true;
             checkedCount++;
 
-            LOG(DEBUG) << "-- checking marker " << markerInRange_[nextIdx].marker->getID() << ": " <<
-                       radianToDegree(markerInRange_[nextIdx].relativeDirection) << "° " <<
-                       markerInRange_[nextIdx].relativeDistance.length() << "m";
             // check if the way to the marker is blocked by an obstacle
             foundMarker = !markerIsObstructed(markerInRange_[nextIdx]);
         }

@@ -36,10 +36,13 @@ namespace mae
          obstacleDetector_(p_properties.robot),
          obstacleAvoidStep_(0)
     {
-        LOG(DEBUG) << "Changed to MovingToMarker state";
         movementController_.setAngleEps(ANGLE_EPS);
         movementController_.setTurnFactor(TURN_FACTOR);
         movementController_.wanderDistance(DISTANCE_FACTOR * properties_.robot->getMarkerSensor().getMaxRange());
+        
+        LOG(DEBUG) << "Changed to MovingToMarker state (" << properties_.robot->getName() << ")";
+        LOG(DEBUG) << "-- target marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
+        LOG(DEBUG) << "-- maximum wander distance " << DISTANCE_FACTOR * properties_.robot->getMarkerSensor().getMaxRange() << "m (" << properties_.robot->getName() << ")";
     }
 
     MovingToMarker::~MovingToMarker()
@@ -51,19 +54,21 @@ namespace mae
         updateTargetMeasurement();
 
         if(!foundMarker_) {
-            LOG(DEBUG) << "-- signal to marker lost";
+            LOG(DEBUG) << "-- signal to target marker " << properties_.nextMarker->getID() << " lost (" << properties_.robot->getName() << ")";
             properties_.currentMarker = NULL;
             properties_.robot->getMotor().stop();
             return new SelectingTarget(properties_);
         }
 
         if(reachedTarget()) {
+            LOG(DEBUG) << "-- reached target marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
             // reached the marker, now select next target
             properties_.currentMarker = properties_.nextMarker;
             properties_.robot->getMotor().stop();
             return new SelectingTarget(properties_);
         }
         if(movementController_.reachedDistance()) {
+            LOG(DEBUG) << "-- moved too far, not reached marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
             // moved far, but did not reach marker, so drop one
             properties_.robot->getMotor().stop();
             return new DroppingMarker(properties_);

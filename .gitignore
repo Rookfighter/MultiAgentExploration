@@ -1,6 +1,6 @@
 *~
-*.project
-*.workspace
+
+# unversioned directories
 build/
 log/
 lib/
@@ -9,6 +9,12 @@ plot/wagner
 plot/lartastar
 plot/randomwalk
 plot/compass
-.codelite/
+
+# IDE files
+*.project
+*.workspace
+*.codelite/
 compile_commands.json
+*.metadata
+*.pydevproject
 

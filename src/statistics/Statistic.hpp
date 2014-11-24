@@ -22,6 +22,7 @@ namespace mae
         void saveVisits();
         void saveTimeBetweenVisits();
         void saveCoverage();
+        void saveExperimentConfig();
 
         Statistic(const StatisticConfig &p_config);
     public:

@@ -11,6 +11,7 @@
 #define MEAN_GRID_TIME_BEWTEEN_VISITS_FILE "mean-grid-time-between-visits.dat"
 #define COVERAGE_EVENTS_FILE "coverage-events.dat"
 #define FINAL_COVERAGE_FILE "final-coverage.dat"
+#define EXPERIMENT_CONFIG_FILE "experiment-config.dat"
 
 namespace mae
 {
@@ -52,6 +53,8 @@ namespace mae
         saveTimeBetweenVisits();
         LOG(INFO) << "-- saving coverage";
         saveCoverage();
+        LOG(INFO) << "-- saving experiment config";
+        saveExperimentConfig();
     }
 
     void Statistic::updateSaveDirectory(const std::string &p_directory)
@@ -150,6 +153,19 @@ namespace mae
         file << "# shows final coverage" << std::endl;
         file << "# [coverage timeStamp(usec)]";
         file << statisticGrid_.getCoverage() << " " << std::endl << experiment_->getSimulation()->getWorld()->SimTimeNow();
+        file.close();
+    }
+    
+    void Statistic::saveExperimentConfig()
+    {
+        std::stringstream ss;
+        std::ofstream file;
+        
+        ss << saveDirectory_ << "/" << EXPERIMENT_CONFIG_FILE;
+        file.open(ss.str());
+        file << "# shows configuration of the experiment" << std::endl;
+        file << "# robotCount" << std::endl;
+        file << experiment_->getSimulation()->getRobots().size();
         file.close();
     }
 

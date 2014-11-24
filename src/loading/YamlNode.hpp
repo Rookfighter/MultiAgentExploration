@@ -8,6 +8,8 @@ namespace mae
 
     namespace YamlNode
     {
+        const std::string import = "import";
+        
         const std::string world = "world";
         const std::string worldFile = "file";
         const std::string worldGui = "gui";
@@ -28,6 +30,7 @@ namespace mae
         const std::string obstacleAvoidDistance = "obstacle_avoid_distance";
         const std::string obstacleMarkerDistance = "obstacle_marker_distance";
         const std::string markerDeployDistance = "marker_deploy_distance";
+        const std::string collisionResolveDistance = "collision_resolve_distance";
         
         const std::string statistic = "statistic";
         const std::string floorplanName = "floorplan_name";

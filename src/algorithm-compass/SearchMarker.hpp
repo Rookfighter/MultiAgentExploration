@@ -2,6 +2,7 @@
 #define MAE_SEARCH_MARKER_HPP
 
 #include "algorithm/MovementController.hpp"
+#include "algorithm/CollisionResolver.hpp"
 #include "algorithm-compass/CompassState.hpp"
 
 namespace mae
@@ -15,6 +16,8 @@ namespace mae
         bool lostAllSignals_;
         
         void updateNewMarker();
+        bool hasCollision();
+        void resolveCollision();
 	public:
 		SearchMarker(const CompassStateProperties &p_properties);
 		~SearchMarker();

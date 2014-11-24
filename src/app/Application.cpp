@@ -1,8 +1,9 @@
 #include <easylogging++.h>
 #include <signal.h>
 #include "app/Application.hpp"
-#include "algorithm/ExperimentLoader.hpp"
-#include "statistics/StatisticLoader.hpp"
+#include "loading/ExperimentLoader.hpp"
+#include "loading/StatisticLoader.hpp"
+#include "loading/ImportYaml.hpp"
 
 #define STATISTIC_SAVE_DIR "../plot"
 
@@ -25,11 +26,13 @@ namespace mae
         try {
             Stg::Init(&argc, &argv);
             
-            statistic_ = StatisticLoader::load(argv[1]);
+            ImportYaml importer;
+            importer.resolveImports(argv[1]);
+            statistic_ = StatisticLoader::load(importer.getRoot());
             if(statistic_ != NULL) {
                 experiment_ = statistic_->getExperiment();
             } else {
-                experiment_ = ExperimentLoader::load(argv[1]);
+                experiment_ = ExperimentLoader::load(importer.getRoot());
             }
             
             experiment_->getSimulation()->getWorld()->AddUpdateCallback(applicationCallback, this);

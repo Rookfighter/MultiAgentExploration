@@ -1,18 +1,7 @@
-statistic:
-    floorplan_name: floorplan1
-    tile_size: [1.0, 1.0] # [m m]
-    coverage_events: [0.5, 0.6, 0.7, 0.8, 0.9]
-algorithm:
-    type: compass
-    obstacle_stop_distance: 0.5 # m
-    obstacle_avoid_distance: 1.0 # m
-    obstacle_marker_distance: 1.2 # m
-    marker_deploy_distance: 3.2 # m
+import: [config/compass.yaml]
 world:
     gui: true
     file: world/obstructed-8.world
-stock:
-    refill_count: 10
 robots:
     -
         name: pioneer1

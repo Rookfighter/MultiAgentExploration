@@ -32,14 +32,15 @@ namespace mae
         :AntState(p_properties),
          movementController_(p_properties.robot,
                              p_properties.obstacleStopDistance,
-                             p_properties.obstacleAvoidDistance),
+                             p_properties.obstacleAvoidDistance,
+                             p_properties.collisionResolveDistance),
          obstacleDetector_(p_properties.robot),
          obstacleAvoidStep_(0)
     {
         movementController_.setAngleEps(ANGLE_EPS);
         movementController_.setTurnFactor(TURN_FACTOR);
         movementController_.wanderDistance(DISTANCE_FACTOR * properties_.robot->getMarkerSensor().getMaxRange());
-        
+
         LOG(DEBUG) << "Changed to MovingToMarker state (" << properties_.robot->getName() << ")";
         LOG(DEBUG) << "-- target marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
         LOG(DEBUG) << "-- maximum wander distance " << DISTANCE_FACTOR * properties_.robot->getMarkerSensor().getMaxRange() << "m (" << properties_.robot->getName() << ")";
@@ -73,6 +74,7 @@ namespace mae
             properties_.robot->getMotor().stop();
             return new DroppingMarker(properties_);
         }
+
         if(hasObstacleToTarget()) {
             obstacleAvoidStep_ = OBSTACLE_AVOID_MAX_STEP;
         }
@@ -82,7 +84,7 @@ namespace mae
             turnToTarget();
 
         move();
-
+        
         return NULL;
     }
 

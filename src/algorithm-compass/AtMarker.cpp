@@ -11,7 +11,8 @@ namespace mae
         :CompassState(p_properties),
          movementController_(properties_.robot,
                              properties_.obstacleStopDistance,
-                             properties_.obstacleAvoidDistance),
+                             properties_.obstacleAvoidDistance,
+                             properties_.collisionResolveDistance),
          obstacleDetector_(properties_.robot),
          checkingRecommendedDirection_(false)
     {

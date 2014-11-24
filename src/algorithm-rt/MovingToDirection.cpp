@@ -20,7 +20,8 @@ namespace mae
         : AntState(p_properties),
           movementController_(p_properties.robot,
                               p_properties.obstacleStopDistance,
-                              p_properties.obstacleAvoidDistance),
+                              p_properties.obstacleAvoidDistance,
+                              p_properties.collisionResolveDistance),
           obstacleDetector_(p_properties.robot)
     {
         LOG(DEBUG) << "Changed to MovingToDirection state (" << properties_.robot->getName() << ")";
@@ -39,8 +40,8 @@ namespace mae
     {
         if(movementController_.reachedDirection() &&
                 (movementController_.reachedDistance() || hasFrontObstacle())) {
-            LOG(DEBUG) << "-- reached distance or had obstacle (" << properties_.robot->getName() << ")";        
-            
+            LOG(DEBUG) << "-- reached distance or had obstacle (" << properties_.robot->getName() << ")";
+
             properties_.robot->getMotor().stop();
             return new DroppingMarker(properties_);
         }
@@ -56,5 +57,4 @@ namespace mae
                                        FRONT_ANGLE_END,
                                        properties_.obstacleStopDistance);
     }
-
 }

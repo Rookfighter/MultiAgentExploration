@@ -8,10 +8,12 @@ namespace mae
 
     MovementController::MovementController(ExplorationBot *p_robot,
                                            const double p_obstacleStopDistance,
-                                           const double p_obstacleAvoidDistance)
+                                           const double p_obstacleAvoidDistance,
+                                           const double p_collisionResolveDistance)
         :wander_(p_robot,
                  p_obstacleStopDistance,
                  p_obstacleAvoidDistance),
+        collisionResolver_(p_robot, p_collisionResolveDistance),
         robot_(p_robot),
         lastPose_(robot_->getMotor().getPose()),
         angleToTurn_(0),
@@ -62,14 +64,18 @@ namespace mae
 
     void MovementController::update()
     {
-        updateGeometry();
+        if(hasCollision())
+            resolveCollision();
+        else {
+            updateGeometry();
 
-        if(!reachedDirection())
-            turn();
-        else if(!reachedDistance())
-            wander();
-        else
-            robot_->getMotor().stop();
+            if(!reachedDirection())
+                turn();
+            else if(!reachedDistance())
+                wander();
+            else
+                robot_->getMotor().stop();
+        }
     }
 
     void MovementController::updateGeometry()
@@ -85,6 +91,23 @@ namespace mae
         }
 
         lastPose_ = currentPose;
+    }
+
+    bool MovementController::hasCollision()
+    {
+        return robot_->collidedWithObstacle() || !collisionResolver_.finished();
+    }
+
+    void MovementController::resolveCollision()
+    {
+        // still have collision, although we finished
+        if(collisionResolver_.finished())
+            collisionResolver_.resolveCollision();
+        collisionResolver_.update();
+
+        // refresh pose of movement controller, so backwards distance is not counted
+        if(collisionResolver_.finished())
+            refreshPose();
     }
 
     void MovementController::turn()

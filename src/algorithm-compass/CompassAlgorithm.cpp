@@ -15,7 +15,8 @@ namespace mae
         properties.obstacleStopDistance = p_config.obstacleStopDistance;
         properties.obstacleAvoidDistance = p_config.obstacleAvoidDistance;
         properties.markerDeployDistance = p_config.markerDeployDistance;
-
+        properties.collisionResolveDistance = p_config.collisionResolveDistance;
+        
         state_ = new InitialCompassState(properties);
     }
 

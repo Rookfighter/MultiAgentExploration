@@ -1,6 +1,6 @@
 #include <easylogging++.h>
 #include "test/TestApplication.hpp"
-#include "simulation/SimulationLoader.hpp"
+#include "loading/SimulationLoader.hpp"
 
 namespace mae
 {

@@ -15,6 +15,7 @@ namespace mae
         double obstacleStopDistance;
         double obstacleAvoidDistance;
         double markerDeployDistance;
+        double collisionResolveDistance;
 		
 		CompassStateProperties()
 		:currentMarker(NULL), lastMarker(NULL) { }

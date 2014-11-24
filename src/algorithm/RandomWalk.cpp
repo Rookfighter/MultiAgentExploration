@@ -13,7 +13,8 @@ namespace mae
         :Algorithm(p_config),
          robotController_(p_config.robot,
                           p_config.obstacleStopDistance,
-                          p_config.obstacleAvoidDistance),
+                          p_config.obstacleAvoidDistance,
+                          p_config.collisionResolveDistance),
          wanderDistance_(p_config.robot->getMarkerSensor().getMaxRange())
     {
         robotController_.setAngleEps(ANGLE_EPS);

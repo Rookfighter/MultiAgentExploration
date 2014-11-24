@@ -26,6 +26,7 @@ endif( ${RELEASE} )
 
 # get source files
 file(GLOB MULTI_AGENT_EXPLORATION_SRC
+    "src/loading/*.cpp"
     "src/statistics/*.cpp"
     "src/algorithm/*.cpp"
     "src/algorithm-rt/*.cpp"

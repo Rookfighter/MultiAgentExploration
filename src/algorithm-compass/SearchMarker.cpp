@@ -15,7 +15,8 @@ namespace mae
         :CompassState(p_properties),
          movementController_(properties_.robot,
                              properties_.obstacleStopDistance,
-                             properties_.obstacleAvoidDistance),
+                             properties_.obstacleAvoidDistance,
+                             p_properties.collisionResolveDistance),
          newMarker_(NULL),
          lostAllSignals_(false)
     {
@@ -53,7 +54,7 @@ namespace mae
 
         if(movementController_.reachedDistance())
             movementController_.wanderDistance(properties_.markerDeployDistance);
-
+        
         movementController_.update();
 
         return NULL;
@@ -79,6 +80,5 @@ namespace mae
             // only set new marker after we lost signal
             newMarker_ = properties_.robot->getMarkerSensor().getClosestMarker(markerWithoutLast).marker;
         }
-
     }
 }

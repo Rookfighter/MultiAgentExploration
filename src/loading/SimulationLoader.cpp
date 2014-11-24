@@ -1,6 +1,6 @@
 #include <easylogging++.h>
-#include "simulation/SimulationLoader.hpp"
-#include "utils/YamlNode.hpp"
+#include "loading/SimulationLoader.hpp"
+#include "loading/YamlNode.hpp"
 
 namespace mae
 {
@@ -32,17 +32,23 @@ namespace mae
 		
 		// get configuration of client
 		worldNode = p_root[YamlNode::world];
+        if(!worldNode.IsDefined())
+            throw std::logic_error("world node not found");
 		worldFile = worldNode[YamlNode::worldFile].as<std::string>();
         worldGui = worldNode[YamlNode::worldGui].as<bool>();
 		LOG(INFO) << "-- world config found";
 		
 		// get configuration of marker stock
 		stockNode = p_root[YamlNode::stock];
+        if(!stockNode.IsDefined())
+            throw std::logic_error("stock node not found");
 		stockConfig.refillCount = stockNode[YamlNode::refillCount].as<int>();
 		LOG(INFO) << "-- stock config found";
 		
 		// get configuration for all robots
 		robotsNode = p_root[YamlNode::robots];
+        if(!robotsNode.IsDefined())
+            throw std::logic_error("robots node not found");
 		LOG(INFO) << "-- robot config found";
 		if(robotsNode.IsSequence()) {
 			LOG(INFO) << "-- found " << robotsNode.size() << " robot configs";

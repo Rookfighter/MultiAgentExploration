@@ -2,6 +2,7 @@
 #define MAE_MOVEMENT_CONTROLLER_HPP
 
 #include "algorithm/Wander.hpp"
+#include "algorithm/CollisionResolver.hpp"
 
 namespace mae
 {
@@ -10,6 +11,7 @@ namespace mae
     {
     private:
         Wander wander_;
+        CollisionResolver collisionResolver_;
         ExplorationBot *robot_;
         Pose lastPose_;
 
@@ -19,14 +21,17 @@ namespace mae
         double angleEps_;
 
         double turnFactor_;
-
+        
+        bool hasCollision();
+        void resolveCollision();
         void updateGeometry();
         void turn();
         void wander();
     public:
         MovementController(ExplorationBot *p_robot,
                            const double p_obstacleStopDistance,
-                           const double p_obstacleAvoidDistance);
+                           const double p_obstacleAvoidDistance,
+                           const double p_collisionResolveDistance);
         ~MovementController();
 
         void setAngleEps(const double p_angleEps);

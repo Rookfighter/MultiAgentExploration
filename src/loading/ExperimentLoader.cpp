@@ -1,14 +1,14 @@
 #include <yaml-cpp/yaml.h>
 #include <easylogging++.h>
-#include "algorithm/ExperimentLoader.hpp"
+#include "loading/ExperimentLoader.hpp"
 #include "algorithm/RandomWalk.hpp"
 #include "algorithm-rt/NodeCounting.hpp"
 #include "algorithm-rt/LRTAStar.hpp"
 #include "algorithm-rt/Wagner.hpp"
 #include "algorithm-compass/CompassAlgorithm.hpp"
-#include "simulation/SimulationLoader.hpp"
+#include "loading/SimulationLoader.hpp"
 #include "utils/Convert.hpp"
-#include "utils/YamlNode.hpp"
+#include "loading/YamlNode.hpp"
 
 #define NODECOUNTING_TYPE "nodecounting"
 #define LRTASTAR_TYPE "lrtastar"
@@ -29,8 +29,9 @@ namespace mae
 
 	Experiment* ExperimentLoader::load(const std::string &p_file)
 	{
+        
 		YAML::Node root;
-		
+        
 		LOG(INFO) << "Loading config: " << p_file;
 		root = YAML::LoadFile(p_file);
 		LOG(INFO) << "-- file found";
@@ -45,6 +46,8 @@ namespace mae
 		Simulation *simulation;
 		
 		algorithm = p_root[YamlNode::algorithm];
+        if(!algorithm.IsDefined())
+            throw std::logic_error("algorithm node not found");
 		LOG(INFO) <<  "-- algorithm config found";
 		
 		algorithmConfig.type = toLowerCase(algorithm[YamlNode::type].as<std::string>());
@@ -52,6 +55,7 @@ namespace mae
 		algorithmConfig.obstacleAvoidDistance = algorithm[YamlNode::obstacleAvoidDistance].as<double>();
 		algorithmConfig.obstacleMarkerDistance = algorithm[YamlNode::obstacleMarkerDistance].as<double>();
         algorithmConfig.markerDeployDistance = algorithm[YamlNode::markerDeployDistance].as<double>();
+        algorithmConfig.collisionResolveDistance = algorithm[YamlNode::collisionResolveDistance].as<double>();
 		LOG(INFO) <<  "-- algorithm type is " << algorithmConfig.type;
 		
 		simulation = SimulationLoader::load(p_root);

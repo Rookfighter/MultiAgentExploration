@@ -1,7 +1,7 @@
 #include <easylogging++.h>
-#include "statistics/StatisticLoader.hpp"
-#include "algorithm/ExperimentLoader.hpp"
-#include "utils/YamlNode.hpp"
+#include "loading/StatisticLoader.hpp"
+#include "loading/ExperimentLoader.hpp"
+#include "loading/YamlNode.hpp"
 
 namespace mae
 {
@@ -21,7 +21,7 @@ namespace mae
 
         statisticNode = p_root[YamlNode::statistic];
         if(!statisticNode.IsDefined()) {
-            LOG(INFO) << "-- no statistic config";
+            LOG(INFO) << "-- statistic not found config";
             return NULL;
         }
         LOG(INFO) << "-- statistic config found";

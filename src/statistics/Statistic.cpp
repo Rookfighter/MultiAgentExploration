@@ -151,8 +151,8 @@ namespace mae
         ss << saveDirectory_ << "/" << FINAL_COVERAGE_FILE;
         file.open(ss.str());
         file << "# shows final coverage" << std::endl;
-        file << "# [coverage timeStamp(usec)]";
-        file << statisticGrid_.getCoverage() << " " << std::endl << experiment_->getSimulation()->getWorld()->SimTimeNow();
+        file << "# [coverage timeStamp(usec)]" << std::endl;
+        file << statisticGrid_.getCoverage() << " " << experiment_->getSimulation()->getWorld()->SimTimeNow();
         file.close();
     }
     

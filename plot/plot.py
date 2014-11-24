@@ -9,6 +9,7 @@ MEAN_TILE_TIME_BEWTEEN_VISITS_FILE = "mean-tile-time-between-visits.dat"
 MEAN_GRID_TIME_BEWTEEN_VISITS_FILE = "mean-grid-time-between-visits.dat"
 COVERAGE_EVENTS_FILE = "coverage-events.dat"
 FINAL_COVERAGE_FILE = "final-coverage.dat"
+EXPERIMENT_CONFIG_FILE = "experiment-config.dat"
 
 MEAN_COVERAGE_EVENTS_FILE = "mean-coverage-events.dat"
 MEAN_TILE_VISITS_FILE = "mean-tile-visits.dat"
@@ -21,7 +22,342 @@ OUT_COVERAGE_EVENTS_FILE = "coverage-events.png"
 OUT_MEAN_TILE_VISITS_HEATMAP_FILE = "mean-tile-visits-heatmap.png"
 OUT_MEAN_COVERAGE_EVENTS_FILE = "mean-coverage-events.png"
 
+def plotCoverageEvents(infile, outfile):
+    subprocess.call(["gnuplot" , "-e", "infile='" + infile + "'; outfile='" + outfile + "'", PLOT_VISITS_HEATMAP_FILE])
+    
+def plotVisitsHeatMap(infile, outfile):
+    subprocess.call(["gnuplot" , "-e", "infile='" + infile + "'; outfile='" + outfile + "'", PLOT_VISITS_HEATMAP_FILE])
 
+class DataFile:
+    loadedFrom_ = ""
+    comments_ = []
+    data_ = []
+    
+    def load(self, filepath):
+        assert(os.path.isfile(filepath))
+        self.clear()
+        self.loadedFrom_ = filepath
+        with open(self.loadedFrom_, 'r') as f:
+            columnCount = -1
+            for line in f:
+                # only lines that are no comments are valid
+                if line[0] == '#':
+                    self.comments_.append(line)
+                else:
+                    values = line.split(' ')
+                    if columnCount < 0:
+                        columnCount = len(values)
+                        # add columns for data
+                        for i in xrange(0, columnCount):
+                            self.data_.append([])
+                    assert(len(values) == columnCount)
+                    
+                    # add data strings to correct column
+                    for i in xrange(0, len(values)):
+                        self.data_[i].append(values[i])
+    
+    def save(self, filepath):
+        with open(filepath, 'w') as f:
+            for comment in self.comments_:
+                f.write(comment + "\n")
+            if self.data_:
+                for line in xrange(0, len(self.data_[0])):
+                    toWrite = ""
+                    for column in self.data_:
+                        toWrite += column[line] + " "
+                    toWrite.strip()
+                    f.write(toWrite) 
+    
+    def columnAsLong(self, column):
+        assert(column < len(self.data_))
+        result = []
+        
+        for value in self.data_[column]:
+            result.append(long(float(value)))
+        
+        return result
+
+    def columnAsFloat(self, column):
+        assert(column < len(self.data_))
+        result = []
+        
+        for value in self.data_[column]:
+            result.append(float(value))
+        
+        return result
+        
+    def addLongColumn(self, longColumn):
+        toAdd = []
+        for value in longColumn:
+            toAdd.append(str(value))
+        self.data_.append(toAdd)
+   
+    def addFloatColumn(self, floatColumn):
+        toAdd = []
+        for value in floatColumn:
+            toAdd.append(repr(value))
+        self.data_.append(toAdd)
+        
+    def addComment(self, comment):
+        self.comments_.append(comment)
+        
+    def clear(self):
+        self.data = []
+        self.comments = []
+        self.filepath_ = ""
+        
+class ExperimentDirectory:
+    directory_ = ""
+    coverageEvents_ = []
+    experimentConfig_ = []
+    finalCoverage_ = 0.0
+    meanGridTimeBetweenVisits_ = 0L
+    meanTileTimeBetweenVisits_ = []
+    tileVisits_ = []
+    meanGridVisits_ = 0.0
+    
+    def load(self, directory):
+        assert(os.path.isdir(directory))
+        self.directory_ = directory
+        coverageEvents = []
+        experimentConfig = []
+        meanTileTimeBetweenVisits = []
+        tileVisits = []
+        
+        data = DataFile()
+        filename = ""
+        
+        print "-- loading data of '" + self.directory_ + "'"
+        
+        filename = data.load(os.path.join(self.directoy_, COVERAGE_EVENTS_FILE))
+        print "-- loading coverageEvents '" + filename + "'"
+        data.load(filename)
+        self.coverageEvents_.append(data.columnAsFloat(0))
+        self.coverageEvents_.append(data.columnAsLong(1))
+        
+        filename = data.load(os.path.join(self.directoy_, EXPERIMENT_CONFIG_FILE))
+        print "-- loading experimenConfig '" + filename + "'"
+        data.load(filename)
+        self.experimentConfig_ = data.columnAsLong(0)
+        
+        filename = data.load(os.path.join(self.directoy_, FINAL_COVERAGE_FILE))
+        print "-- loading finalCoverage '" + filename + "'"
+        data.load(filename)
+        self.finalCoverage_ = data.columnAsFloat(0)[0]
+        
+        filename = data.load(os.path.join(self.directoy_, MEAN_GRID_TIME_BEWTEEN_VISITS_FILE))
+        print "-- loading meanGridTimeBetweenVisits '" + filename + "'"
+        data.load(filename)
+        self.meanGridTimeBetweenVisits_ = data.columnAsLong(0)[0]
+        
+        filename = data.load(os.path.join(self.directoy_, MEAN_TILE_TIME_BEWTEEN_VISITS_FILE))
+        print "-- loading meanTileTimeBetweenVisits '" + filename + "'"
+        data.load(filename)
+        self.meanTileTimeBetweenVisits_.append(data.columnAsLong(0))
+        self.meanTileTimeBetweenVisits_.append(data.columnAsLong(1))
+        self.meanTileTimeBetweenVisits_.append(data.columnAsLong(2))
+        
+        filename = data.load(os.path.join(self.directoy_, TILE_VISITS_FILE))
+        print "-- loading tileVisits '" + filename + "'"
+        data.load(filename)
+        self.tileVisits_.append(data.columnAsLong(0))
+        self.tileVisits_.append(data.columnAsLong(1))
+        self.tileVisits_.append(data.columnAsLong(2))
+        
+        filename = data.load(os.path.join(self.directoy_, MEAN_GRID_VISITS_FILE))
+        print "-- loading meanGridVisits '" + filename + "'"
+        data.load(filename)
+        self.meanGridVisits_ = data.columnAsFloat(0)[0]
+        
+    def plot(self):
+        infile = ""
+        outfile = ""
+        
+        print "-- plotting data of '" + self.directory_ + "'"
+        
+        infile = os.path.join(self.directoy_, TILE_VISITS_FILE)
+        outfile = os.path.join(self.directoy_, OUT_TILE_VISITS_HEATMAP_FILE)
+        plotVisitsHeatMap(infile, outfile)
+        
+        infile = os.path.join(self.directoy_, COVERAGE_EVENTS_FILE)
+        outfile = os.path.join(self.directoy_, OUT_COVERAGE_EVENTS_FILE)
+        plotCoverageEvents(infile, outfile)
+
+class AlgorithmDirectory:
+    directory_ = ""
+    experimentCount_ = 0
+    robotCountSamples_ = dict()
+    meanCoverageEvents_ = dict()
+    meanGridTimeBetweenVisits_ = dict()
+    meanGridVisits_ = dict()
+    meanTileTimeBetweenVisits_ = dict()
+    meanTileVisits_ = dict()
+    
+    def process(self, directory):
+        self.clear()
+        self.directory_ = directory
+        
+        print "++ processing '" + self.directory_ + "'"
+        
+        subDirectories = getSubdirectoriesConcat(self.directory_)
+        experimentCount = len(subDirectories)
+        experimentDir = ExperimentDirectory()
+        
+        for subDir in subDirectories:
+            experimentDir.load(subDir)
+            experimentDir.plot()
+            
+            robotCount = str(experimentDir.experimentConfig_[0][0])
+            
+            if robotCount in self.robotCountSamples_:
+                robotCountSamples_[robotCount] += 1
+            else:
+                robotCountSamples_[robotCount] = 1
+            
+            # calculate sum of coverage events
+            if robotCount in self.meanCoverageEvents_:
+                assert(len(self.meanCoverageEvents_[robotCount]) == len(experimentDir.coverageEvents_))
+                assert(len(self.meanCoverageEvents_[robotCount][1]) == len(experimentDir.coverageEvents_[1]))
+                
+                for coverageSum, coverageToAdd in zip(self.meanCoverageEvents_[robotCount][1], experimentDir.coverageEvents_[1]):
+                    coverageSum += coverageToAdd
+            else:
+                self.meanCoverageEvents_[robotCount] = experimentDir.coverageEvents_
+           
+            # calculate sum of meanGridTimeBetweenVisits
+            if robotCount in self.meanGridTimeBetweenVisits_:
+                self.meanGridTimeBetweenVisits_[robotCount] += experimentDir.meanGridTimeBetweenVisits_
+            else:
+                self.meanGridTimeBetweenVisits_[robotCount] = experimentDir.meanGridTimeBetweenVisits_
+            
+            # calculate sum of meanGridVisits
+            if robotCount in self.meanGridVisits_:
+                self.meanGridVisits_[robotCount] += experimentDir.meanGridVisits_
+            else:
+                self.meanGridVisits_[robotCount] = experimentDir.meanGridVisits_
+                
+            # calculate sum of meanTileTimeBetweenVisits
+            if robotCount in self.meanTileTimeBetweenVisits_:
+                assert(len(self.meanTileTimeBetweenVisits_[robotCount]) == len(experimentDir.meanTileTimeBetweenVisits_))
+                assert(len(self.meanTileTimeBetweenVisits_[robotCount][2]) == len(experimentDir.meanTileTimeBetweenVisits_[2]))
+                
+                for timeSum, timeToAdd in zip(self.meanTileTimeBetweenVisits_[robotCount][2], experimentDir.meanTileTimeBetweenVisits[2]):
+                    timeSum += timeToAdd
+            else:
+                self.meanTileTimeBetweenVisits_[robotCount] = experimentDir.meanTileTimeBetweenVisits_
+                
+            # calculate sum of tileVisits
+            if robotCount in self.meanTileVisits_:
+                assert(len(self.meanTileVisits_[robotCount]) == len(experimentDir.tileVisits_))
+                assert(len(self.meanTileVisits_[robotCount][2]) == len(experimentDir.tileVisits_[2]))
+                
+                for visitSum, visitsToAdd in zip(self.meanTileVisits_[robotCount][2], experimentDir.tileVisits[2]):
+                    visitSum += visitsToAdd
+            else:
+                self.meanTileVisits_[robotCount] = experimentDir.tileVisits_
+            
+        # calc mean of coverageEvents
+        for key, value in self.meanCoverageEvents_:
+            sampleCount = robotCountSamples_[key]
+            for coverage in value[1]:
+                coverage /= samplecount
+                
+        # calc mean of gridTimeBetweenVisits
+        for key, value in self.meanGridTimeBetweenVisits_:
+            sampleCount = robotCountSamples_[key]
+            value /= sampleCount
+        
+        # calc mean of gridVisits
+        for key, value in self.meanGridVisits_:
+            sampleCount = robotCountSamples_[key]
+            value /= sampleCount
+            
+        # calc mean of tileTimeBetweenVisits
+        for key, value in self.meanTileTimeBetweenVisits_:
+            sampleCount = robotCountSamples_[key]
+            for time in value[2]:
+                time /= sampleCount
+                
+        # calc mean of tileVisits
+        for key, value in self.meanTileVisits_:
+            sampleCount = robotCountSamples_[key]
+            for visits in value[2]:
+                visits /= sampleCount
+                
+        self.save()
+        self.plot()
+                
+    def save(self):
+        print "-- saving data for algorithm"
+        
+        datafile = DataFile()
+        filename = ""
+        for key in robotCountSamples_:
+            filename = self.getFilename(MEAN_COVERAGE_EVENTS_FILE, key)
+            datafile.clear()
+            datafile.addComment()
+            datafile.addFloatColumn(self.meanCoverageEvents_[key][0])
+            datafile.addLongColumn(self.meanCoverageEvents_[key][1])
+            datafile.save(filename)
+            
+            filename = self.getFilename(MEAN_GRID_TIME_BEWTEEN_VISITS_FILE, key)
+            datafile.clear()
+            datafile.addComment()
+            datafile.addLongColumn([ self.meanGridTimeBetweenVisits_[key] ])
+            datafile.save(filename)
+            
+            filename = self.getFilename(MEAN_GRID_VISITS_FILE, key)
+            datafile.clear()
+            datafile.addComment()
+            datafile.addFloatColumn([ self.meanGridVisits_[key] ])
+            datafile.save(filename)
+            
+            filename = self.getFilename(MEAN_TILE_TIME_BEWTEEN_VISITS_FILE, key)
+            datafile.clear()
+            datafile.addComment()
+            datafile.addLongColumn(self.meanTileTimeBetweenVisits_[key][0])
+            datafile.addLongColumn(self.meanTileTimeBetweenVisits_[key][1])
+            datafile.addLongColumn(self.meanTileTimeBetweenVisits_[key][2])
+            datafile.save(filename)
+            
+            filename = self.getFilename(MEAN_TILE_VISITS_FILE, key)
+            datafile.clear()
+            datafile.addComment()
+            datafile.addLongColumn(self.meanTileVisits_[key][0])
+            datafile.addLongColumn(self.meanTileVisits_[key][1])
+            datafile.addLongColumn(self.meanTileVisits_[key][2])
+            datafile.save(filename)
+        
+    def plot(self):
+        infile = ""
+        outfile = ""
+        
+        print "-- plotting data of algorithm"
+        
+        for key in robotCountSamples_:
+            infile = self.getFilename(MEAN_TILE_VISITS_FILE, key)
+            outfile = self.getFilename(OUT_TILE_VISITS_HEATMAP_FILE, key)
+            plotVisitsHeatMap(infile, outfile)
+            
+            infile = self.getFilename(MEAN_COVERAGE_EVENTS_FILE, key)
+            outfile = self.getFilename(OUT_COVERAGE_EVENTS_FILE, key)
+            plotCoverageEvents(infile, outfile)
+            
+            
+    def getFilename(self, filename, robotCount):
+        return os.path.join(self.directory_, robotCount + "-" + filename)    
+    
+    def clear(self):
+        self.directory = ""
+        self.experimentCount_ = 0
+        self.robotCountSamples_ = dict()
+        self.meanCoverageEvents_ = dict()
+        self.meanGridTimeBetweenVisits_ = dict()
+        self.meanGridVisits_ = dict()
+        self.meanTileTimeBetweenVisits_ = dict()
+        self.meanTileVisits_ = dict()
+    
+    
 def getImmediateSubdirectories(p_dir):
     return [name for name in os.listdir(p_dir)
             if os.path.isdir(os.path.join(p_dir, name))]

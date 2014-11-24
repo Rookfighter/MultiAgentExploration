@@ -19,12 +19,14 @@ namespace mae
          newMarker_(NULL),
          lostAllSignals_(false)
     {
-        LOG(DEBUG) << "Changed to SearchMarker state";
+        LOG(DEBUG) << "Changed to SearchMarker state (" << properties_.robot->getName() << ")";
         movementController_.setTurnFactor(TURN_FACTOR);
         movementController_.setAngleEps(ANGLE_EPS);
         movementController_.wanderDistance(properties_.markerDeployDistance);
 
         properties_.lastMarker = properties_.currentMarker;
+        LOG(DEBUG) << "-- current marker is " << properties_.currentMarker->getID() << " (" << properties_.robot->getName() << ")";
+        LOG(DEBUG) << "-- wander distance " << properties_.markerDeployDistance << "m (" << properties_.robot->getName() << ")";
     }
 
     SearchMarker::~SearchMarker()
@@ -36,12 +38,14 @@ namespace mae
         updateNewMarker();
 
         if(lostAllSignals_) {
+            LOG(DEBUG) << "-- lost signal to all others markers (" << properties_.robot->getName() << ")";
             properties_.currentMarker = NULL;
             properties_.robot->getMotor().stop();
             return new DeployMarker(properties_);
         }
 
         if(newMarker_ != NULL) {
+            LOG(DEBUG) << "-- found new marker " << newMarker_->getID() << " (" << properties_.robot->getName() << ")";
             properties_.currentMarker = newMarker_;
             properties_.robot->getMotor().stop();
             return new AtMarker(properties_);

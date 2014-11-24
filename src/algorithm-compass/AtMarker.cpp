@@ -15,11 +15,12 @@ namespace mae
          obstacleDetector_(properties_.robot),
          checkingRecommendedDirection_(false)
     {
-        LOG(DEBUG) << "Changed to AtMarker state";
+        LOG(DEBUG) << "Changed to AtMarker state (" << properties_.robot->getName() << ")";
 
         assert(properties_.currentMarker != NULL);
         if(properties_.lastMarker != NULL) {
             CardinalDirection originDirection = getOppositeDirection(properties_.robot->getCompass().getFacingDirection());
+            LOG(DEBUG) << "-- came from marker " << properties_.lastMarker->getID() << " " << getDirectionStr(originDirection) << " (" << properties_.robot->getName() << ")";
             properties_.currentMarker->exploreDirection(originDirection);
         }
     }
@@ -35,8 +36,10 @@ namespace mae
 
         if(checkingRecommendedDirection_ && movementController_.reachedDirection()) {
             if(checkFrontObstacle()) {
+                LOG(DEBUG) << "-- direction is blocked (" << properties_.robot->getName() << ")";
                 checkingRecommendedDirection_ = false;
             } else {
+                LOG(DEBUG) << "-- proceeding to direction " << getDirectionStr(properties_.robot->getCompass().getFacingDirection()) << " (" << properties_.robot->getName() << ")";
                 return new SearchMarker(properties_);
             }
         }
@@ -56,9 +59,9 @@ namespace mae
         double angleToTurn = getDirectionDiff(currentDirection, nextDirection) * (M_PI / 2);
         movementController_.turnBy(angleToTurn);
 
-        LOG(DEBUG) << "-- recommended: " << getDirectionStr(nextDirection);
-        LOG(DEBUG) << "-- facing: " << getDirectionStr(currentDirection);
-        LOG(DEBUG) << "-- last: " << properties_.currentMarker->getDirectionLastVisit(nextDirection) << "ms";
+        LOG(DEBUG) << "-- recommended: " << getDirectionStr(nextDirection) << " (" << properties_.robot->getName() << ")";
+        LOG(DEBUG) << "-- facing: " << getDirectionStr(currentDirection) << " (" << properties_.robot->getName() << ")";
+        LOG(DEBUG) << "-- last timestamp: " << properties_.currentMarker->getDirectionLastVisit(nextDirection) << "ms" << " (" << properties_.robot->getName() << ")";
 
         properties_.currentMarker->exploreDirection(nextDirection);
         checkingRecommendedDirection_ = true;

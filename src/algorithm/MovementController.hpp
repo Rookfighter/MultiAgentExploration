@@ -22,7 +22,7 @@ namespace mae
 
         double turnFactor_;
         
-        bool hasCollision();
+        bool hasCollision() const;
         void resolveCollision();
         void updateGeometry();
         void turn();

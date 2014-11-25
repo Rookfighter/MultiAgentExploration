@@ -27,7 +27,7 @@ namespace mae
         ~CollisionResolver();
 
         void resolveCollision();
-        bool finished();
+        bool finished() const;
 
         void update();
 

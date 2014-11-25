@@ -30,7 +30,7 @@ namespace mae
         lastPose_ = robot_->getMotor().getPose();
     }
 
-    bool CollisionResolver::finished()
+    bool CollisionResolver::finished() const
     {
         return distanceToMove_ <= 0;
     }

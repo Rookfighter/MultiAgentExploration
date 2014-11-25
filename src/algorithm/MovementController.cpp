@@ -109,7 +109,7 @@ namespace mae
         lastPose_ = currentPose;
     }
 
-    bool MovementController::hasCollision()
+    bool MovementController::hasCollision() const
     {
         return robot_->collidedWithObstacle() || !collisionResolver_.finished();
     }

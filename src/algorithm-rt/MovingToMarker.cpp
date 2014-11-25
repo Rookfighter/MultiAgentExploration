@@ -128,7 +128,7 @@ namespace mae
     {
         return obstacleDetector_.check(targetMeasurement_.relativeDirection - (OBSTACLE_DETECT_FOV / 2),
                                        targetMeasurement_.relativeDirection + (OBSTACLE_DETECT_FOV / 2),
-                                       std::max(properties_.obstacleAvoidDistance, properties_.obstacleStopDistance));
+                                       std::min(properties_.obstacleAvoidDistance, properties_.obstacleStopDistance));
     }
 
     void MovingToMarker::turnToTarget()

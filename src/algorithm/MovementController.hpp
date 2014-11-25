@@ -43,6 +43,7 @@ namespace mae
         bool reachedDistance() const;
         bool reachedDirection() const;
         bool finished() const;
+        bool isAvoidingObstacle() const;
 
         void update();
         void refreshPose();

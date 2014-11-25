@@ -15,13 +15,13 @@ namespace mae
 
 	bool ObstacleDetector::check(const double p_beginAngle,
 	                             const double p_endAngle,
-	                             const double p_distance)
+	                             const double p_distance) const
 	{
 		return getMinDistance(p_beginAngle,p_endAngle) < p_distance;
 	}
 
 	double ObstacleDetector::getMinDistance(const double p_beginAngle,
-	                                        const double p_endAngle)
+	                                        const double p_endAngle) const
 	{
 		double minDistance = 1e6;
 

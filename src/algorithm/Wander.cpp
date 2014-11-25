@@ -28,6 +28,11 @@ namespace mae
 	{
 
 	}
+    
+    bool Wander::isAvoidingObstacle() const
+    {
+        return hasStopObstacle() || hasNearbyObstacle();
+    }
 
 	void Wander::update()
 	{
@@ -55,13 +60,18 @@ namespace mae
 		minLeftDistance_ = obstacleDetector_.getMinDistance(LEFT_ANGLE_BEGIN, LEFT_ANGLE_END);
 		minRightDistance_ = obstacleDetector_.getMinDistance(RIGHT_ANGLE_BEGIN, RIGHT_ANGLE_END);
 
-		bool tmpStopRobot = minFrontDistance_ <= frontStopDistance_;
+		bool tmpStopRobot = hasStopObstacle();
 		if(!stopRobot_ && tmpStopRobot)
 			beginAvoiding();
 		if(stopRobot_ && !tmpStopRobot)
 			endAvoiding();
 		stopRobot_ = tmpStopRobot;
 	}
+    
+    bool Wander::hasStopObstacle() const
+    {
+         return minFrontDistance_ <= frontStopDistance_;
+    }
 
 	void Wander::stopAndAvoidObstacle()
 	{
@@ -80,7 +90,7 @@ namespace mae
 		avoidStep_++;
 	}
     
-    bool Wander::hasNearbyObstacle()
+    bool Wander::hasNearbyObstacle() const
     {
         return minLeftDistance_ <= avoidDistance_ || minRightDistance_ <= avoidDistance_;
     }
@@ -91,14 +101,16 @@ namespace mae
         double leftRightDiff = 0;
         
         if(minLeftDistance_ <= avoidDistance_) {
-            leftRightDiff += (1.0 - (minLeftDistance_ / avoidDistance_));
+            leftRightDiff -= (1.0 - (minLeftDistance_ / avoidDistance_));
             measureCount++;
         }
         if(minRightDistance_ <= avoidDistance_) {
-            leftRightDiff -= (1.0 - (minRightDistance_ / avoidDistance_));
+            leftRightDiff += (1.0 - (minRightDistance_ / avoidDistance_));
             measureCount++;
         }
-        leftRightDiff /= measureCount;
+        
+        if(measureCount != 0)
+            leftRightDiff /= measureCount;
         
         if(leftRightDiff > 0)
             velocity_.angular = abs(leftRightDiff) * robot_->getMotor().getMaxVelocity().angular;

@@ -31,9 +31,10 @@ namespace mae
 		std::function<void(void)> avoidEndCallback_;
 		
 		void checkObstacle();
+        bool hasStopObstacle() const;
 		void stopAndAvoidObstacle();
         void avoidNearbyObstacle();
-        bool hasNearbyObstacle();
+        bool hasNearbyObstacle() const;
 		void cruise();
 		
 		void beginAvoiding();
@@ -43,7 +44,9 @@ namespace mae
 		       const double p_frontStopDistance,
                const double p_avoidDistance);
 		~Wander();
-
+        
+        bool isAvoidingObstacle() const;
+        
 		void update();
 		
 		void onAvoidBegin(std::function<void(void)> p_callback);

@@ -16,10 +16,10 @@ namespace mae
 
 		bool check(const double p_beginAngle,
 		           const double p_endAngle,
-		           const double p_distance);
+		           const double p_distance) const;
 
 		double getMinDistance(const double p_beginAngle,
-		                      const double p_endAngle);
+		                      const double p_endAngle) const;
 	};
 
 }

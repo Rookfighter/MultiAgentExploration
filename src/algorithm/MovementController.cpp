@@ -13,7 +13,9 @@ namespace mae
         :wander_(p_robot,
                  p_obstacleStopDistance,
                  p_obstacleAvoidDistance),
-        collisionResolver_(p_robot, p_collisionResolveDistance),
+        collisionResolver_(p_robot,
+                           p_collisionResolveDistance,
+                           p_obstacleStopDistance),
         robot_(p_robot),
         lastPose_(robot_->getMotor().getPose()),
         angleToTurn_(0),
@@ -62,13 +64,18 @@ namespace mae
         return reachedDirection() && reachedDistance();
     }
 
+    bool MovementController::isAvoidingObstacle() const
+    {
+        return wander_.isAvoidingObstacle();
+    }
+
     void MovementController::update()
     {
+        updateGeometry();
+        
         if(hasCollision())
             resolveCollision();
         else {
-            updateGeometry();
-
             if(!reachedDirection())
                 turn();
             else if(!reachedDistance())
@@ -81,13 +88,22 @@ namespace mae
     void MovementController::updateGeometry()
     {
         Pose currentPose = robot_->getMotor().getPose();
-
-        if(!reachedDirection())
-            angleToTurn_ -= normalizeRadian(currentPose.yaw - lastPose_.yaw);
-
-        if(!reachedDistance()) {
+        
+        if(!collisionResolver_.finished()) {
+            // if collision resolver is working, we are driving backwards
+            // so distanceToMove has to be increased
             double distance = (currentPose.position - lastPose_.position).length();
-            distanceToMove_ -= distance;
+            distanceToMove_ += distance;
+        } else {
+            // we are moving normally
+            
+            if(!reachedDirection())
+                angleToTurn_ -= normalizeRadian(currentPose.yaw - lastPose_.yaw);
+
+            if(!reachedDistance()) {
+                double distance = (currentPose.position - lastPose_.position).length();
+                distanceToMove_ -= distance;
+            }
         }
 
         lastPose_ = currentPose;

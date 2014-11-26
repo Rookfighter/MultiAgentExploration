@@ -3,16 +3,8 @@
 #include <sstream>
 #include <fstream>
 #include "statistics/Statistic.hpp"
-
-#include "../io/File.hpp"
-
-#define TILE_VISITS_FILE "tile-visits.dat"
-#define MEAN_GRID_VISITS_FILE "mean-grid-visits.dat"
-#define MEAN_TILE_TIME_BEWTEEN_VISITS_FILE "mean-tile-time-between-visits.dat"
-#define MEAN_GRID_TIME_BEWTEEN_VISITS_FILE "mean-grid-time-between-visits.dat"
-#define COVERAGE_EVENTS_FILE "coverage-events.dat"
-#define FINAL_COVERAGE_FILE "final-coverage.dat"
-#define EXPERIMENT_CONFIG_FILE "experiment-config.dat"
+#include "io/File.hpp"
+#include "io/FileNames.hpp"
 
 namespace mae
 {
@@ -56,6 +48,8 @@ namespace mae
         saveCoverage();
         LOG(INFO) << "-- saving experiment config";
         saveExperimentConfig();
+        LOG(INFO) << "-- saving log";
+        saveLogFile();
     }
 
     void Statistic::updateSaveDirectory(const std::string &p_directory)
@@ -84,7 +78,7 @@ namespace mae
     void Statistic::saveVisits()
     {
         std::stringstream ss;
-        ss << saveDirectory_ << "/" << TILE_VISITS_FILE;
+        ss << saveDirectory_ << "/" << FileNames::tileVisitsFile;
 
         // save all visitCounts of each tile
         std::ofstream file;
@@ -98,7 +92,7 @@ namespace mae
 
         // save mean meanVisitCount of whole grid
         ss.str(std::string());
-        ss << saveDirectory_ << "/" << MEAN_GRID_VISITS_FILE;
+        ss << saveDirectory_ << "/" << FileNames::meanGridVisitsFile;
         file.open(ss.str());
         file << "# shows mean visitCount of whole map" << std::endl;
         file << "# [meanVisitCount]";
@@ -112,7 +106,7 @@ namespace mae
         std::ofstream file;
 
         // save all meanTimeBetweenVisits of each tile
-        ss << saveDirectory_ << "/" << MEAN_TILE_TIME_BEWTEEN_VISITS_FILE;
+        ss << saveDirectory_ << "/" << FileNames::meanTileTimeBetweenVisitsFile;
         file.open(ss.str());
         file << "# shows meanTimeBetweenVisits of each tile" << std::endl;
         file << "# [x y meanTimeBetweenVisits(usec)]";
@@ -123,7 +117,7 @@ namespace mae
 
         // save mean meanTimeBetweenVisits of whole grid
         ss.str(std::string());
-        ss << saveDirectory_ << "/" << MEAN_GRID_TIME_BEWTEEN_VISITS_FILE;
+        ss << saveDirectory_ << "/" << FileNames::meanGridTimeBetweenVisitsFile;
         file.open(ss.str());
         file << "# shows mean TimeBetweenVisits of whole map" << std::endl;
         file << "# [meanTimeBetweenVisits(usec)]";
@@ -137,7 +131,7 @@ namespace mae
         std::ofstream file;
 
         // save all coverageEvents that occurred
-        ss << saveDirectory_ << "/" << COVERAGE_EVENTS_FILE;
+        ss << saveDirectory_ << "/" << FileNames::coverageEventsFile;
         file.open(ss.str());
         file << "# shows coverageEvents" << std::endl;
         file << "# [coverage timeStamp(usec)]";
@@ -149,7 +143,7 @@ namespace mae
 
         // save final coverage of whole grid
         ss.str(std::string());
-        ss << saveDirectory_ << "/" << FINAL_COVERAGE_FILE;
+        ss << saveDirectory_ << "/" << FileNames::finalCoverageFile;
         file.open(ss.str());
         file << "# shows final coverage" << std::endl;
         file << "# [coverage timeStamp(usec)]" << std::endl;
@@ -162,12 +156,21 @@ namespace mae
         std::stringstream ss;
         std::ofstream file;
         
-        ss << saveDirectory_ << "/" << EXPERIMENT_CONFIG_FILE;
+        ss << saveDirectory_ << "/" << FileNames::experimentConfigFile;
         file.open(ss.str());
         file << "# shows configuration of the experiment" << std::endl;
         file << "# robotCount" << std::endl;
         file << simulation_->getRobots().size();
         file.close();
+    }
+
+    void Statistic::saveLogFile()
+    {
+        std::stringstream ss;
+
+        ss << saveDirectory_ << "/" << FileNames::logFile;
+        std::string outfile = ss.str();
+        File::copyFile(FileNames::logFilePath, outfile);
     }
 
     void Statistic::printLog()

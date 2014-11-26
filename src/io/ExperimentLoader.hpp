@@ -1,8 +1,8 @@
 #ifndef MAE_EXPERIMENT_LOADER_HPP
 #define MAE_EXPERIMENT_LOADER_HPP
 
-#include "../io/SimulationLoader.hpp"
-#include "../io/StatisticLoader.hpp"
+#include "io/SimulationLoader.hpp"
+#include "io/StatisticLoader.hpp"
 #include "algorithm/Experiment.hpp"
 
 namespace mae

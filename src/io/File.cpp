@@ -1,4 +1,5 @@
-#include "../io/File.hpp"
+#include "io/File.hpp"
+#include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -46,6 +47,22 @@ namespace mae
         {
             struct stat buffer;
             return (stat(p_directory.c_str(), &buffer) == 0);
+        }
+
+        void copyFile(const std::string &p_source, const std::string &p_destination)
+        {
+            std::ifstream src(p_source, std::ios::binary);
+            std::ofstream dst(p_destination, std::ios::binary);
+
+            dst << src.rdbuf();
+
+            dst.close();
+            src.close();
+        }
+
+        void remove(const std::string &p_file)
+        {
+            std::remove(p_file.c_str());
         }
     }
 

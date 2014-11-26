@@ -1,7 +1,7 @@
-#include "../io/SimulationLoader.hpp"
+#include "io/SimulationLoader.hpp"
 
 #include <easylogging++.h>
-#include "../io/YamlNode.hpp"
+#include "io/YamlNode.hpp"
 
 namespace mae
 {

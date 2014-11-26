@@ -1,6 +1,9 @@
 #include <easylogging++.h>
 #include <signal.h>
+#include <iostream>
 #include "app/Application.hpp"
+#include "io/File.hpp"
+#include "io/FileNames.hpp"
 
 _INITIALIZE_EASYLOGGINGPP
 
@@ -13,6 +16,9 @@ static void sig_handler(int signo)
 
 int main(int argc, char **argv)
 {
+    if(mae::File::exists(mae::FileNames::logFilePath))
+        mae::File::remove(mae::FileNames::logFilePath);
+
     el::Configurations conf("config/easylog.conf");
     el::Loggers::reconfigureLogger("default", conf);
 

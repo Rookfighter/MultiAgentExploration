@@ -1,8 +1,8 @@
-#include "../io/ExperimentLoader.hpp"
+#include "io/ExperimentLoader.hpp"
 
 #include <yaml-cpp/yaml.h>
 #include <easylogging++.h>
-#include "../io/YamlNode.hpp"
+#include "io/YamlNode.hpp"
 #include "algorithm/RandomWalk.hpp"
 #include "algorithm-rt/NodeCounting.hpp"
 #include "algorithm-rt/LRTAStar.hpp"

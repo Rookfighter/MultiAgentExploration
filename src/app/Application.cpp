@@ -2,9 +2,9 @@
 #include <signal.h>
 #include "app/Application.hpp"
 
-#include "../io/ExperimentLoader.hpp"
-#include "../io/ImportYaml.hpp"
-#include "../io/StatisticLoader.hpp"
+#include "io/ExperimentLoader.hpp"
+#include "io/ImportYaml.hpp"
+#include "io/StatisticLoader.hpp"
 
 #define STATISTIC_SAVE_DIR "../plot"
 

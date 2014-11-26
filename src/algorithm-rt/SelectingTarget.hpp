@@ -19,8 +19,7 @@ namespace mae
 		bool findNextMarker();
 		std::vector<MarkerMeasurement> getPossibleTargets();
 		double getMinNonObstructedMarkerValue();
-        bool isPossibleTarget(MarkerMeasurement p_marker,
-                              const double p_minValue);
+        bool isPossibleTarget(const MarkerMeasurement &p_marker);
 		bool markerIsObstructed(const MarkerMeasurement &p_markerMeasurement);
 	public:
 		SelectingTarget(const AntStateProperties &p_properties);

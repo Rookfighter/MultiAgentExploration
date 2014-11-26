@@ -181,22 +181,14 @@ namespace mae
         for(unsigned int i = 0; i < markerInRange_.size(); ++i) {
             double markerValue = properties_.calcValue(properties_.currentMarker, markerInRange_[i].marker);
             LOG(DEBUG) << "-- algo-value of marker " << markerInRange_[i].marker->getID() << ": " << markerValue << " (" << properties_.robot->getName() << ")";
-            if(isPossibleTarget(markerInRange_[i], minValue)) {
+            if(isPossibleTarget(markerInRange_[i]) &&
+                    sameDouble(markerValue, minValue, MARKER_VALUE_EPS)) {
                 LOG(DEBUG) << "-- marker " << markerInRange_[i].marker->getID() << " is possible target (" << properties_.robot->getName() << ")";
                 result.push_back(markerInRange_[i]);
             }
         }
 
         return result;
-    }
-
-    bool SelectingTarget::isPossibleTarget(MarkerMeasurement p_marker,
-                                           const double p_minValue)
-    {
-        double markerValue = properties_.calcValue(properties_.currentMarker, p_marker.marker);
-        return sameDouble(markerValue, p_minValue, MARKER_VALUE_EPS) &&
-               !markerIsObstructed(p_marker) &&
-               !p_marker.marker->isLocked();
     }
 
     double SelectingTarget::getMinNonObstructedMarkerValue()
@@ -230,14 +222,19 @@ namespace mae
 
             // check if the way to the marker is blocked by an obstacle
             // and if marker is already locked
-            foundMarker = !markerIsObstructed(markerInRange_[nextIdx]) &&
-                          !markerInRange_[nextIdx].marker->isLocked();
+            foundMarker = isPossibleTarget(markerInRange_[nextIdx]);
         }
 
         if(foundMarker) {
             return properties_.calcValue(properties_.currentMarker, markerInRange_[nextIdx].marker);
         } else
             return -1.0;
+    }
+
+    bool SelectingTarget::isPossibleTarget(const MarkerMeasurement &p_marker)
+    {
+        return !markerIsObstructed(p_marker) &&
+               !p_marker.marker->isLocked();
     }
 
     bool SelectingTarget::markerIsObstructed(const MarkerMeasurement &p_markerMeasurement)

@@ -1,7 +1,7 @@
 #include <easylogging++.h>
 #include "algorithm-rt/InitialAntState.hpp"
 #include "algorithm-rt/DroppingMarker.hpp"
-#include "algorithm-rt/MovingToMarker.hpp"
+#include "algorithm-rt/SelectingTarget.hpp"
 
 namespace mae
 {
@@ -23,8 +23,7 @@ namespace mae
 		if(markerInRange.empty()) {
 			return new DroppingMarker(properties_);
 		} else {
-			properties_.nextMarker = properties_.robot->getMarkerSensor().getClosestMarker().marker;
-			return new MovingToMarker(properties_);
+			return new SelectingTarget(properties_);
 		}
 	}
 

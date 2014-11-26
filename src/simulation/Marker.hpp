@@ -23,6 +23,7 @@ namespace mae
 		int id_;
 		bool highlighted_;
 		std::string name_;
+        bool isLocked_;
 		
 		double value_;
 		TwoBitCompass compass_;
@@ -40,6 +41,10 @@ namespace mae
 		void setHighlighted(const bool p_highlighted);
 		void setDirectionState(const CardinalDirection p_direction, const DirectionState p_state);
 		void exploreDirection(const CardinalDirection p_direction);
+        bool lock();
+        void unlock();
+        void setAsTarget();
+        void releaseAsTarget();
 		
 		int getID() const;
 		Pose getPose() const;
@@ -49,6 +54,7 @@ namespace mae
 		CardinalDirection getRecommendedDirection() const;
         DirectionState getDirectionState(const CardinalDirection p_direction) const;
         long getDirectionLastVisit(const CardinalDirection p_direction) const;
+        bool isLocked() const;
 		
 		void changeValueBy(const double p_toChange);
 		

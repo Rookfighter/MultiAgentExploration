@@ -60,12 +60,7 @@ namespace mae
 		minLeftDistance_ = obstacleDetector_.getMinDistance(LEFT_ANGLE_BEGIN, LEFT_ANGLE_END);
 		minRightDistance_ = obstacleDetector_.getMinDistance(RIGHT_ANGLE_BEGIN, RIGHT_ANGLE_END);
 
-		bool tmpStopRobot = hasStopObstacle();
-		if(!stopRobot_ && tmpStopRobot)
-			beginAvoiding();
-		if(stopRobot_ && !tmpStopRobot)
-			endAvoiding();
-		stopRobot_ = tmpStopRobot;
+		stopRobot_ = hasStopObstacle();
 	}
     
     bool Wander::hasStopObstacle() const
@@ -125,29 +120,4 @@ namespace mae
 		velocity_ = robot_->getMotor().getMaxVelocity();
 		velocity_.angular = 0;
 	}
-
-	void Wander::beginAvoiding()
-	{
-		if(avoidBeginCallback_)
-			avoidBeginCallback_();
-	}
-
-	void Wander::endAvoiding()
-	{
-		avoidStep_ = 0;
-		if(avoidEndCallback_)
-			avoidEndCallback_();
-	}
-
-	void Wander::onAvoidBegin(std::function<void(void)> p_callback)
-	{
-		avoidBeginCallback_ = p_callback;
-	}
-
-	void Wander::onAvoidEnd(std::function<void(void)> p_callback)
-	{
-		avoidEndCallback_ = p_callback;
-	}
-
-
 }

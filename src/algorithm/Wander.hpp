@@ -27,9 +27,6 @@ namespace mae
 		int avoidStep_;
 		static const int STEP_REFRESH_INTERVAL = 10;
 		
-		std::function<void(void)> avoidBeginCallback_;
-		std::function<void(void)> avoidEndCallback_;
-		
 		void checkObstacle();
         bool hasStopObstacle() const;
 		void stopAndAvoidObstacle();
@@ -37,8 +34,6 @@ namespace mae
         bool hasNearbyObstacle() const;
 		void cruise();
 		
-		void beginAvoiding();
-		void endAvoiding();
 	public:
 		Wander(ExplorationBot *p_robot,
 		       const double p_frontStopDistance,
@@ -48,9 +43,6 @@ namespace mae
         bool isAvoidingObstacle() const;
         
 		void update();
-		
-		void onAvoidBegin(std::function<void(void)> p_callback);
-		void onAvoidEnd(std::function<void(void)> p_callback);
 	};
 
 }

@@ -100,6 +100,32 @@ namespace mae
     {
         setDirectionState(p_direction, EXPLORED);
     }
+    
+    bool Marker::lock()
+    {
+        if(isLocked())
+            return false;
+            
+        isLocked_ = true;
+        return true;
+    }
+    
+    void Marker::unlock()
+    {
+        isLocked_ = false;
+    }
+    
+    void Marker::setAsTarget()
+    {
+        lock();
+        setHighlighted(true);
+    }
+    
+    void Marker::releaseAsTarget()
+    {
+        unlock();
+        setHighlighted(false);
+    }
 
     bool Marker::isHighlighted() const
     {
@@ -164,6 +190,11 @@ namespace mae
         }
 
         return 0L;
+    }
+    
+    bool Marker::isLocked() const
+    {
+        return isLocked_;
     }
 
     void Marker::changeValueBy(const double p_toChange)

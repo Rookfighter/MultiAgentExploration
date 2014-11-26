@@ -52,7 +52,7 @@ namespace mae
     AntState* SelectingTarget::update()
     {
         if(properties_.nextMarker != NULL)
-            properties_.nextMarker->setHighlighted(false);
+            properties_.nextMarker->releaseAsTarget();
         properties_.nextMarker = NULL;
         properties_.angleToTurn = 0;
 
@@ -62,7 +62,7 @@ namespace mae
             LOG(DEBUG) << "-- no blank found (" << properties_.robot->getName() << ")";
             // check if we can find any marker
             if(findNextMarker()) {
-                properties_.nextMarker->setHighlighted(true);
+                properties_.nextMarker->setAsTarget();
                 LOG(DEBUG) << "-- found next marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
             } else
                 LOG(DEBUG) << "-- no fitting next marker found (" << properties_.robot->getName() << ")";
@@ -88,7 +88,7 @@ namespace mae
             }
             markerInRange_.erase(it);
         }
-        
+
         LOG(DEBUG) << "-- found " << markerInRange_.size() << " marker in range (" << properties_.robot->getName() << ")";
         for(MarkerMeasurement measurement : markerInRange_)
             LOG(DEBUG) << "--> id: " << measurement.marker->getID() << " value: " << measurement.marker->getValue() << " (" << properties_.robot->getName() << ")";
@@ -134,10 +134,10 @@ namespace mae
                                               markerAngles[RIGHT_IDX],
                                               markerAngles[RIGHT_IDX + 1]);
         }
-        
+
         LOG(DEBUG) << "-- marker & obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
                    ", L=" << boolToStr(blockedLeft) << ", R=" << boolToStr(blockedRight);
-        
+
         if(!blockedFront)
             properties_.angleToTurn = 0; // move forward
         else if(!blockedLeft)
@@ -158,8 +158,8 @@ namespace mae
         if(markerInRange_.empty())
             return false;
 
-        std::vector<MarkerMeasurement> possibleTargets = getNonObstructedMarker();
-        
+        std::vector<MarkerMeasurement> possibleTargets = getPossibleTargets();
+
         if(possibleTargets.empty())
             return false;
         Random rand;
@@ -169,7 +169,7 @@ namespace mae
         return true;
     }
 
-    std::vector<MarkerMeasurement> SelectingTarget::getNonObstructedMarker()
+    std::vector<MarkerMeasurement> SelectingTarget::getPossibleTargets()
     {
         std::vector<MarkerMeasurement> result;
         double minValue = getMinNonObstructedMarkerValue();
@@ -180,15 +180,23 @@ namespace mae
 
         for(unsigned int i = 0; i < markerInRange_.size(); ++i) {
             double markerValue = properties_.calcValue(properties_.currentMarker, markerInRange_[i].marker);
-            LOG(DEBUG) << "-- algo value of marker " << markerInRange_[i].marker->getID() << ": " << markerValue << " (" << properties_.robot->getName() << ")";
-            if(sameDouble(markerValue, minValue, MARKER_VALUE_EPS) &&
-                    !markerIsObstructed(markerInRange_[i])) {
+            LOG(DEBUG) << "-- algo-value of marker " << markerInRange_[i].marker->getID() << ": " << markerValue << " (" << properties_.robot->getName() << ")";
+            if(isPossibleTarget(markerInRange_[i], minValue)) {
                 LOG(DEBUG) << "-- marker " << markerInRange_[i].marker->getID() << " is possible target (" << properties_.robot->getName() << ")";
                 result.push_back(markerInRange_[i]);
             }
         }
 
         return result;
+    }
+
+    bool SelectingTarget::isPossibleTarget(MarkerMeasurement p_marker,
+                                           const double p_minValue)
+    {
+        double markerValue = properties_.calcValue(properties_.currentMarker, p_marker.marker);
+        return sameDouble(markerValue, p_minValue, MARKER_VALUE_EPS) &&
+               !markerIsObstructed(p_marker) &&
+               !p_marker.marker->isLocked();
     }
 
     double SelectingTarget::getMinNonObstructedMarkerValue()
@@ -221,7 +229,9 @@ namespace mae
             checkedCount++;
 
             // check if the way to the marker is blocked by an obstacle
-            foundMarker = !markerIsObstructed(markerInRange_[nextIdx]);
+            // and if marker is already locked
+            foundMarker = !markerIsObstructed(markerInRange_[nextIdx]) &&
+                          !markerInRange_[nextIdx].marker->isLocked();
         }
 
         if(foundMarker) {

@@ -89,21 +89,12 @@ namespace mae
     {
         Pose currentPose = robot_->getMotor().getPose();
         
-        if(!collisionResolver_.finished()) {
-            // if collision resolver is working, we are driving backwards
-            // so distanceToMove has to be increased
-            double distance = (currentPose.position - lastPose_.position).length();
-            distanceToMove_ += distance;
-        } else {
-            // we are moving normally
-            
-            if(!reachedDirection())
-                angleToTurn_ -= normalizeRadian(currentPose.yaw - lastPose_.yaw);
+        if(!reachedDirection())
+            angleToTurn_ -= normalizeRadian(currentPose.yaw - lastPose_.yaw);
 
-            if(!reachedDistance()) {
-                double distance = (currentPose.position - lastPose_.position).length();
-                distanceToMove_ -= distance;
-            }
+        if(!reachedDistance()) {
+            double distance = (currentPose.position - lastPose_.position).length();
+            distanceToMove_ -= distance;
         }
 
         lastPose_ = currentPose;

@@ -11,10 +11,13 @@ plot/randomwalk
 plot/compass
 
 # IDE files
+*.metadata/
+*.codelite/
+*.settings/
 *.project
 *.workspace
-*.codelite/
-compile_commands.json
-*.metadata
 *.pydevproject
+*.cproject
+compile_commands.json
+
 

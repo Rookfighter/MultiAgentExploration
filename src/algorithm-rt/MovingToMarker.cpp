@@ -35,6 +35,7 @@ namespace mae
                              p_properties.obstacleAvoidDistance,
                              p_properties.collisionResolveDistance),
          obstacleDetector_(p_properties.robot),
+         foundMarker_(false),
          obstacleAvoidStep_(0)
     {
         movementController_.setAngleEps(ANGLE_EPS);

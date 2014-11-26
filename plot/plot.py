@@ -221,6 +221,8 @@ class AlgorithmDirectory:
         experimentDir = ExperimentDirectory()
         
         for subDir in subDirectories:
+            if os.path.basename(subDir) == SUMMARY_DIRECTORY:
+                continue 
             experimentDir.load(subDir)
             experimentDir.plot()
             

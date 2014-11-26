@@ -1,13 +1,14 @@
+#include "../io/ExperimentLoader.hpp"
+
 #include <yaml-cpp/yaml.h>
 #include <easylogging++.h>
-#include "loading/ExperimentLoader.hpp"
+#include "../io/YamlNode.hpp"
 #include "algorithm/RandomWalk.hpp"
 #include "algorithm-rt/NodeCounting.hpp"
 #include "algorithm-rt/LRTAStar.hpp"
 #include "algorithm-rt/Wagner.hpp"
 #include "algorithm-compass/CompassAlgorithm.hpp"
 #include "utils/Convert.hpp"
-#include "loading/YamlNode.hpp"
 
 #define NODECOUNTING_TYPE "nodecounting"
 #define LRTASTAR_TYPE "lrtastar"
@@ -40,7 +41,7 @@ namespace mae
     
     void ExperimentLoader::load(YAML::Node &p_root)
     {
-        YAML::Node algorithmNode, experimentNode;
+        YAML::Node algorithmNode, experimentNode, tmpNode;
 		
         simulationLoader_.load(p_root);
         statisticLoader_.load(p_root);
@@ -63,7 +64,17 @@ namespace mae
 		    throw std::logic_error("experiment node not found");
 		LOG(INFO) << "-- experiment config found";
 
-		experimentConfig_.terminationMinutes = experimentNode[YamlNode::terminationMinutes].as<int>();
+		tmpNode = experimentNode[YamlNode::terminationMinutes];
+		if(tmpNode.IsDefined()) {
+		    experimentConfig_.terminationMinutes = tmpNode.as<int>();
+		    LOG(INFO) << "-- terminationMinutes: " << experimentConfig_.terminationMinutes;
+		}
+
+		tmpNode = experimentNode[YamlNode::terminationCoverage];
+		if(tmpNode.IsDefined()) {
+		    experimentConfig_.terminationCoverage= tmpNode.as<double>();
+		    LOG(INFO) << "-- terminationCoverage: " << experimentConfig_.terminationCoverage;
+		}
     }
 
     Experiment* ExperimentLoader::create()

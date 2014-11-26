@@ -3,7 +3,8 @@
 #include <sstream>
 #include <fstream>
 #include "statistics/Statistic.hpp"
-#include "utils/File.hpp"
+
+#include "../io/File.hpp"
 
 #define TILE_VISITS_FILE "tile-visits.dat"
 #define MEAN_GRID_VISITS_FILE "mean-grid-visits.dat"

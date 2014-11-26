@@ -1,7 +1,8 @@
+#include "../io/StatisticLoader.hpp"
+
 #include <easylogging++.h>
-#include "loading/StatisticLoader.hpp"
-#include "loading/ExperimentLoader.hpp"
-#include "loading/YamlNode.hpp"
+#include "../io/ExperimentLoader.hpp"
+#include "../io/YamlNode.hpp"
 
 namespace mae
 {

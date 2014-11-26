@@ -1,6 +1,7 @@
+#include "../io/ImportYaml.hpp"
+
 #include <easylogging++.h>
-#include "loading/ImportYaml.hpp"
-#include "loading/YamlNode.hpp"
+#include "../io/YamlNode.hpp"
 #include "utils/Convert.hpp"
 
 namespace mae

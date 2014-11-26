@@ -1,9 +1,10 @@
 #include <easylogging++.h>
 #include <signal.h>
 #include "app/Application.hpp"
-#include "loading/ExperimentLoader.hpp"
-#include "loading/StatisticLoader.hpp"
-#include "loading/ImportYaml.hpp"
+
+#include "../io/ExperimentLoader.hpp"
+#include "../io/ImportYaml.hpp"
+#include "../io/StatisticLoader.hpp"
 
 #define STATISTIC_SAVE_DIR "../plot"
 

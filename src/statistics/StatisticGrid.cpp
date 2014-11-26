@@ -6,7 +6,7 @@ namespace mae
 {
 
     StatisticGrid::StatisticGrid(const StatisticConfig &p_config)
-        :simulation_(p_config.experiment->getSimulation()),
+        :simulation_(p_config.simulation),
          tileSize_(0,0),
          size_(0,0),
          floorplanName_(p_config.floorplanName),

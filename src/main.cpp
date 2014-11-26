@@ -1,6 +1,5 @@
 #include <easylogging++.h>
 #include <signal.h>
-#include "test/TestApplication.hpp"
 #include "app/Application.hpp"
 
 _INITIALIZE_EASYLOGGINGPP
@@ -21,8 +20,8 @@ int main(int argc, char **argv)
     signal(SIGTERM, sig_handler);
     signal(SIGINT, sig_handler);
     signal(SIGKILL, sig_handler);
-    app->run();
+    int exitCode = app->run();
     delete app;
     LOG(INFO) << "Exiting main";
-    return 0;
+    return exitCode;
 }

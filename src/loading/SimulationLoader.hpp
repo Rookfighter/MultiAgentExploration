@@ -10,12 +10,18 @@ namespace mae
 	class SimulationLoader
 	{
 	private:
-		SimulationLoader();
-		~SimulationLoader();
+	    StockConfig stockConfig_;
+        std::vector<RobotConfig> robotConfigs_;
+        bool worldGui_;
+        std::string worldFile_;
 	public:
-		
-		static Simulation* load(const std::string &p_file);
-		static Simulation* load(YAML::Node &p_root);
+	    SimulationLoader();
+        ~SimulationLoader();
+
+		void load(const std::string &p_file);
+		void load(YAML::Node &p_root);
+
+		Simulation* create();
 	};
 
 }

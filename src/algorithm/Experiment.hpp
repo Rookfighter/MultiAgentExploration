@@ -12,6 +12,7 @@ namespace mae
 		friend class ExperimentLoader;
 	private:
 		Simulation *simulation_;
+		Statistic *statistic_;
 		std::vector<Algorithm*> algorithms_;
 		ExperimentTermination experimentTermination_;
 		StopWatch algorithmWatch_;
@@ -27,6 +28,7 @@ namespace mae
 		std::vector<Algorithm*> getAlgorithms();
 		
 		Simulation* getSimulation();
+		Statistic* getStatistic();
 	};
 
 }

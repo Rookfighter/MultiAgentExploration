@@ -2,7 +2,6 @@
 #define MAE_EXPERIMENT_TERMINATION_HPP
 
 #include "algorithm/ExperimentConfig.hpp"
-#include "simulation/Simulation.hpp"
 
 namespace mae
 {
@@ -11,8 +10,9 @@ namespace mae
     {
     private:
         Simulation *simulation_;
-
+        Statistic *statistic_;
         int terminationMinutes_;
+        double terminationCoverage_;
     public:
         ExperimentTermination(const ExperimentConfig &p_config);
         ~ExperimentTermination();

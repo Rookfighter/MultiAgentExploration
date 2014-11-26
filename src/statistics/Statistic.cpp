@@ -17,7 +17,7 @@ namespace mae
 {
 
     Statistic::Statistic(const StatisticConfig &p_config)
-        :experiment_(p_config.experiment),
+        :simulation_(p_config.simulation),
          statisticGrid_(p_config),
          algorithmType_(p_config.algorithmType)
     {
@@ -28,9 +28,9 @@ namespace mae
     {
     }
 
-    Experiment* Statistic::getExperiment()
+    Simulation* Statistic::getSimulation()
     {
-        return experiment_;
+        return simulation_;
     }
 
     const StatisticGrid& Statistic::getStatisticGrid() const
@@ -152,7 +152,7 @@ namespace mae
         file.open(ss.str());
         file << "# shows final coverage" << std::endl;
         file << "# [coverage timeStamp(usec)]" << std::endl;
-        file << statisticGrid_.getCoverage() << " " << experiment_->getSimulation()->getWorld()->SimTimeNow();
+        file << statisticGrid_.getCoverage() << " " << simulation_->getWorld()->SimTimeNow();
         file.close();
     }
     
@@ -165,7 +165,7 @@ namespace mae
         file.open(ss.str());
         file << "# shows configuration of the experiment" << std::endl;
         file << "# robotCount" << std::endl;
-        file << experiment_->getSimulation()->getRobots().size();
+        file << simulation_->getRobots().size();
         file.close();
     }
 

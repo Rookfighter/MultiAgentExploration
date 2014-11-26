@@ -1,7 +1,7 @@
 #ifndef MAE_STATISTIC_HPP
 #define MAE_STATISTIC_HPP
 
-#include "algorithm/Experiment.hpp"
+#include "simulation/Simulation.hpp"
 #include "statistics/StatisticGrid.hpp"
 #include "statistics/StatisticConfig.hpp"
 
@@ -12,7 +12,7 @@ namespace mae
     {
         friend class StatisticLoader;
     private:
-        Experiment *experiment_;
+        Simulation *simulation_;
         StatisticGrid statisticGrid_;
         std::string saveDirectory_;
         std::string algorithmType_;
@@ -28,7 +28,7 @@ namespace mae
     public:
         ~Statistic();
 
-        Experiment* getExperiment();
+        Simulation* getSimulation();
 
         const StatisticGrid& getStatisticGrid() const;
 

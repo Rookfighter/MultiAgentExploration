@@ -11,11 +11,15 @@ namespace mae
 	{
 	private:
 		Experiment *experiment_;
-        Statistic *statistic_;
         
         bool run_;
         volatile bool keepRunning_;
         
+        int exitCode_;
+        std::string configFile_;
+
+        bool init();
+
         void saveStatistics();
         
         void loop();
@@ -26,8 +30,10 @@ namespace mae
 		~Application();
 		
         int update();
-		void run();
+		int run();
         void stop();
+
+        int getExitCode();
 
 	};
 

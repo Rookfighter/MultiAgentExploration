@@ -1,7 +1,7 @@
 #ifndef MAE_STATISTIC_CONFIG_HPP
 #define MAE_STATISTIC_CONFIG_HPP
 
-#include "algorithm/Experiment.hpp"
+#include "simulation/Simulation.hpp"
 
 namespace mae
 {
@@ -9,16 +9,19 @@ namespace mae
     class StatisticConfig
     {
     public:
-        Experiment *experiment;
+        Simulation *simulation;
         Vector2f tileSize;
         std::string floorplanName;
         std::vector<double> coverageEvents;
         std::string algorithmType;
-    
+
         StatisticConfig()
-        { }
+                : simulation(NULL)
+        {
+        }
         ~StatisticConfig()
-        { }
+        {
+        }
 
     };
 

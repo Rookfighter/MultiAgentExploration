@@ -16,39 +16,20 @@ namespace mae
     }
 
     Application::Application(int argc, char** argv)
-        : experiment_(NULL),
-          statistic_(NULL),
-          run_(true),
-          keepRunning_(true)
+            : experiment_(NULL),
+              run_(true),
+              keepRunning_(true),
+              exitCode_(0),
+              configFile_("")
     {
         assert(argc > 1);
 
-        try {
-            Stg::Init(&argc, &argv);
-            
-            ImportYaml importer;
-            importer.resolveImports(argv[1]);
-            statistic_ = StatisticLoader::load(importer.getRoot());
-            if(statistic_ != NULL) {
-                experiment_ = statistic_->getExperiment();
-            } else {
-                experiment_ = ExperimentLoader::load(importer.getRoot());
-            }
-            
-            experiment_->getSimulation()->getWorld()->AddUpdateCallback(applicationCallback, this);
-        } catch(std::exception &e) {
-            LOG(ERROR) << "Loading exception: " << e.what();
-            run_ = false;
-        } catch(...) {
-            LOG(ERROR) << "Loading exception: Catched unkown instance.";
-            run_ = false;
-        }
+        Stg::Init(&argc, &argv);
+        configFile_ = argv[1];
     }
 
     Application::~Application()
     {
-        if(statistic_ != NULL)
-            delete statistic_;
         if(experiment_ != NULL)
             delete experiment_;
     }
@@ -65,43 +46,66 @@ namespace mae
         }
 
         experiment_->update();
-        if(statistic_ != NULL)
-            statistic_->update();
-        
+
         return 0;
     }
-    
+
     void Application::saveStatistics()
     {
-         if(statistic_ == NULL)
-             return;
-             
-        try {
-            statistic_->saveToDirectory(STATISTIC_SAVE_DIR);
-        } catch(std::exception &e) {
-            LOG(ERROR) << "Catched exception: " << e.what();
-        } catch(...) {
-            LOG(ERROR) << "Catched unkown instance.";
-        }
-    }
-
-
-    void Application::run()
-    {
-        if(!run_)
+        if(experiment_->getStatistic() == NULL)
             return;
 
-        LOG(INFO) << "Running Application";
         try {
-            loop();
+            experiment_->getStatistic()->saveToDirectory(STATISTIC_SAVE_DIR);
         } catch(std::exception &e) {
-            LOG(ERROR) << "Catched exception: " << e.what();
+            LOG(ERROR)<< "Catched exception: " << e.what();
         } catch(...) {
             LOG(ERROR) << "Catched unkown instance.";
         }
-        LOG(INFO) << "Application terminated.";
     }
-    
+
+    int Application::run()
+    {
+        exitCode_ = 0;
+        if(init()) {
+            LOG(INFO)<< "Running Application";
+            try {
+                loop();
+            } catch(std::exception &e) {
+                LOG(ERROR)<< "Catched exception: " << e.what();
+                exitCode_ = -2;
+            } catch(...) {
+                LOG(ERROR) << "Catched unkown instance.";
+                exitCode_ = -2;
+            }
+            LOG(INFO)<< "Application terminated.";
+        }
+
+        return exitCode_;
+
+    }
+
+    bool Application::init()
+    {
+        try {
+            ImportYaml importer;
+            ExperimentLoader experimentLoader;
+            importer.resolveImports(configFile_);
+            experimentLoader.load(importer.getRoot());
+            experiment_ = experimentLoader.create();
+            experiment_->getSimulation()->getWorld()->AddUpdateCallback(applicationCallback,
+                                                                        this);
+        } catch(std::exception &e) {
+            LOG(ERROR)<< "Loading exception: " << e.what();
+            exitCode_ = -1;
+        } catch(...) {
+            LOG(ERROR) << "Loading exception: Catched unkown instance.";
+            exitCode_ = -1;
+        }
+
+        return exitCode_ == 0;
+    }
+
     void Application::loop()
     {
         keepRunning_ = true;
@@ -110,25 +114,30 @@ namespace mae
         else
             loopNonGUI();
     }
-    
+
     void Application::loopGUI()
     {
-        LOG(INFO) << "Running in GUI mode";
+        LOG(INFO)<< "Running in GUI mode";
         Stg::World::Run();
     }
-    
+
     void Application::loopNonGUI()
     {
-        LOG(INFO) << "Running in NonGUI mode";
+        LOG(INFO)<< "Running in NonGUI mode";
         while(keepRunning_) {
-             experiment_->getSimulation()->getWorld()->Update();
+            experiment_->getSimulation()->getWorld()->Update();
         }
     }
-    
+
     void Application::stop()
     {
-        LOG(INFO) << "Stopping application";
+        LOG(INFO)<< "Stopping application";
         experiment_->getSimulation()->getWorld()->Quit();
+    }
+
+    int Application::getExitCode()
+    {
+        return exitCode_;
     }
 
 }

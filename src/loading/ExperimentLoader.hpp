@@ -1,7 +1,8 @@
 #ifndef MAE_EXPERIMENT_LOADER_HPP
 #define MAE_EXPERIMENT_LOADER_HPP
 
-#include <yaml-cpp/yaml.h>
+#include "loading/SimulationLoader.hpp"
+#include "loading/StatisticLoader.hpp"
 #include "algorithm/Experiment.hpp"
 
 namespace mae
@@ -10,12 +11,19 @@ namespace mae
 	class ExperimentLoader
 	{
 	private:
-		ExperimentLoader();
-		~ExperimentLoader();
-	public:
+	    AlgorithmConfig algorithmConfig_;
+        ExperimentConfig experimentConfig_;
 
-		static Experiment* load(const std::string &p_file);
-        static Experiment* load(YAML::Node &p_root);
+	    SimulationLoader simulationLoader_;
+	    StatisticLoader statisticLoader_;
+	public:
+	    ExperimentLoader();
+        ~ExperimentLoader();
+
+		void load(const std::string &p_file);
+        void load(YAML::Node &p_root);
+
+        Experiment* create();
 	};
 
 }

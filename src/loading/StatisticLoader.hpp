@@ -9,11 +9,16 @@ namespace mae
     class StatisticLoader
     {
     private:
-        StatisticLoader() { }
-        ~StatisticLoader() { }
+        StatisticConfig config_;
+        bool found_;
     public:
-        static Statistic* load(const std::string &p_file);
-        static Statistic* load(YAML::Node &p_root);
+        StatisticLoader();
+        ~StatisticLoader();
+
+        void load(const std::string &p_file);
+        void load(YAML::Node &p_root);
+
+        Statistic* create(Simulation *p_simulation);
     };
 
 }

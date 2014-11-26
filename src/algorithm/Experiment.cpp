@@ -5,6 +5,7 @@ namespace mae
 {
     Experiment::Experiment(const ExperimentConfig &p_config)
         :simulation_(p_config.simulation),
+         statistic_(p_config.statistic),
          algorithms_(p_config.algorithms),
          experimentTermination_(p_config),
          algorithmWatch_()
@@ -17,6 +18,10 @@ namespace mae
             if(algo != NULL)
                 delete algo;
         algorithms_.clear();
+
+        if(statistic_ != NULL)
+                delete statistic_;
+
         if(simulation_ != NULL)
             delete simulation_;
     }
@@ -33,7 +38,10 @@ namespace mae
         algorithmWatch_.stop();
 
         /*LOG(DEBUG) << "Update: " << updateWatch_.getLastMsec() << "ms (" << updateWatch_.getWorstMsec() << "ms) "<<
-                   "Algorithm: " << algorithmWatch_.getLastMsec() << "ms (" << algorithmWatch_.getWorstMsec() << "ms)";*/
+                           "Algorithm: " << algorithmWatch_.getLastMsec() << "ms (" << algorithmWatch_.getWorstMsec() << "ms)";*/
+
+        if(statistic_ != NULL)
+            statistic_->update();
     }
 
     bool Experiment::terminated() const
@@ -60,4 +68,10 @@ namespace mae
     {
         return simulation_;
     }
+
+    Statistic* Experiment::getStatistic()
+    {
+        return statistic_;
+    }
+
 }

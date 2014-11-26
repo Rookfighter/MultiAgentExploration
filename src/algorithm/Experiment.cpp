@@ -3,16 +3,19 @@
 
 namespace mae
 {
-    Experiment::Experiment()
-        :simulation_(NULL),
-         algorithms_()
+    Experiment::Experiment(const ExperimentConfig &p_config)
+        :simulation_(p_config.simulation),
+         algorithms_(p_config.algorithms),
+         experimentTermination_(p_config),
+         algorithmWatch_()
     {
     }
 
     Experiment::~Experiment()
     {
         for(Algorithm* algo: algorithms_)
-            delete algo;
+            if(algo != NULL)
+                delete algo;
         algorithms_.clear();
         if(simulation_ != NULL)
             delete simulation_;
@@ -20,6 +23,9 @@ namespace mae
 
     void Experiment::update()
     {
+        if(terminated())
+            return;
+
         algorithmWatch_.start();
         for(Algorithm *algo : algorithms_)
             algo->update();
@@ -28,6 +34,11 @@ namespace mae
 
         /*LOG(DEBUG) << "Update: " << updateWatch_.getLastMsec() << "ms (" << updateWatch_.getWorstMsec() << "ms) "<<
                    "Algorithm: " << algorithmWatch_.getLastMsec() << "ms (" << algorithmWatch_.getWorstMsec() << "ms)";*/
+    }
+
+    bool Experiment::terminated() const
+    {
+        return experimentTermination_.terminated();
     }
 
     Algorithm* Experiment::getAlgorithmOf(const std::string &p_robotName)

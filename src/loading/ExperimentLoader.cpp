@@ -41,48 +41,57 @@ namespace mae
     
     Experiment* ExperimentLoader::load(YAML::Node &p_root)
     {
-        YAML::Node algorithm;
+        YAML::Node algorithmNode, experimentNode;
 		AlgorithmConfig algorithmConfig;
+		ExperimentConfig experimentConfig;
 		Simulation *simulation;
 		
-		algorithm = p_root[YamlNode::algorithm];
-        if(!algorithm.IsDefined())
+		algorithmNode = p_root[YamlNode::algorithm];
+        if(!algorithmNode.IsDefined())
             throw std::logic_error("algorithm node not found");
 		LOG(INFO) <<  "-- algorithm config found";
 		
-		algorithmConfig.type = toLowerCase(algorithm[YamlNode::type].as<std::string>());
-        algorithmConfig.obstacleStopDistance = algorithm[YamlNode::obstacleStopDistance].as<double>();
-		algorithmConfig.obstacleAvoidDistance = algorithm[YamlNode::obstacleAvoidDistance].as<double>();
-		algorithmConfig.obstacleMarkerDistance = algorithm[YamlNode::obstacleMarkerDistance].as<double>();
-        algorithmConfig.markerDeployDistance = algorithm[YamlNode::markerDeployDistance].as<double>();
-        algorithmConfig.collisionResolveDistance = algorithm[YamlNode::collisionResolveDistance].as<double>();
+		algorithmConfig.type = toLowerCase(algorithmNode[YamlNode::type].as<std::string>());
+        algorithmConfig.obstacleStopDistance = algorithmNode[YamlNode::obstacleStopDistance].as<double>();
+		algorithmConfig.obstacleAvoidDistance = algorithmNode[YamlNode::obstacleAvoidDistance].as<double>();
+		algorithmConfig.obstacleMarkerDistance = algorithmNode[YamlNode::obstacleMarkerDistance].as<double>();
+        algorithmConfig.markerDeployDistance = algorithmNode[YamlNode::markerDeployDistance].as<double>();
+        algorithmConfig.collisionResolveDistance = algorithmNode[YamlNode::collisionResolveDistance].as<double>();
 		LOG(INFO) <<  "-- algorithm type is " << algorithmConfig.type;
 		
+		experimentNode = p_root[YamlNode::experiment];
+		if(!experimentNode.IsDefined())
+		    throw std::logic_error("experiment node not found");
+		LOG(INFO) << "-- experiment config found";
+
+		experimentConfig.terminationMinutes = experimentNode[YamlNode::terminationMinutes].as<int>();
+
 		simulation = SimulationLoader::load(p_root);
 		algorithmConfig.stock = simulation->getStock();
 		
-		Experiment *result = new Experiment();
-		result->simulation_ = simulation;
+		experimentConfig.simulation = simulation;
 		
-		result->algorithms_.resize(simulation->getRobots().size());
-		for(unsigned int i = 0; i < result->algorithms_.size(); ++i) {
+		experimentConfig.algorithms.resize(simulation->getRobots().size());
+		for(unsigned int i = 0; i < experimentConfig.algorithms.size(); ++i) {
 			algorithmConfig.robot = simulation->getRobots()[i];
 			
 			if(algorithmConfig.type == NODECOUNTING_TYPE) {
-				result->algorithms_[i] = new NodeCounting(algorithmConfig);
+			    experimentConfig.algorithms[i] = new NodeCounting(algorithmConfig);
 			} else if(algorithmConfig.type == LRTASTAR_TYPE) {
-				result->algorithms_[i] = new LRTAStar(algorithmConfig);
+			    experimentConfig.algorithms[i] = new LRTAStar(algorithmConfig);
 			} else if(algorithmConfig.type == WAGNER_TYPE){
-				result->algorithms_[i] = new Wagner(algorithmConfig);
+			    experimentConfig.algorithms[i] = new Wagner(algorithmConfig);
 			} else if (algorithmConfig.type == RANDOMWALK_TYPE) {
-				result->algorithms_[i] = new RandomWalk(algorithmConfig);
+			    experimentConfig.algorithms[i] = new RandomWalk(algorithmConfig);
 			} else if(algorithmConfig.type == COMPASS_TYPE) {
-                result->algorithms_[i] = new CompassAlgorithm(algorithmConfig);
+			    experimentConfig.algorithms[i] = new CompassAlgorithm(algorithmConfig);
             } else {
 				throw std::logic_error("invalid Algorithm type");
 			}
 		}
 		
+		Experiment *result = new Experiment(experimentConfig);
+
 		return result;
     }
 }

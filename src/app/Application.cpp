@@ -55,16 +55,18 @@ namespace mae
 
     int Application::update()
     {
-        experiment_->update();
-        if(statistic_ != NULL)
-            statistic_->update();
-            
+        if(experiment_->terminated())
+            stop();
         if(experiment_->getSimulation()->getWorld()->TestQuit()) {
             saveStatistics();
             keepRunning_ = false;
             experiment_->getSimulation()->getWorld()->Stop();
             return -1;
         }
+
+        experiment_->update();
+        if(statistic_ != NULL)
+            statistic_->update();
         
         return 0;
     }
@@ -111,12 +113,13 @@ namespace mae
     
     void Application::loopGUI()
     {
+        LOG(INFO) << "Running in GUI mode";
         Stg::World::Run();
     }
     
     void Application::loopNonGUI()
     {
-        LOG(INFO) << "Loop non GUI";
+        LOG(INFO) << "Running in NonGUI mode";
         while(keepRunning_) {
              experiment_->getSimulation()->getWorld()->Update();
         }

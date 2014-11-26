@@ -11,3 +11,5 @@ algorithm:
     collision_resolve_distance: 0.5 # m
 stock:
     refill_count: 10
+experiment:
+    termination_minutes: 30

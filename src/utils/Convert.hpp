@@ -3,6 +3,7 @@
 
 #include <string>
 #include <algorithm>
+#include <stage.hh>
 
 namespace mae
 {
@@ -28,6 +29,11 @@ namespace mae
             p_string.erase(pos, p_find.length());
             p_string.insert(pos, p_replacement);
         }
+    }
+
+    inline int usecToMin(const Stg::usec_t p_usec)
+    {
+        return p_usec / 60000000;
     }
 }
 

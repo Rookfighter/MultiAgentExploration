@@ -70,9 +70,17 @@ namespace mae
         }
         if(movementController_.reachedDistance()) {
             LOG(DEBUG) << "-- moved too far, not reached marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
-            // moved far, but did not reach marker, so drop one
-            properties_.robot->getMotor().stop();
-            return new DroppingMarker(properties_);
+            // moved far, but did not reach marker
+            if(hasOtherMarkersInRange()) {
+                LOG(DEBUG) << "-- have other marker in range (" << properties_.robot->getName() << ")";
+                properties_.currentMarker = NULL;
+                properties_.robot->getMotor().stop();
+                return new SelectingTarget(properties_);
+            } else {
+                LOG(DEBUG) << "-- no other marker in range (" << properties_.robot->getName() << ")";
+                properties_.robot->getMotor().stop();
+                return new DroppingMarker(properties_);
+            }
         }
 
         if(hasObstacleToTarget()) {
@@ -90,12 +98,12 @@ namespace mae
 
     void MovingToMarker::updateTargetMeasurement()
     {
-        std::vector<MarkerMeasurement> markerInRange = properties_.robot->getMarkerSensor().getMarkerInRange();
+        markerInRange_ = properties_.robot->getMarkerSensor().getMarkerInRange();
 
         // find target marker from all available marker
         // check if marker was not found (is destroyed or not in range anymore)
         foundMarker_ = false;
-        for(MarkerMeasurement measurement : markerInRange) {
+        for(MarkerMeasurement measurement : markerInRange_) {
             if(properties_.nextMarker->getID() == measurement.marker->getID()) {
                 targetMeasurement_ = measurement;
                 foundMarker_ = true;
@@ -117,6 +125,39 @@ namespace mae
         return sameDouble(0,
                           targetMeasurement_.relativeDirection,
                           ANGLE_EPS);
+    }
+    
+    bool MovingToMarker::hasOtherMarkersInRange()
+    {
+        std::vector<MarkerMeasurement> markerInRangeTmp = markerInRange_;
+        std::vector<MarkerMeasurement>::iterator it;
+        bool found;
+        
+        // find currentMarker
+        if(properties_.currentMarker != NULL) {
+            found = false;
+            for(it = markerInRangeTmp.begin(); it != markerInRangeTmp.end(); ++it) {
+                if(it->marker->getID() == properties_.currentMarker->getID()) {
+                    found = true;
+                    break;
+                }
+            }
+            if(found)
+                markerInRangeTmp.erase(it);
+        }
+        
+        // find nextMarker
+        found = false;
+        for(it = markerInRangeTmp.begin(); it != markerInRangeTmp.end(); ++it) {
+            if(it->marker->getID() == properties_.nextMarker->getID()) {
+                found = true;
+                break;
+            }
+        }
+        if(found)
+            markerInRangeTmp.erase(it);
+        
+        return !markerInRangeTmp.empty();
     }
 
     bool MovingToMarker::isAvoidingObstacle()

@@ -12,6 +12,7 @@ namespace mae
 	private:
 		MovementController movementController_;
 		ObstacleDetector obstacleDetector_;
+        std::vector<MarkerMeasurement> markerInRange_;
 		
 		MarkerMeasurement targetMeasurement_;
 		bool foundMarker_;
@@ -21,6 +22,7 @@ namespace mae
 		void updateTargetMeasurement();
 		bool isFacingToTarget();
 		bool reachedTarget();
+        bool hasOtherMarkersInRange();
 		void move();
 		void turnToTarget();
 		bool isAvoidingObstacle();

@@ -24,6 +24,7 @@ namespace mae
 		double obstacleMarkerDistance;
         double markerDeployDistance;
         double collisionResolveDistance;
+        double markerTooCloseDistance;
 
 		AntStateProperties();
 		~AntStateProperties();

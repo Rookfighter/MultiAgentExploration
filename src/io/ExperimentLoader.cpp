@@ -57,6 +57,7 @@ namespace mae
 		algorithmConfig_.obstacleMarkerDistance = algorithmNode[YamlNode::obstacleMarkerDistance].as<double>();
         algorithmConfig_.markerDeployDistance = algorithmNode[YamlNode::markerDeployDistance].as<double>();
         algorithmConfig_.collisionResolveDistance = algorithmNode[YamlNode::collisionResolveDistance].as<double>();
+        algorithmConfig_.markerTooCloseDistance = algorithmNode[YamlNode::markerTooCloseDistance].as<double>();
 		LOG(INFO) <<  "-- algorithm type is " << algorithmConfig_.type;
 		
 		experimentNode = p_root[YamlNode::experiment];

@@ -1,6 +1,7 @@
 #include <easylogging++.h>
 #include "algorithm-rt/MovingToDirection.hpp"
 #include "algorithm-rt/DroppingMarker.hpp"
+#include "algorithm-rt/SelectingTarget.hpp"
 #include "utils/Math.hpp"
 
 /* determines how much of the max angular
@@ -41,9 +42,14 @@ namespace mae
         if(movementController_.reachedDirection() &&
                 (movementController_.reachedDistance() || hasFrontObstacle())) {
             LOG(DEBUG) << "-- reached distance or had obstacle (" << properties_.robot->getName() << ")";
-
             properties_.robot->getMotor().stop();
-            return new DroppingMarker(properties_);
+            properties_.currentMarker = NULL;
+
+            if(hasTooCloseMarker()) {
+                return new SelectingTarget(properties_);
+            } else {
+                return new DroppingMarker(properties_);
+            }
         }
 
         movementController_.update();
@@ -51,10 +57,15 @@ namespace mae
         return NULL;
     }
 
-    bool MovingToDirection::hasFrontObstacle()
+    bool MovingToDirection::hasFrontObstacle() const
     {
         return obstacleDetector_.check(FRONT_ANGLE_BEGIN,
                                        FRONT_ANGLE_END,
                                        properties_.obstacleStopDistance);
+    }
+
+    bool MovingToDirection::hasTooCloseMarker() const
+    {
+        return properties_.robot->getMarkerSensor().getClosestMarker().relativeDistance.lengthSQ() <= properties_.markerTooCloseDistance * properties_.markerTooCloseDistance;
     }
 }

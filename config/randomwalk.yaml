@@ -9,6 +9,7 @@ algorithm:
     obstacle_marker_distance: 1.2 # m
     marker_deploy_distance: 1.6 # m
     collision_resolve_distance: 0.5 # m
+    marker_too_close_distance: 0.4 # m
 stock:
     refill_count: 10
 experiment:

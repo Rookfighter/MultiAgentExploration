@@ -19,6 +19,7 @@ namespace mae
         double obstacleMarkerDistance;
         double markerDeployDistance;
         double collisionResolveDistance;
+        double markerTooCloseDistance;
 
         AlgorithmConfig()
                 : robot(NULL),
@@ -27,7 +28,8 @@ namespace mae
                   obstacleAvoidDistance(-1),
                   obstacleMarkerDistance(-1),
                   markerDeployDistance(-1),
-                  collisionResolveDistance(-1)
+                  collisionResolveDistance(-1),
+                  markerTooCloseDistance(-1)
         {
         }
         ~AlgorithmConfig()

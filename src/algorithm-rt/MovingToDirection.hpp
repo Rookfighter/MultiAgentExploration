@@ -14,7 +14,8 @@ namespace mae
 		MovementController movementController_;
 		ObstacleDetector obstacleDetector_;
 		
-		bool hasFrontObstacle();
+		bool hasFrontObstacle() const;
+		bool hasTooCloseMarker() const;
 	public:
 		MovingToDirection(const AntStateProperties &p_properties);
 		~MovingToDirection();

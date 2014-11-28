@@ -19,6 +19,7 @@ namespace mae
         properties.obstacleMarkerDistance = p_config.obstacleMarkerDistance;
         properties.markerDeployDistance = p_config.markerDeployDistance;
         properties.collisionResolveDistance = p_config.collisionResolveDistance;
+        properties.markerTooCloseDistance = p_config.markerTooCloseDistance;
 
         state_ = new InitialAntState(properties);
     }

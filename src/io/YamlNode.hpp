@@ -31,6 +31,7 @@ namespace mae
         const std::string obstacleMarkerDistance = "obstacle_marker_distance";
         const std::string markerDeployDistance = "marker_deploy_distance";
         const std::string collisionResolveDistance = "collision_resolve_distance";
+        const std::string markerTooCloseDistance = "marker_too_close_distance";
         
         const std::string experiment = "experiment";
         const std::string terminationMinutes = "termination_minutes";

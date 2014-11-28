@@ -8,9 +8,12 @@ namespace mae
 		 currentMarker(NULL),
          nextMarker(NULL),
          angleToTurn(0),
-         obstacleStopDistance(1.0),
-		 obstacleAvoidDistance(1.0),
-         obstacleMarkerDistance(1.0)
+         obstacleStopDistance(-1),
+		 obstacleAvoidDistance(-1),
+         obstacleMarkerDistance(-1),
+         markerDeployDistance(-1),
+         collisionResolveDistance(-1),
+         markerTooCloseDistance(-1)
 	{
 
 	}

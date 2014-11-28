@@ -5,7 +5,7 @@ statistic:
 algorithm:
     type: lrtastar
     obstacle_stop_distance: 0.5 # m
-    obstacle_avoid_distance: 1.0 # m
+    obstacle_avoid_distance: 0.7 # m
     obstacle_marker_distance: 1.2 # m
     marker_deploy_distance: 1.6 # m
     collision_resolve_distance: 0.5 # m

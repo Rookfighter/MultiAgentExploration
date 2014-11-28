@@ -15,23 +15,23 @@ namespace mae
 		ObstacleDetector obstacleDetector_;
 		Velocity velocity_;
 
-		double minFrontDistance_;
-		double minLeftDistance_;
-		double minRightDistance_;
-
 		double frontStopDistance_;
         double avoidDistance_;
 		
-		bool stopRobot_;
-		
 		int avoidStep_;
-		static const int STEP_REFRESH_INTERVAL = 10;
+		int stopStep_;
+		static const int STOP_STEP_REFRESH_INTERVAL = 10;
+		static const int AVOID_STEP_REFRESH_INTERVAL = 3;
 		
+		bool hasLeftObstacle() const;
+		bool hasRightObstacle() const;
+		bool hasfrontStopObstacle() const;
+		double getLeftMinDistance() const;
+		double getRightMinDistance() const;
+
 		void checkObstacle();
-        bool hasStopObstacle() const;
 		void stopAndAvoidObstacle();
         void avoidNearbyObstacle();
-        bool hasNearbyObstacle() const;
 		void cruise();
 		
 	public:

@@ -1,9 +1,10 @@
+#include <easylogging++.h>
 #include "algorithm/Wander.hpp"
 #include "utils/Math.hpp"
 
 #define LEFT_ANGLE_BEGIN (M_PI / 6) // 30°
-#define LEFT_ANGLE_END (M_PI / 2) // 90°
-#define RIGHT_ANGLE_BEGIN (-M_PI / 2) // -90°
+#define LEFT_ANGLE_END (7 * M_PI / 12) // 105°
+#define RIGHT_ANGLE_BEGIN (-7 * M_PI / 12) // -105°
 #define RIGHT_ANGLE_END (-M_PI / 6) // -30°
 #define FRONT_ANGLE_BEGIN (-M_PI / 6) // -30°
 #define FRONT_ANGLE_END (M_PI / 6) // 30
@@ -19,8 +20,8 @@ namespace mae
 		 obstacleDetector_(p_robot),
 		 frontStopDistance_(p_frontStopDistance),
          avoidDistance_(p_avoidDistance),
-		 stopRobot_(false),
-		 avoidStep_(0)
+		 avoidStep_(0),
+		 stopStep_(0)
 	{
 	}
 
@@ -28,10 +29,41 @@ namespace mae
 	{
 
 	}
+
+	bool Wander::hasLeftObstacle() const
+	{
+	    return obstacleDetector_.check(LEFT_ANGLE_BEGIN,
+	                                   LEFT_ANGLE_END,
+	                                   avoidDistance_);
+	}
+
+    bool Wander::hasRightObstacle() const
+    {
+        return obstacleDetector_.check(RIGHT_ANGLE_BEGIN,
+                                       RIGHT_ANGLE_END,
+                                       avoidDistance_);
+    }
     
+    bool Wander::hasfrontStopObstacle() const
+    {
+        return obstacleDetector_.check(FRONT_ANGLE_BEGIN,
+                                       FRONT_ANGLE_END,
+                                       frontStopDistance_);
+    }
+
+    double Wander::getLeftMinDistance() const
+    {
+        return obstacleDetector_.getMinDistance(LEFT_ANGLE_BEGIN, LEFT_ANGLE_END);
+    }
+
+    double Wander::getRightMinDistance() const
+    {
+        return obstacleDetector_.getMinDistance(RIGHT_ANGLE_BEGIN, RIGHT_ANGLE_END);
+    }
+
     bool Wander::isAvoidingObstacle() const
     {
-        return hasStopObstacle() || hasNearbyObstacle();
+        return hasRightObstacle() || hasLeftObstacle() || hasfrontStopObstacle();
     }
 
 	void Wander::update()
@@ -44,75 +76,83 @@ namespace mae
 
 		checkObstacle();
 
-		if(stopRobot_)
+		if(hasfrontStopObstacle()) {
+		    avoidStep_ = 0;
 			stopAndAvoidObstacle();
-        else if(hasNearbyObstacle())
+		} else if(hasLeftObstacle() || hasRightObstacle()) {
+            stopStep_ = 0;
             avoidNearbyObstacle();
-		else
+        } else {
+            avoidStep_ = 0;
+            stopStep_ = 0;
 			cruise();
+        }
 
 		robot_->getMotor().setVelocity(velocity_);
 	}
 
 	void Wander::checkObstacle()
 	{
-		minFrontDistance_ = obstacleDetector_.getMinDistance(FRONT_ANGLE_BEGIN, FRONT_ANGLE_END);
+		/*minFrontDistance_ = obstacleDetector_.getMinDistance(FRONT_ANGLE_BEGIN, FRONT_ANGLE_END);
 		minLeftDistance_ = obstacleDetector_.getMinDistance(LEFT_ANGLE_BEGIN, LEFT_ANGLE_END);
-		minRightDistance_ = obstacleDetector_.getMinDistance(RIGHT_ANGLE_BEGIN, RIGHT_ANGLE_END);
+		minRightDistance_ = obstacleDetector_.getMinDistance(RIGHT_ANGLE_BEGIN, RIGHT_ANGLE_END);*/
 
-		stopRobot_ = hasStopObstacle();
 	}
     
-    bool Wander::hasStopObstacle() const
-    {
-         return minFrontDistance_ <= frontStopDistance_;
-    }
-
 	void Wander::stopAndAvoidObstacle()
 	{
 		// only change behavior after a certain interval
 		// prohibits that robots keeps changing direction every step
-		if(avoidStep_ % STEP_REFRESH_INTERVAL == 0) {
-			if(minLeftDistance_ < minRightDistance_)
+		if(stopStep_ % STOP_STEP_REFRESH_INTERVAL == 0) {
+			if(getLeftMinDistance() < getRightMinDistance())
 				velocity_.angular = robot_->getMotor().getMinVelocity().angular;
 			else
 				velocity_.angular = robot_->getMotor().getMaxVelocity().angular;
 
 			velocity_.linear = 0;
-			avoidStep_ = 0;
+			stopStep_ = 0;
 		}
 
-		avoidStep_++;
+		stopStep_++;
 	}
-    
-    bool Wander::hasNearbyObstacle() const
-    {
-        return minLeftDistance_ <= avoidDistance_ || minRightDistance_ <= avoidDistance_;
-    }
     
     void Wander::avoidNearbyObstacle()
     {
         int measureCount = 0;
         double leftRightDiff = 0;
         
-        if(minLeftDistance_ <= avoidDistance_) {
-            leftRightDiff -= (1.0 - (minLeftDistance_ / avoidDistance_));
-            measureCount++;
-        }
-        if(minRightDistance_ <= avoidDistance_) {
-            leftRightDiff += (1.0 - (minRightDistance_ / avoidDistance_));
-            measureCount++;
-        }
-        
-        if(measureCount != 0)
-            leftRightDiff /= measureCount;
-        
-        if(leftRightDiff > 0)
-            velocity_.angular = abs(leftRightDiff) * robot_->getMotor().getMaxVelocity().angular;
-        else
-            velocity_.angular = abs(leftRightDiff) * robot_->getMotor().getMinVelocity().angular;
+        // only change behavior after a certain interval
+        // prohibits that robots keeps changing direction every step
+        if(avoidStep_ % AVOID_STEP_REFRESH_INTERVAL == 0) {
+            LOG(DEBUG) << "-- avoiding nearby obstacle";
+
+            if(hasLeftObstacle()) {
+                leftRightDiff -= (1.0 - (getLeftMinDistance() / avoidDistance_));
+                measureCount++;
+            }
+            if(hasRightObstacle()) {
+                leftRightDiff += (1.0 - (getRightMinDistance() / avoidDistance_));
+                measureCount++;
+            }
+
+            if(measureCount != 0)
+                leftRightDiff /= measureCount;
             
-        velocity_.linear = (1.0 - abs(leftRightDiff)) * robot_->getMotor().getMaxVelocity().linear;
+            LOG(DEBUG) << "-- leftRightDiff:" << leftRightDiff;
+
+            if(leftRightDiff > 0)
+                velocity_.angular = fabs(leftRightDiff) * robot_->getMotor().getMaxVelocity().angular;
+            else
+                velocity_.angular = fabs(leftRightDiff) * robot_->getMotor().getMinVelocity().angular;
+
+            velocity_.linear = (1.0 - fabs(leftRightDiff)) * robot_->getMotor().getMaxVelocity().linear;
+
+            LOG(DEBUG) << "-- set velocity to " << velocity_.str();
+
+            avoidStep_ = 0;
+        }
+
+        avoidStep_++;
     }
 
 	void Wander::cruise()

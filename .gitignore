@@ -9,6 +9,7 @@ plot/wagner
 plot/lartastar
 plot/randomwalk
 plot/compass
+plot/summary
 
 # IDE files
 *.metadata/

@@ -2,6 +2,7 @@ import: [config/nodecounting.yaml]
 world:
     gui: true
     file: world/simple-rooms-4.world
+    covered_by_obstacles: 0.3068
 robots:
     -
         name: pioneer1

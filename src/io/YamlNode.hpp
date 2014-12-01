@@ -13,6 +13,7 @@ namespace mae
         const std::string world = "world";
         const std::string worldFile = "file";
         const std::string worldGui = "gui";
+        const std::string coveredByObstacles = "covered_by_obstacles";
         
         const std::string stock = "stock";
         const std::string refillCount = "refill_count";

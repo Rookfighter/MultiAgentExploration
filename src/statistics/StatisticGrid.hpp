@@ -29,6 +29,8 @@ namespace mae
 
         std::vector<CoverageTime> coverageTimes_;
 
+        double coveredByObstacles;
+
         void updateCoverageTimes();
     public:
         StatisticGrid(const StatisticConfig &p_config);

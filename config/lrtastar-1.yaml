@@ -2,6 +2,7 @@ import: [config/lrtastar.yaml]
 world:
     gui: true
     file: world/obstructed-1.world
+    covered_by_obstacles: 0.08297
 robots:
     -
         name: pioneer1

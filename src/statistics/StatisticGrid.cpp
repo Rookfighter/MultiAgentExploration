@@ -12,7 +12,8 @@ namespace mae
          floorplanName_(p_config.floorplanName),
          grid_(),
          previousTilePosition_(simulation_->getRobots().size()),
-         coverageTimes_()
+         coverageTimes_(),
+         coveredByObstacles(p_config.coveredByObstacles)
     {
         Vector2f worldSize;
         Stg::Model *floorplan = simulation_->getWorld()->GetModel(floorplanName_);
@@ -138,7 +139,7 @@ namespace mae
             }
         }
 
-        return ((double) covered) / ((double)(size_.x * size_.y));
+        return ((double) covered) / ((1.0 - coveredByObstacles) * (double)(size_.x * size_.y));
     }
 
     const std::vector<CoverageTime>& StatisticGrid::getCoverageTimes() const

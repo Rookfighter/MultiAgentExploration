@@ -26,7 +26,7 @@ namespace mae
 
     void StatisticLoader::load(YAML::Node &p_root)
     {
-        YAML::Node statisticNode, coverageEventNode, algorithmNode;
+        YAML::Node statisticNode, coverageEventNode, algorithmNode, worldNode;
 
         statisticNode = p_root[YamlNode::statistic];
         found_ = true;
@@ -45,6 +45,11 @@ namespace mae
         algorithmNode = p_root[YamlNode::algorithm];
         assert(algorithmNode.IsDefined());
         config_.algorithmType = algorithmNode[YamlNode::type].as<std::string>();
+
+
+        worldNode = p_root[YamlNode::world];
+        assert(worldNode.IsDefined());
+        config_.coveredByObstacles = worldNode[YamlNode::coveredByObstacles].as<double>();
 
         coverageEventNode = statisticNode[YamlNode::coverageEvents];
         if(coverageEventNode.IsDefined() &&

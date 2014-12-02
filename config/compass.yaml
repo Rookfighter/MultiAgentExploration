@@ -5,7 +5,7 @@ statistic:
 algorithm:
     type: compass
     obstacle_stop_distance: 0.5 # m
-    obstacle_avoid_distance: 0.7 # m
+    obstacle_avoid_distance: 0.5 # m
     obstacle_marker_distance: 1.2 # m
     marker_deploy_distance: 3.2 # m
     collision_resolve_distance: 0.5 # m

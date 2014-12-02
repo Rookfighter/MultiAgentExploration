@@ -29,7 +29,6 @@ namespace mae
 		double getLeftMinDistance() const;
 		double getRightMinDistance() const;
 
-		void checkObstacle();
 		void stopAndAvoidObstacle();
         void avoidNearbyObstacle();
 		void cruise();

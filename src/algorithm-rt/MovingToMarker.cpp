@@ -36,6 +36,7 @@ namespace mae
                              p_properties.collisionResolveDistance),
          obstacleDetector_(p_properties.robot),
          foundMarker_(false),
+         firstTurnToMarker_(true),
          obstacleAvoidStep_(0)
     {
         movementController_.setAngleEps(ANGLE_EPS);
@@ -84,13 +85,23 @@ namespace mae
             }
         }
 
-        if(hasObstacleToTarget()) {
-            obstacleAvoidStep_ = OBSTACLE_AVOID_MAX_STEP;
-        }
+        // at first turn to marker so we don't proceed in the wrong direction
+        // with obstacle avoidance
+        if(firstTurnToMarker_) {
+            if(movementController_.reachedDirection() && isFacingToTarget()) {
+                firstTurnToMarker_ = false;
+            } else {
+                turnToTarget();
+            }
+        } else {
+            if(hasObstacleToTarget() || movementController_.isAvoidingObstacle()) {
+                obstacleAvoidStep_ = OBSTACLE_AVOID_MAX_STEP;
+            }
 
-        // if we are not avoiding any obstacles turn to the target
-        if(!isAvoidingObstacle() && movementController_.reachedDirection() && !isFacingToTarget())
-            turnToTarget();
+            // if we are not avoiding any obstacles turn to the target
+            if(!isAvoidingObstacle() && movementController_.reachedDirection() && !isFacingToTarget())
+                turnToTarget();
+        }
 
         move();
         

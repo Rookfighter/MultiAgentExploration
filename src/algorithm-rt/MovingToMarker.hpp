@@ -16,6 +16,7 @@ namespace mae
 		
 		MarkerMeasurement targetMeasurement_;
 		bool foundMarker_;
+		bool firstTurnToMarker_;
 		
 		int obstacleAvoidStep_;
 		

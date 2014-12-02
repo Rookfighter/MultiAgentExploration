@@ -74,8 +74,6 @@ namespace mae
 			return;
 		}
 
-		checkObstacle();
-
 		if(hasfrontStopObstacle()) {
 		    avoidStep_ = 0;
 			stopAndAvoidObstacle();
@@ -89,14 +87,6 @@ namespace mae
         }
 
 		robot_->getMotor().setVelocity(velocity_);
-	}
-
-	void Wander::checkObstacle()
-	{
-		/*minFrontDistance_ = obstacleDetector_.getMinDistance(FRONT_ANGLE_BEGIN, FRONT_ANGLE_END);
-		minLeftDistance_ = obstacleDetector_.getMinDistance(LEFT_ANGLE_BEGIN, LEFT_ANGLE_END);
-		minRightDistance_ = obstacleDetector_.getMinDistance(RIGHT_ANGLE_BEGIN, RIGHT_ANGLE_END);*/
-
 	}
     
 	void Wander::stopAndAvoidObstacle()

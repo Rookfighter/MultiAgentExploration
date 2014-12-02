@@ -11,8 +11,7 @@
 /* precision of turn angle check */
 #define ANGLE_EPS ((M_PI / 180) * 5) // precision 5°
 
-#define FRONT_ANGLE_BEGIN (-M_PI / 6)
-#define FRONT_ANGLE_END (M_PI / 6)
+#define FRONT_OBSTACLE_FOV (M_PI / 3) // 60°
 
 namespace mae
 {
@@ -59,8 +58,8 @@ namespace mae
 
     bool MovingToDirection::hasFrontObstacle() const
     {
-        return obstacleDetector_.check(FRONT_ANGLE_BEGIN,
-                                       FRONT_ANGLE_END,
+        return obstacleDetector_.check(-FRONT_OBSTACLE_FOV / 2,
+                                       FRONT_OBSTACLE_FOV / 2,
                                        properties_.obstacleStopDistance);
     }
 

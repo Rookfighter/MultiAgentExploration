@@ -25,5 +25,5 @@ floorplan
 (
     name "floorplan1"
     bitmap "bitmaps/simple_rooms.png"
-    size [30 30 1]
+    size [15 15 1]
 )

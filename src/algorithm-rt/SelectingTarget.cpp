@@ -5,10 +5,8 @@
 #include "utils/Convert.hpp"
 #include "utils/Random.hpp"
 
-#define FRONT_IDX 0
-#define BACK_IDX 2
-#define LEFT_IDX 4
-#define RIGHT_IDX 6
+#define BLOCK_OBSTACLE_FOV (M_PI / 3) // 60°
+#define BLOCK_MARKER_FOV (M_PI / 2) // 90°
 
 #define MARKER_OBSTACLE_FOV (M_PI / 4) // 45°
 
@@ -16,20 +14,25 @@
 
 namespace mae
 {
-    static const double obstacleAngles[8] = {
-        -M_PI / 6, M_PI / 6, // FRONT -30°, 30°
-        5 * M_PI / 6, -5 * M_PI / 6, // BACK 150°, -150°
-        2 * M_PI / 6, 4 * M_PI / 6, // LEFT 60°, 120°
-        -4 * M_PI / 6, -2 * M_PI / 6 // RIGHT -120°, -60°
+    // directions for 45° FOV
+    /*static const std::vector<double> checkDirections = {
+            0               , (M_PI / 4),
+            (M_PI / 2)      , (3 * M_PI / 4),
+            (M_PI)          , (5 * M_PI / 4),
+            (3 * M_PI / 2)  , (7 * M_PI / 4)
+    };*/
+
+    // directions for 60° FOV
+    static const std::vector<double> checkObstacleDirections = {
+                0               , (M_PI / 3),
+                (2 * M_PI / 3)  , (M_PI),
+                (4 * M_PI / 3)  , (5 * M_PI / 3)
     };
 
-    static const double markerAngles[8] = {
-        -M_PI / 4, M_PI / 4, // FRONT -45°, 45°
-        3 * M_PI / 4, -3 * M_PI / 4, // BACK 135°, -135°
-        M_PI / 4, 3 * M_PI / 4, // LEFT 45°, 135°
-        -3 * M_PI / 4, -M_PI / 4 // RIGHT -135°, -46°
-    };
-
+    static const std::vector<double> checkMarkerDirections = {
+                    0       , (M_PI / 2),
+                    (M_PI)  , (3 * M_PI / 2),
+        };
 
     SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
         : AntState(p_properties),
@@ -96,58 +99,64 @@ namespace mae
 
     bool SelectingTarget::checkBlankSpace()
     {
-        // check if obstacle is the direction
-        bool blockedFront = obstacleDetector_.check(obstacleAngles[FRONT_IDX],
-                            obstacleAngles[FRONT_IDX + 1],
-                            obstacleMarkerDistance_);
-        bool blockedBack = obstacleDetector_.check(obstacleAngles[BACK_IDX],
-                           obstacleAngles[BACK_IDX + 1],
-                           obstacleMarkerDistance_);
-        bool blockedLeft = obstacleDetector_.check(obstacleAngles[LEFT_IDX],
-                           obstacleAngles[LEFT_IDX + 1],
-                           obstacleMarkerDistance_);
-        bool blockedRight = obstacleDetector_.check(obstacleAngles[RIGHT_IDX],
-                            obstacleAngles[RIGHT_IDX + 1],
-                            obstacleMarkerDistance_);
 
-        LOG(DEBUG) << "-- obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
-                   ", L=" << boolToStr(blockedLeft) << ", R=" << boolToStr(blockedRight);
-        // check if there is already a marker in that direction
-        for(MarkerMeasurement measurement : markerInRange_) {
-            if(!blockedFront)
-                blockedFront = angleIsBetween(measurement.relativeDirection,
-                                              markerAngles[FRONT_IDX],
-                                              markerAngles[FRONT_IDX + 1]);
-
-            if(!blockedBack)
-                blockedBack = angleIsBetween(measurement.relativeDirection,
-                                             markerAngles[BACK_IDX],
-                                             markerAngles[BACK_IDX +1]);
-
-            if(!blockedLeft)
-                blockedLeft = angleIsBetween(measurement.relativeDirection,
-                                             markerAngles[LEFT_IDX],
-                                             markerAngles[LEFT_IDX + 1]);
-
-            if(!blockedRight)
-                blockedRight = angleIsBetween(measurement.relativeDirection,
-                                              markerAngles[RIGHT_IDX],
-                                              markerAngles[RIGHT_IDX + 1]);
+        // check if obstacles block any directions
+        std::vector<bool> blockedByObstacle(checkObstacleDirections.size());
+        for(unsigned int i = 0; i < checkObstacleDirections.size(); ++i) {
+            double beginAngle = checkObstacleDirections[i] - (BLOCK_OBSTACLE_FOV / 2);
+            double endAngle = checkObstacleDirections[i] + (BLOCK_OBSTACLE_FOV / 2);
+            blockedByObstacle[i] = obstacleDetector_.check(beginAngle,
+                                                           endAngle,
+                                                           obstacleMarkerDistance_);
         }
 
-        LOG(DEBUG) << "-- marker & obstacles: F=" << boolToStr(blockedFront) << ", B=" <<  boolToStr(blockedBack) <<
-                   ", L=" << boolToStr(blockedLeft) << ", R=" << boolToStr(blockedRight);
+        // check if marker block any direction
+        std::vector<bool> blockedByMarker(checkMarkerDirections.size());
+        for(MarkerMeasurement measurement : markerInRange_) {
+            for(unsigned int i = 0; i < checkObstacleDirections.size(); ++i) {
+                if(!blockedByMarker[i]) {
+                    double beginAngle = checkMarkerDirections[i] - (BLOCK_MARKER_FOV / 2);
+                    double endAngle = checkMarkerDirections[i] + (BLOCK_MARKER_FOV / 2);
+                    blockedByMarker[i] = angleIsBetween(measurement.relativeDirection,
+                                                        beginAngle,
+                                                        endAngle);
+                }
+            }
+        }
 
-        if(!blockedFront)
-            properties_.angleToTurn = 0; // move forward
-        else if(!blockedLeft)
-            properties_.angleToTurn = M_PI / 2; // turn to left
-        else if(!blockedRight)
-            properties_.angleToTurn = -M_PI / 2; // turn right
-        else if(!blockedBack)
-            properties_.angleToTurn = M_PI; // turn back
+        // mark the directions as blocked, if marker blocks that direction
+        for(unsigned int i = 0; i < checkMarkerDirections.size(); ++i) {
+            if(blockedByMarker[i]) {
+                double beginAngle = checkMarkerDirections[i] - (BLOCK_MARKER_FOV / 2);
+                double endAngle = checkMarkerDirections[i] + (BLOCK_MARKER_FOV / 2);
+                for(unsigned int j = 0; j < checkObstacleDirections.size(); ++j) {
+                    if(angleIsBetween(checkObstacleDirections[j], beginAngle, endAngle))
+                        blockedByObstacle[j] = true;
+                }
+            }
+        }
 
-        return  !blockedFront || !blockedBack || !blockedLeft || !blockedRight;
+        std::stringstream ss;
+        ss << "-- ";
+        for(unsigned int i = 0; i < checkObstacleDirections.size(); ++i)
+            ss << radianToDegree(checkObstacleDirections[i]) << "°=" << boolToStr(blockedByObstacle[i]) << " ";
+        ss << "(" << properties_.robot->getName() << ")";
+        LOG(DEBUG) << ss.str();
+
+        int idx = -1;
+        for(unsigned int i = 0; i < checkObstacleDirections.size(); ++i) {
+            if(!blockedByObstacle[i]) {
+                idx = i;
+                break;
+            }
+        }
+
+        if(idx >= 0) {
+            properties_.angleToTurn = checkObstacleDirections[idx];
+            LOG(DEBUG) << "-- chosen: " << radianToDegree(properties_.angleToTurn) << "° (" << properties_.robot->getName() << ")";
+        }
+
+        return  idx >= 0;
     }
 
     bool SelectingTarget::findNextMarker()

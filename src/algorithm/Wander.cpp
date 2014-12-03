@@ -9,7 +9,7 @@
 #define FRONT_ANGLE_BEGIN (-M_PI / 6) // -30°
 #define FRONT_ANGLE_END (M_PI / 6) // 30
 
-#define LINEAR_OBSTRUCT_FACTOR 0.4
+#define NEARBY_SAFETY_DISTANCE 0.2
 
 namespace mae
 {
@@ -117,11 +117,19 @@ namespace mae
             LOG(DEBUG) << "-- avoiding nearby obstacle";
 
             if(hasLeftObstacle()) {
-                leftRightDiff -= (1.0 - (getLeftMinDistance() / avoidDistance_));
+                double safeLeftDistance = getLeftMinDistance() - NEARBY_SAFETY_DISTANCE;
+                if(safeLeftDistance < 0)
+                    safeLeftDistance = 0;
+                double safeAvoidDistance = avoidDistance_ - NEARBY_SAFETY_DISTANCE;
+                leftRightDiff -= (1.0 - (safeLeftDistance / safeAvoidDistance));
                 measureCount++;
             }
             if(hasRightObstacle()) {
-                leftRightDiff += (1.0 - (getRightMinDistance() / avoidDistance_));
+                double safeRightDistance = getRightMinDistance() - NEARBY_SAFETY_DISTANCE;
+                if(safeRightDistance < 0)
+                    safeRightDistance = 0;
+                double safeAvoidDistance = avoidDistance_ - NEARBY_SAFETY_DISTANCE;
+                leftRightDiff += (1.0 - (safeRightDistance / safeAvoidDistance));
                 measureCount++;
             }
 

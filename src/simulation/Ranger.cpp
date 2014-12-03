@@ -9,6 +9,7 @@ namespace mae
 	 *=================*/
 
 	RangerProperties::RangerProperties()
+	: fov_(-1), maxRange_(-1), measurementCount_(0)
 	{
 	}
 
@@ -16,7 +17,7 @@ namespace mae
 	{
 	}
 
-	void RangerProperties::setMeasurementCount(const int p_count)
+	void RangerProperties::setMeasurementCount(const unsigned int p_count)
 	{
 		measurementCount_ = p_count;
 		measurementOrigins_.resize(p_count);
@@ -32,7 +33,7 @@ namespace mae
 		return maxRange_;
 	}
 
-	int RangerProperties::getMeasurementCount() const
+	unsigned int RangerProperties::getMeasurementCount() const
 	{
 		return measurementCount_;
 	}
@@ -77,7 +78,7 @@ namespace mae
 		properties_.maxRange_ = ranger_->GetSensors()[0].range.max;
 		properties_.fov_ = ranger_->GetSensors()[0].fov;
 
-		for(int i = 0; i < properties_.getMeasurementCount(); ++i) {
+		for(unsigned int i = 0; i < properties_.getMeasurementCount(); ++i) {
 			Stg::Pose pose = ranger_->GetSensors()[i].pose;
 
 			properties_.measurementOrigins_[i].set(pose.x, pose.y, pose.a);
@@ -104,7 +105,7 @@ namespace mae
 		return properties_;
 	}
 
-	int Ranger::getMeasurementCount() const
+	unsigned int Ranger::getMeasurementCount() const
 	{
 		return properties_.getMeasurementCount();
 	}

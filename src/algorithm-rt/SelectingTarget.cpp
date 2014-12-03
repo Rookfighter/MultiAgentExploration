@@ -23,16 +23,16 @@ namespace mae
     };*/
 
     // directions for 60° FOV
-    static const std::vector<double> checkObstacleDirections = {
+   /* static const std::vector<double> checkObstacleDirections = {
                 0               , (M_PI / 3),
                 (2 * M_PI / 3)  , (M_PI),
                 (4 * M_PI / 3)  , (5 * M_PI / 3)
-    };
+    };*/
 
     static const std::vector<double> checkMarkerDirections = {
-                    0       , (M_PI / 2),
-                    (M_PI)  , (3 * M_PI / 2),
-        };
+        0       , (M_PI / 2),
+        (M_PI)  , (3 * M_PI / 2)
+    };
 
     SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
         : AntState(p_properties),
@@ -99,21 +99,22 @@ namespace mae
 
     bool SelectingTarget::checkBlankSpace()
     {
+        RangerProperties rangerProperties = properties_.robot->getRanger().getProperties();
 
         // check if obstacles block any directions
-        std::vector<bool> blockedByObstacle(checkObstacleDirections.size());
-        for(unsigned int i = 0; i < checkObstacleDirections.size(); ++i) {
-            double beginAngle = checkObstacleDirections[i] - (BLOCK_OBSTACLE_FOV / 2);
-            double endAngle = checkObstacleDirections[i] + (BLOCK_OBSTACLE_FOV / 2);
-            blockedByObstacle[i] = obstacleDetector_.check(beginAngle,
-                                                           endAngle,
-                                                           obstacleMarkerDistance_);
+        std::vector<bool> blockedByObstacle(rangerProperties.getMeasurementCount());
+        for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
+            double distance = properties_.robot->getRanger().getDistance(i);
+            blockedByObstacle[i] = distance <= obstacleMarkerDistance_;
         }
 
         // check if marker block any direction
         std::vector<bool> blockedByMarker(checkMarkerDirections.size());
+        for(unsigned int i = 0; i < blockedByMarker.size(); ++i)
+            blockedByMarker[i] = false;
+
         for(MarkerMeasurement measurement : markerInRange_) {
-            for(unsigned int i = 0; i < checkObstacleDirections.size(); ++i) {
+            for(unsigned int i = 0; i < checkMarkerDirections.size(); ++i) {
                 if(!blockedByMarker[i]) {
                     double beginAngle = checkMarkerDirections[i] - (BLOCK_MARKER_FOV / 2);
                     double endAngle = checkMarkerDirections[i] + (BLOCK_MARKER_FOV / 2);
@@ -129,8 +130,8 @@ namespace mae
             if(blockedByMarker[i]) {
                 double beginAngle = checkMarkerDirections[i] - (BLOCK_MARKER_FOV / 2);
                 double endAngle = checkMarkerDirections[i] + (BLOCK_MARKER_FOV / 2);
-                for(unsigned int j = 0; j < checkObstacleDirections.size(); ++j) {
-                    if(angleIsBetween(checkObstacleDirections[j], beginAngle, endAngle))
+                for(unsigned int j = 0; j < rangerProperties.getMeasurementCount(); ++j) {
+                    if(angleIsBetween(rangerProperties.getMeasurementOrigins()[j].yaw, beginAngle, endAngle))
                         blockedByObstacle[j] = true;
                 }
             }
@@ -138,25 +139,26 @@ namespace mae
 
         std::stringstream ss;
         ss << "-- ";
-        for(unsigned int i = 0; i < checkObstacleDirections.size(); ++i)
-            ss << radianToDegree(checkObstacleDirections[i]) << "°=" << boolToStr(blockedByObstacle[i]) << " ";
+        for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i)
+            ss << radianToDegree(rangerProperties.getMeasurementOrigins()[i].yaw) << "°=" << boolToStr(blockedByObstacle[i]) << " ";
         ss << "(" << properties_.robot->getName() << ")";
         LOG(DEBUG) << ss.str();
 
-        int idx = -1;
-        for(unsigned int i = 0; i < checkObstacleDirections.size(); ++i) {
+        std::vector<unsigned int> possibleDirections;
+        for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
             if(!blockedByObstacle[i]) {
-                idx = i;
-                break;
+                possibleDirections.push_back(i);
             }
         }
 
-        if(idx >= 0) {
-            properties_.angleToTurn = checkObstacleDirections[idx];
+        if(!possibleDirections.empty()) {
+            Random random;
+            int idx = random.nextInt(possibleDirections.size());
+            properties_.angleToTurn = rangerProperties.getMeasurementOrigins()[possibleDirections[idx]].yaw;
             LOG(DEBUG) << "-- chosen: " << radianToDegree(properties_.angleToTurn) << "° (" << properties_.robot->getName() << ")";
         }
 
-        return  idx >= 0;
+        return !possibleDirections.empty();
     }
 
     bool SelectingTarget::findNextMarker()

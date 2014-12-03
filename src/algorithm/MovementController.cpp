@@ -49,6 +49,16 @@ namespace mae
         distanceToMove_ = p_distance;
     }
 
+    void MovementController::stopWandering()
+    {
+        wanderDistance(0);
+    }
+
+    void MovementController::stopTurning()
+    {
+        turnBy(0);
+    }
+
     bool MovementController::reachedDistance() const
     {
         return distanceToMove_ <= 0;

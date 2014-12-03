@@ -6,12 +6,12 @@ algorithm:
     type: nodecounting
     obstacle_stop_distance: 0.5 # m
     obstacle_avoid_distance: 0.5 # m
-    obstacle_marker_distance: 1.2 # m
+    obstacle_marker_distance: 2.0 # m
     marker_deploy_distance: 1.6 # m
     collision_resolve_distance: 0.5 # m
-    marker_too_close_distance: 0.4 # m
+    marker_too_close_distance: 0.5 # m
 stock:
     refill_count: 10
 experiment:
     termination_minutes: 90
-    termination_coverage: 0.9
+    termination_coverage: -1 #0.9

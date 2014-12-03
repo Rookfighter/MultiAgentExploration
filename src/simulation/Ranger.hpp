@@ -12,17 +12,17 @@ namespace mae
 	private:
 		double fov_;
 		double maxRange_;
-		int measurementCount_;
+		unsigned int measurementCount_;
 		std::vector<Pose> measurementOrigins_;
 		
-		void setMeasurementCount(const int p_count);
+		void setMeasurementCount(const unsigned int p_count);
 	public:
 		RangerProperties();
 		~RangerProperties();
 		
 		double getFOV() const;
 		double getMaxRange() const;
-		int getMeasurementCount() const;
+		unsigned int getMeasurementCount() const;
 		const std::vector<Pose>& getMeasurementOrigins() const;
 		
 		std::string str(const int p_index) const;
@@ -45,7 +45,7 @@ namespace mae
 		bool hasValidData() const;
 
 		const RangerProperties& getProperties() const;
-		int getMeasurementCount() const;
+		unsigned int getMeasurementCount() const;
 		
 	};
 

@@ -26,7 +26,7 @@ namespace mae
 		double minDistance = 1e6;
 
 		const RangerProperties& rangerProperties = robot_->getRanger().getProperties();
-		for(int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
+		for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
 
 			// check if sensor is in the angles we check
 			if(!angleIsBetween(rangerProperties.getMeasurementOrigins()[i].yaw, p_beginAngle, p_endAngle))

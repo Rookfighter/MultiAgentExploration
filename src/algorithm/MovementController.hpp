@@ -39,6 +39,8 @@ namespace mae
 
         void turnBy(const double p_angle);
         void wanderDistance(const double p_distance);
+        void stopWandering();
+        void stopTurning();
 
         bool reachedDistance() const;
         bool reachedDirection() const;

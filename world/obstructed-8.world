@@ -3,7 +3,7 @@ include "include/obstructed-world.inc"
 pioneer2dx
 (
     name "pioneer1"
-    pose [ -3 -2 0 0 ]
+    pose [ -6.5 -5.5 0 0 ]
 
     localization "odom"
     odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
@@ -14,7 +14,7 @@ pioneer2dx
 pioneer2dx
 (
     name "pioneer2"
-    pose [ 2.5 2 0 0 ]
+    pose [ -5.5 -5.5 0 0 ]
 
     localization "odom"
     odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
@@ -25,7 +25,7 @@ pioneer2dx
 pioneer2dx
 (
     name "pioneer3"
-    pose [ -3 2 0 0 ]
+    pose [ -6.5 -4.5 0 0 ]
 
     localization "odom"
     odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
@@ -36,7 +36,7 @@ pioneer2dx
 pioneer2dx
 (
     name "pioneer4"
-    pose [ 2.5 -2 0 0 ]
+    pose [ -5.5 -4.5 0 0 ]
 
     localization "odom"
     odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
@@ -47,7 +47,7 @@ pioneer2dx
 pioneer2dx
 (
     name "pioneer5"
-    pose [ -4.5 -4.5 0 0 ]
+    pose [ -4.5 -5.5 0 0 ]
 
     localization "odom"
     odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
@@ -58,7 +58,7 @@ pioneer2dx
 pioneer2dx
 (
     name "pioneer6"
-    pose [ 4.5 5 0 0 ]
+    pose [ -4.5 -4.5 0 0 ]
 
     localization "odom"
     odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
@@ -69,7 +69,7 @@ pioneer2dx
 pioneer2dx
 (
     name "pioneer7"
-    pose [ -4.5 5 0 0 ]
+    pose [ -6.5 -3.5 0 0 ]
 
     localization "odom"
     odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta
@@ -80,7 +80,7 @@ pioneer2dx
 pioneer2dx
 (
     name "pioneer8"
-    pose [ 4.5 -4.5 0 0 ]
+    pose [ -5.5 -3.5 0 0 ]
 
     localization "odom"
     odom_error [ 0.05 0.05 0.0 0.1 ]   	# Odometry error or slip in X, Y and Theta

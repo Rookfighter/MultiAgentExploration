@@ -1,0 +1,32 @@
+import: [config/lrtastar.yaml]
+world:
+    gui: true
+    file: world/obstructed-4.world
+    covered_by_obstacles: 0.08297
+    type: obstructed
+robots:
+    -
+        name: pioneer1
+        ranger_index: 0
+        max_velocity: [0.5, 1.57] # [m/s rad/s]
+        min_velocity: [-0.5, -1.57]
+        marker_sensor_max_range: 2.0
+    -
+        name: pioneer2
+        ranger_index: 0
+        max_velocity: [0.5, 1.57] # [m/s rad/s]
+        min_velocity: [-0.5, -1.57]
+        marker_sensor_max_range: 2.0
+    -
+        name: pioneer3
+        ranger_index: 0
+        max_velocity: [0.5, 1.57] # [m/s rad/s]
+        min_velocity: [-0.5, -1.57]
+        marker_sensor_max_range: 2.0
+    -
+        name: pioneer4
+        ranger_index: 0
+        max_velocity: [0.5, 1.57] # [m/s rad/s]
+        min_velocity: [-0.5, -1.57]
+        marker_sensor_max_range: 2.0
+

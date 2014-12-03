@@ -24,6 +24,6 @@ window
 floorplan
 (
     name "floorplan1"
-    bitmap "bitmaps/obstructed_room.png"
+    bitmap "bitmaps/obstructed.png"
     size [30 30 1]
 )

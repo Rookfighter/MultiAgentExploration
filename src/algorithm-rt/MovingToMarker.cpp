@@ -88,14 +88,16 @@ namespace mae
         // at first turn to marker so we don't proceed in the wrong direction
         // with obstacle avoidance
         if(firstTurnToMarker_) {
-            if(movementController_.reachedDirection() && isFacingToTarget()) {
-                firstTurnToMarker_ = false;
-            } else {
-                turnToTarget();
+            if(movementController_.reachedDirection()) {
+                if(isFacingToTarget())
+                    firstTurnToMarker_ = false;
+                else
+                    turnToTarget();
             }
         } else {
             if(hasObstacleToTarget() || movementController_.isAvoidingObstacle()) {
                 obstacleAvoidStep_ = OBSTACLE_AVOID_MAX_STEP;
+                movementController_.stopTurning();
             }
 
             // if we are not avoiding any obstacles turn to the target

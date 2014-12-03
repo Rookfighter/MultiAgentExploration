@@ -12,7 +12,8 @@ namespace mae
     Statistic::Statistic(const StatisticConfig &p_config)
         :simulation_(p_config.simulation),
          statisticGrid_(p_config),
-         algorithmType_(p_config.algorithmType)
+         algorithmType_(p_config.algorithmType),
+         worldType_(p_config.worldType)
     {
         LOG(INFO) << "Initialized Statistic";
     }
@@ -159,8 +160,9 @@ namespace mae
         ss << saveDirectory_ << "/" << FileNames::experimentConfigFile;
         file.open(ss.str());
         file << "# shows configuration of the experiment" << std::endl;
-        file << "# robotCount" << std::endl;
-        file << simulation_->getRobots().size();
+        file << "# robotCount, worldType" << std::endl;
+        file << simulation_->getRobots().size() << std::endl;
+        file << worldType_;
         file.close();
     }
 

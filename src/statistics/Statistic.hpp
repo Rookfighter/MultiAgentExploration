@@ -16,6 +16,7 @@ namespace mae
         StatisticGrid statisticGrid_;
         std::string saveDirectory_;
         std::string algorithmType_;
+        std::string worldType_;
 
         void updateSaveDirectory(const std::string &p_directory);
         std::string getCurrentTime();

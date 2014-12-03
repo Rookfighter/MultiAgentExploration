@@ -35,8 +35,6 @@ namespace mae
         const std::string markerTooCloseDistance = "marker_too_close_distance";
         
         const std::string experiment = "experiment";
-        const std::string terminationMinutes = "termination_minutes";
-        const std::string terminationCoverage = "termination_coverage";
 
         const std::string statistic = "statistic";
         const std::string floorplanName = "floorplan_name";

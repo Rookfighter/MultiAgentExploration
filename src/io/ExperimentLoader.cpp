@@ -1,7 +1,9 @@
-#include "io/ExperimentLoader.hpp"
+
 
 #include <yaml-cpp/yaml.h>
 #include <easylogging++.h>
+#include "app/ArgumentParser.hpp"
+#include "io/ExperimentLoader.hpp"
 #include "io/YamlNode.hpp"
 #include "algorithm/RandomWalk.hpp"
 #include "algorithm-rt/NodeCounting.hpp"
@@ -41,7 +43,7 @@ namespace mae
     
     void ExperimentLoader::load(YAML::Node &p_root)
     {
-        YAML::Node algorithmNode, experimentNode, tmpNode;
+        YAML::Node algorithmNode, experimentNode;
 		
         simulationLoader_.load(p_root);
         statisticLoader_.load(p_root);
@@ -65,17 +67,14 @@ namespace mae
 		    throw std::logic_error("experiment node not found");
 		LOG(INFO) << "-- experiment config found";
 
-		tmpNode = experimentNode[YamlNode::terminationMinutes];
-		if(tmpNode.IsDefined()) {
-		    experimentConfig_.terminationMinutes = tmpNode.as<int>();
-		    LOG(INFO) << "-- terminationMinutes: " << experimentConfig_.terminationMinutes;
-		}
+        experimentConfig_.terminationMinutes = ArgumentParser::getTerminationMinutes();
+        if(experimentConfig_.terminationMinutes > 0)
+            LOG(INFO) << "-- terminationMinutes: " << experimentConfig_.terminationMinutes;
 
-		tmpNode = experimentNode[YamlNode::terminationCoverage];
-		if(tmpNode.IsDefined()) {
-		    experimentConfig_.terminationCoverage= tmpNode.as<double>();
-		    LOG(INFO) << "-- terminationCoverage: " << experimentConfig_.terminationCoverage;
-		}
+
+        experimentConfig_.terminationCoverage = ArgumentParser::getTerminationCoverage();
+        if(experimentConfig_.terminationCoverage > 0)
+            LOG(INFO) << "-- terminationCoverage: " << experimentConfig_.terminationCoverage;
     }
 
     Experiment* ExperimentLoader::create()

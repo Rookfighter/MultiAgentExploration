@@ -14,6 +14,7 @@ namespace mae
         std::string floorplanName;
         std::vector<double> coverageEvents;
         std::string algorithmType;
+        std::string worldType;
         double coveredByObstacles;
 
         StatisticConfig()

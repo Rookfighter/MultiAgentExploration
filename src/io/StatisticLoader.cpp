@@ -50,6 +50,7 @@ namespace mae
         worldNode = p_root[YamlNode::world];
         assert(worldNode.IsDefined());
         config_.coveredByObstacles = worldNode[YamlNode::coveredByObstacles].as<double>();
+        config_.worldType = worldNode[YamlNode::type].as<std::string>();
 
         coverageEventNode = statisticNode[YamlNode::coverageEvents];
         if(coverageEventNode.IsDefined() &&

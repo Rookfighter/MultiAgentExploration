@@ -1,7 +1,7 @@
 #include <easylogging++.h>
 #include <signal.h>
 #include "app/Application.hpp"
-
+#include "app/ArgumentParser.hpp"
 #include "io/ExperimentLoader.hpp"
 #include "io/ImportYaml.hpp"
 #include "io/StatisticLoader.hpp"
@@ -24,9 +24,14 @@ namespace mae
               configFile_("")
     {
         assert(argc > 1);
-
-        Stg::Init(&argc, &argv);
-        configFile_ = argv[1];
+        try {
+            Stg::Init(&argc, &argv);
+            run_ = ArgumentParser::parse(argc, argv);
+            configFile_ = ArgumentParser::getConfigFile();
+        } catch (const std::exception &e) {
+            run_ = false;
+            LOG(ERROR) << "Exception: " << e.what();
+        }
     }
 
     Application::~Application()
@@ -68,7 +73,7 @@ namespace mae
     int Application::run()
     {
         exitCode_ = 0;
-        if(init()) {
+        if(run_ && init()) {
             LOG(INFO)<< "Running Application";
             try {
                 loop();

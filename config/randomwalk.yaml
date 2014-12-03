@@ -13,5 +13,3 @@ algorithm:
 stock:
     refill_count: 10
 experiment:
-    termination_minutes: 90
-    termination_coverage: 0.9

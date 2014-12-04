@@ -13,7 +13,7 @@ EXPERIMENT_CONFIG_FILE = "experiment-config.dat"
 class ExperimentDirectory:
     directory_ = ""
     coverageEvents_ = []
-    finalCoverage_ = 0.0
+    finalCoverage_ = []
     meanGridTimeBetweenVisits_ = 0L
     meanTileTimeBetweenVisits_ = []
     tileVisits_ = []
@@ -54,7 +54,7 @@ class ExperimentDirectory:
         # load final coverage
         filename = os.path.join(self.directory_, FINAL_COVERAGE_FILE)
         dataFile.load(filename)
-        self.finalCoverage_ = dataFile.getDataAs("f")[0][0]
+        self.finalCoverage_ = dataFile.getDataAs("fl")
         
         # load meanGridTimeBetweenVisits
         filename = os.path.join(self.directory_, MEAN_GRID_TIME_BEWTEEN_VISITS_FILE)
@@ -64,12 +64,12 @@ class ExperimentDirectory:
         # load meanTileTimeBetweenVisits
         filename = os.path.join(self.directory_, MEAN_TILE_TIME_BEWTEEN_VISITS_FILE)
         dataFile.load(filename)
-        self.meanTileTimeBetweenVisits_ = dataFile.getDataAs("lll")
+        self.meanTileTimeBetweenVisits_ = dataFile.getDataAs("iil")
         
         # load tileVisits
         filename = os.path.join(self.directory_, TILE_VISITS_FILE)
         dataFile.load(filename)
-        self.tileVisits_ = dataFile.getDataAs("lll")
+        self.tileVisits_ = dataFile.getDataAs("iii")
         
         # load meanGridVisits
         filename = os.path.join(self.directory_, MEAN_GRID_VISITS_FILE)

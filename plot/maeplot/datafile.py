@@ -79,7 +79,9 @@ class DataFile:
         if fmt == 'f':
             return float(numString)
         elif fmt == 'l':
-            return long(float(numString))
+            return long(numString)
+        elif fmt == 'i':
+            return int(numString)
         else:
             raise ValueError("unknown format '" + format + "'")
         
@@ -87,6 +89,8 @@ class DataFile:
         if fmt == 'f':
             return repr(num)
         elif fmt == 'l':
+            return str(num)
+        elif fmt == 'i':
             return str(num)
         else:
             raise ValueError("unknown format '" + format + "'")

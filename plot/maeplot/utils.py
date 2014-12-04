@@ -1,4 +1,5 @@
 import os
+import errno
 
 def mkdirRec(directory):
     try:

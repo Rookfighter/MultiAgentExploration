@@ -19,6 +19,7 @@ plot/summary
 *.workspace
 *.pydevproject
 *.cproject
+*.pyc
 compile_commands.json
 
 

@@ -46,9 +46,9 @@ class DataFile:
                 for line in zip(*self.data_):
                     for value in line:
                         dataContent += value + " "
-                    dataContent.strip()
+                    dataContent = dataContent.strip()
                     dataContent += "\n"
-                dataContent.strip()
+                dataContent = dataContent.strip()
                 f.write(dataContent)
     
     def getDataAs(self, formatStr):

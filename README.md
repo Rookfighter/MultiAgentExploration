@@ -108,3 +108,9 @@ For plotting the received data Gnuplot is used.
 
 ```
 sudo apt-get install gnuplot gnuplot-x11
+
+### Matplotlib
+
+```
+sudo apt-get install python-tk python-matplotlib
+```

@@ -1,25 +1,26 @@
 import os
 import sys
-from maeplot.algorithmdir import AlgorithmDirectory
-from maeplot.utils import getImmediateSubdirectories
+from maeplot.plotdir import PlotDirectory
 
 # main
 originDir = os.getcwd()
 baseDir = os.path.dirname(os.path.realpath(sys.argv[0]))
-algorithmDirs = getImmediateSubdirectories(baseDir)
 
 print ""
-print "Plot MultiAgentExploration v1.2"
-print "-------------------------------"
+print "Plot MultiAgentExploration 2nd Edition v1.0"
+print "-------------------------------------------"
+
 print "cd to '" + baseDir + "'"
 print ""
 os.chdir(baseDir)
 
-for algoDir in algorithmDirs:
-    
-    algorithmDirectory = AlgorithmDirectory()
-    algorithmDirectory.load(algoDir)
-        
+plotDir = PlotDirectory()
+plotDir.load(baseDir)
+plotDir.save()
+plotDir.plot()
+
 print ""
 print "return to '" + originDir + "'"
 os.chdir(originDir)
+print "-------------------------------------------" 
+print "Finished: successful"

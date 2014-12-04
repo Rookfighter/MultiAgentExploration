@@ -1,42 +1,46 @@
-import os
-from ExperimentDirectory import ExperimentDirectory
-from Utils import *
-from chardet.test import result
+from experimentdir import ExperimentDirectory
+from utils import mkdirRec
+from utils import getSubdirectoriesConcat
 
 SUMMARY_DIRECTORY = "summary"
 
 class MeanCoverageEvents:
     
-    coverageEventsSum_ = dict()
-    coverageEventsCount_ = dict()
+    # [coverage, timeStamp, count]
+    coverageEventsData_ = [[],[],[]]
     
     def reset(self):
-        self.coverageEventsSum_ = dict()
-        self.coverageEventsCount_ = dict()
+        self.coverageEventsData_ = [[],[],[]]
     
     def add(self, coverageEvents):
         assert(len(coverageEvents) == 2)
         
-        for coverage,time in zip(coverageEvents[0], coverageEvents[1]):
-            coverageStr = str(coverage)
-            if coverageStr in self.coverageEventsSum_:
-                self.coverageEventsSum_[coverageStr] = self.coverageEventsSum_[coverageStr] + time
-                self.coverageEventsCount_[coverageStr] = self.coverageEventsCount_[coverageStr] + 1
-            else:
-                self.coverageEventsSum_[coverageStr] = time
-                self.coverageEventsCount_[coverageStr] = 1
+        for coverage in coverageEvents[0]:
+            if not coverage in self.coverageEventsData_[0]:
+                self.coverageEventsData_[0].append(coverage)
+                self.coverageEventsData_[0].sort()
+                idx = self.coverageEventsData_[0].index(coverage)
+                self.coverageEventsData_[1].insert(idx, 0L)
+                self.coverageEventsData_[2].insert(idx, 0)
+        
+        for toAddCoverage, toAddTime in zip(*coverageEvents):
+            for i,coverage in self.coverageEventsData_[0]:
+                if coverage == toAddCoverage:
+                    self.coverageEventsData_[1][i] = self.coverageEventsData_[1][i] + toAddTime
+                    self.coverageEventsData_[2][i] = self.coverageEventsData_[2][i] + 1
                 
     def getMean(self):
         result = [[],[]]
-        for key in self.coverageEventsSum_:
-            result[0] = self.coverageEventsSum_[key] / self.coverageEventsCount_
-        
+        for coverage, time, count  in zip(*self.coverageEventsData_):
+            result[0].append(coverage)
+            result[1].append(time / count)
+            
         return result
 
 class MeanTileTimeBetweenVisits:
     
-    tileTimeSum_ = dict()
-    tileTimeCount_ = dict()
+    # [x, y, time, count]
+    tileTimeData_ = [[], [], [], []]
     
     def reset(self):
         self.tileTimeSum_ = dict()

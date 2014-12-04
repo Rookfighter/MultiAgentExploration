@@ -1,5 +1,5 @@
 import os
-from DataFile import DataFile
+from datafile import DataFile
 
 # all files that are in an experiment directory
 TILE_VISITS_FILE = "tile-visits.dat"
@@ -36,50 +36,45 @@ class ExperimentDirectory:
         self.reset()
         
         self.directory_ = directory
-        data = DataFile()
+        dataFile = DataFile()
         
         print "-- loading data from '" + self.getName() + "'"
         
         # load coverage events
         filename = os.path.join(self.directory_, COVERAGE_EVENTS_FILE)
-        data.load(filename)
-        self.coverageEvents_.append(data.columnAsFloat(0))
-        self.coverageEvents_.append(data.columnAsLong(1))
+        dataFile.load(filename)
+        self.coverageEvents_= dataFile.getDataAs("fl")
         
         # load experiment config
         filename = os.path.join(self.directory_, EXPERIMENT_CONFIG_FILE)
-        data.load(filename)
-        self.robotCount_ = int(data.data_[0][0]);
-        self.worldType_ = data.data_[1][0];
+        dataFile.load(filename)
+        self.robotCount_ = int(dataFile.data_[0][0]);
+        self.worldType_ = dataFile.data_[0][1];
         
         # load final coverage
         filename = os.path.join(self.directory_, FINAL_COVERAGE_FILE)
-        data.load(filename)
-        self.finalCoverage_ = data.columnAsFloat(0)[0]
+        dataFile.load(filename)
+        self.finalCoverage_ = dataFile.getDataAs("f")[0][0]
         
         # load meanGridTimeBetweenVisits
         filename = os.path.join(self.directory_, MEAN_GRID_TIME_BEWTEEN_VISITS_FILE)
-        data.load(filename)
-        self.meanGridTimeBetweenVisits_ = data.columnAsLong(0)[0]
+        dataFile.load(filename)
+        self.meanGridTimeBetweenVisits_ = dataFile.getDataAs("f")[0][0]
         
         # load meanTileTimeBetweenVisits
         filename = os.path.join(self.directory_, MEAN_TILE_TIME_BEWTEEN_VISITS_FILE)
-        data.load(filename)
-        self.meanTileTimeBetweenVisits_.append(data.columnAsLong(0))
-        self.meanTileTimeBetweenVisits_.append(data.columnAsLong(1))
-        self.meanTileTimeBetweenVisits_.append(data.columnAsLong(2))
+        dataFile.load(filename)
+        self.meanTileTimeBetweenVisits_ = dataFile.getDataAs("lll")
         
         # load tileVisits
         filename = os.path.join(self.directory_, TILE_VISITS_FILE)
-        data.load(filename)
-        self.tileVisits_.append(data.columnAsLong(0))
-        self.tileVisits_.append(data.columnAsLong(1))
-        self.tileVisits_.append(data.columnAsLong(2))
+        dataFile.load(filename)
+        self.tileVisits_ = dataFile.getDataAs("lll")
         
         # load meanGridVisits
         filename = os.path.join(self.directory_, MEAN_GRID_VISITS_FILE)
-        data.load(filename)
-        self.meanGridVisits_ = data.columnAsFloat(0)[0]
+        dataFile.load(filename)
+        self.meanGridVisits_ = dataFile.getDataAs("f")[0][0]
         
     def getName(self):
         return os.path.basename(os.path.normpath(self.directory_))

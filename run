@@ -1,0 +1,29 @@
+#!/bin/bash
+
+declare -i COUNT
+COUNT=1
+TERRAINS="open obstructed office"
+ROBOT_COUNTS="1 2 4 8"
+ALGORITHMS="nodecounting lrtastar wagner compass randomwalk"
+
+if [ $# -gt 1 ]
+then
+    COUNT=$#
+fi
+
+cd build
+
+for algorithm in $ALGORITHMS;
+do
+    for terrain in $TERRAINS;
+    do
+        for robots in $ROBOT_COUNTS;
+        do
+            for i in $(seq 1 $COUNT);
+            do
+                echo "executing '$algorithm' in '$terrain' with $robots robots ($i)"
+                ./MultiAgentExploration -f config/$terrain/$algorithm-$robots.yaml -t 90 -g
+            done
+        done
+    done
+done

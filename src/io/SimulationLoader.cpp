@@ -1,6 +1,6 @@
-#include "io/SimulationLoader.hpp"
-
 #include <easylogging++.h>
+#include "app/ArgumentParser.hpp"
+#include "io/SimulationLoader.hpp"
 #include "io/YamlNode.hpp"
 
 namespace mae
@@ -33,7 +33,7 @@ namespace mae
         if(!worldNode.IsDefined())
             throw std::logic_error("world node not found");
 		worldFile_ = worldNode[YamlNode::worldFile].as<std::string>();
-        worldGui_ = worldNode[YamlNode::worldGui].as<bool>();
+        worldGui_ = ArgumentParser::useGUI();
 		LOG(INFO) << "-- world config found";
 		
 		// get configuration of marker stock

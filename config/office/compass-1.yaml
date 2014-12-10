@@ -1,6 +1,5 @@
 import: [config/compass.yaml]
 world:
-    gui: true
     file: world/office-1.world
     covered_by_obstacles: 0.4006
     type: office

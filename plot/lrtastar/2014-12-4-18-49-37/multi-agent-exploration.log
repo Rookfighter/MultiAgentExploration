@@ -1,0 +1,24 @@
+10/12/2014 18:49:26,780267 [INFO  ] loading config file 'config/obstructed/lrtastar-2.yaml'
+10/12/2014 18:49:26,781857 [INFO  ] -- importing file 'config/lrtastar.yaml'
+10/12/2014 18:49:26,784454 [INFO  ] -- world config found
+10/12/2014 18:49:26,784495 [INFO  ] -- stock config found
+10/12/2014 18:49:26,784511 [INFO  ] -- robot config found
+10/12/2014 18:49:26,784531 [INFO  ] -- found 2 robot configs
+10/12/2014 18:49:26,784633 [INFO  ] -- statistic config found
+10/12/2014 18:49:26,784717 [INFO  ] -- algorithm config found
+10/12/2014 18:49:26,784759 [INFO  ] -- algorithm type is lrtastar
+10/12/2014 18:49:26,784777 [INFO  ] -- experiment config found
+10/12/2014 18:49:26,784792 [INFO  ] -- terminationMinutes: 90
+10/12/2014 18:49:26,964862 [INFO  ] WorldSize: (30;30)
+10/12/2014 18:49:26,965011 [INFO  ] Initialized StatisticGrid
+10/12/2014 18:49:26,965027 [INFO  ] Initialized Statistic
+10/12/2014 18:49:26,965207 [INFO  ] Running Application
+10/12/2014 18:49:26,965222 [INFO  ] Running in NonGUI mode
+10/12/2014 18:49:37,253333 [INFO  ] Stopping application
+10/12/2014 18:49:37,253389 [INFO  ] Saving statistics to "../plot"
+10/12/2014 18:49:37,253444 [INFO  ] -- creating directory "../plot"
+10/12/2014 18:49:37,253553 [INFO  ] -- saving visits
+10/12/2014 18:49:37,258295 [INFO  ] -- saving timeBetweenVisits
+10/12/2014 18:49:37,264504 [INFO  ] -- saving coverage
+10/12/2014 18:49:37,264821 [INFO  ] -- saving experiment config
+10/12/2014 18:49:37,264885 [INFO  ] -- saving log

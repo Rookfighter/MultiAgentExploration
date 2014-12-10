@@ -1,6 +1,5 @@
 import: [config/lrtastar.yaml]
 world:
-    gui: true
     file: world/obstructed-2.world
     covered_by_obstacles: 0.08297
     type: obstructed

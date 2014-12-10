@@ -22,7 +22,7 @@ namespace mae
 
     bool ArgumentParser::parse(int argc, char** argv)
     {
-
+    	reset();
         char c;
         bool gaveFile = false;
         while((c = getopt(argc, argv, "hgf:t:c:")) != -1) {

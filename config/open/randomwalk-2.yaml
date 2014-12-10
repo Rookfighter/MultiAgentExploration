@@ -1,6 +1,5 @@
 import: [config/randomwalk.yaml]
 world:
-    gui: true
     file: world/open-2.world
     covered_by_obstacles: 0.0444
     type: open

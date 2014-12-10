@@ -1,6 +1,5 @@
 import: [config/nodecounting.yaml]
 world:
-    gui: true
     file: world/office-4.world
     covered_by_obstacles: 0.4006
     type: office

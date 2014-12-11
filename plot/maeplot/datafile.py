@@ -1,9 +1,9 @@
 import os
 
 class DataFile:
-    loadedFrom_ = ""
-    comments_ = []
-    data_ = []
+    
+    def __init__(self):
+        self.reset()
     
     def reset(self):
         self.data_ = []

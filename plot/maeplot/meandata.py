@@ -1,42 +1,40 @@
 class MeanCoverageEvents:
     
-    # [coverage, timeStamp, count]
-    coverageEventsData_ = [[],[],[]]
+    def __init__(self):
+        self.reset()
     
     def reset(self):
-        self.coverageEventsData_ = [[],[],[]]
+        # [coverage] (timeStamp, count)
+        self.coverageEventsData_ = dict()
     
     def add(self, coverageEvents):
         assert(len(coverageEvents) == 2)
         
         for coverage in coverageEvents[0]:
-            if not coverage in self.coverageEventsData_[0]:
-                self.coverageEventsData_[0].append(coverage)
-                self.coverageEventsData_[0].sort()
-                idx = self.coverageEventsData_[0].index(coverage)
-                self.coverageEventsData_[1].insert(idx, 0L)
-                self.coverageEventsData_[2].insert(idx, 0)
+            if not coverage in self.coverageEventsData_:
+                self.coverageEventsData_[coverage] = [0L, 0]
         
-        for toAddCoverage, toAddTime in zip(*coverageEvents):
-            for i,coverage in enumerate(self.coverageEventsData_[0]):
-                if coverage == toAddCoverage:
-                    self.coverageEventsData_[1][i] = self.coverageEventsData_[1][i] + toAddTime
-                    self.coverageEventsData_[2][i] = self.coverageEventsData_[2][i] + 1
+        for coverage, time in zip(*coverageEvents):
+            self.coverageEventsData_[coverage][0] = self.coverageEventsData_[coverage][0] + time
+            self.coverageEventsData_[coverage][1] = self.coverageEventsData_[coverage][1] + 1
                 
     def getMean(self):
         result = [[],[]]
-        for coverage, time, count  in zip(*self.coverageEventsData_):
+        for coverage in sorted(self.coverageEventsData_):
             result[0].append(coverage)
+            time = self.coverageEventsData_[coverage][0]
+            count = self.coverageEventsData_[coverage][1]
             result[1].append(time / count)
             
         return result
 
 class MeanTileTimeBetweenVisits:
     
-    # (time, count)
-    tileTimeData_ = dict()
+    def __init__(self):
+        self.reset()
     
     def reset(self):
+        # [x,y] (time, count)
         self.tileTimeData_ = dict()
     
     def add(self, tileTimeBetweenVisits):
@@ -59,11 +57,11 @@ class MeanTileTimeBetweenVisits:
     def getMean(self):
         result = [[],[],[]]
         
-        for key,values in self.tileTimeData_.iteritems():
+        for key in sorted(self.tileTimeData_):
             coord = self.keyToValue(key)
             result[0].append(coord[0])
             result[1].append(coord[1])
-            
+            values = self.tileTimeData_[key]
             if values[1] == 0:
                 result[2].append(0L)
             else:
@@ -83,10 +81,12 @@ class MeanTileTimeBetweenVisits:
     
     
 class MeanTileVisits:
-    # (visits, count)
-    tileVisitsData_ = dict()
+    
+    def __init__(self):
+        self.reset()
     
     def reset(self):
+        # [x,y] (visits, count)
         self.tileVisitsData_ = dict()
     
     def add(self, tileVisits):
@@ -108,11 +108,12 @@ class MeanTileVisits:
     def getMean(self):
         result = [[], [], []]
         
-        for key, values in self.tileVisitsData_.iteritems():
+        for key in sorted(self.tileVisitsData_):
             coord = self.keyToValue(key)
             result[0].append(coord[0])
             result[1].append(coord[1])
-            
+            values = self.tileVisitsData_[key]
+
             if values[1] == 0:
                 result[2].append(0.0)
             else:
@@ -132,9 +133,8 @@ class MeanTileVisits:
 
 class MeanGridTimeBetweenVisits:
     
-    # [time, count]
-    gridTimeSum_ = 0L
-    gridTimeCount_ = 0
+    def __init__(self):
+        self.reset()
     
     def reset(self):
         self.gridTimeSum_ = 0L
@@ -152,8 +152,8 @@ class MeanGridTimeBetweenVisits:
         
 class MeanGridVisits:
     
-    gridVisitsSum_ = 0.0
-    gridVisitsCount_ = 0;
+    def __init__(self):
+        self.reset()
     
     def reset(self):
         self.gridVisitsSum_ = 0.0
@@ -171,9 +171,8 @@ class MeanGridVisits:
 
 class MeanFinalCoverage:
     
-    finalCoverageSum_ = 0.0
-    finalTimeSum_ = 0L
-    finalCoverageCount_ = 0
+    def __init__(self):
+        self.reset()
     
     def reset(self):
         self.finalCoverageSum_ = 0.0

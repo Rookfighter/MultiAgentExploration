@@ -27,16 +27,9 @@ FINAL_COVERAGE_FILE = "final-coverage.dat"
 COVERAGE_EVENTS_PER_COUNT = "coverage-events-per-robots.png"
 
 class AlgorithmDirectory:
-    directory_ = ""
     
-    meanCoverageEvents_ = dict()
-    meanTileTimeBetweenVisits_ = dict()
-    meanTileVisits_ = dict()
-    meanGridTimeBetweenVisits_ = dict()
-    meanGridVisits_ = dict()
-    meanFinalCoverage_ = dict()
-    
-    worldTypes_ = set()
+    def __init__(self):
+        self.reset()
     
     def reset(self):
         self.directory_ = ""
@@ -153,7 +146,7 @@ class AlgorithmDirectory:
                 dataFile.save(filename)
         
     def plot(self):
-        print "-- plotting summary data of '" + self.getName() + "'";
+        print "plotting summary data of '" + self.getName() + "'";
         
         summaryDir = self.getSummaryDir()
         for worldType in self.worldTypes_:

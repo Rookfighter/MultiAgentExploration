@@ -6,7 +6,7 @@ log/
 lib/
 plot/nodecounting
 plot/wagner
-plot/lartastar
+plot/lrtastar
 plot/randomwalk
 plot/compass
 plot/summary

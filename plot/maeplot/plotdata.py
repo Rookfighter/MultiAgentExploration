@@ -32,7 +32,7 @@ def plotFinalCoverageTimes(data, outfile):
     fig, ax = plt.subplots()
     ax.set_ylabel('minutes')
     ax.set_title('Time to Coverage')
-    colorCycle = ['r', 'g', 'b', 'c', 'm']; 
+    colorCycle = ['red', 'blue', 'orange', 'olive', 'cyan']; 
     
     availableWorldsTmp = set()
     for worldDict in data.values():
@@ -48,6 +48,43 @@ def plotFinalCoverageTimes(data, outfile):
         for worldType in availableWorlds:
             if worldType in worldDict:
                 toPlot.append(usecToMin(worldDict[worldType].getMean()[1][0]))
+            else:
+                toPlot.append(0.0)
+        
+        leftBorders = [i + (algorithmCount * width) for i in xrange(len(toPlot))]
+        ax.bar(leftBorders, toPlot, width=width, label=algorithm, color=colorCycle[algorithmCount % len(colorCycle)])
+        algorithmCount = algorithmCount + 1
+        
+    ax.set_xticks([(i + (len(availableWorlds) * width) / 2) for i in xrange(len(availableWorlds))])
+    ax.set_xticklabels(availableWorlds)
+    ax.legend(loc='upper right')
+    
+    fig.set_size_inches(18.5,10.5)
+    plt.savefig(outfile, dpi=100)
+    
+def plotFinalCoverage(data, outfile):
+    plt.figure()
+    plt.cla()
+    
+    fig, ax = plt.subplots()
+    ax.set_ylabel('coverage')
+    ax.set_title('Coverage in Time')
+    colorCycle = ['red', 'blue', 'orange', 'olive', 'cyan']; 
+    
+    availableWorldsTmp = set()
+    for worldDict in data.values():
+        for worldType in worldDict:
+            availableWorldsTmp.add(worldType)
+    
+    availableWorlds = sorted(availableWorldsTmp)
+    width = 0.1
+    
+    algorithmCount = 0
+    for algorithm, worldDict in data.iteritems():
+        toPlot = []
+        for worldType in availableWorlds:
+            if worldType in worldDict:
+                toPlot.append(worldDict[worldType].getMean()[0][0])
             else:
                 toPlot.append(0.0)
         

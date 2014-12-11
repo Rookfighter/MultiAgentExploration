@@ -4,11 +4,13 @@ from utils import getSubdirectoriesConcat
 from utils import mkdirRec
 from meandata import MeanFinalCoverage
 from plotdata import plotFinalCoverageTimes
+from plotdata import plotFinalCoverage
 
 SUMMARY_DIRECTORY = "summary"
 PACKAGE_DIRECTORY = "maeplot"
 
 FINAL_COVERAGE_PLOT_FILE = "final-coverage.png"
+FINAL_COVERAGE_TIME_PLOT_FILE = "final-coverage-time.png"
 
 class PlotDirectory(object):
     
@@ -53,8 +55,14 @@ class PlotDirectory(object):
     def plot(self):
         mkdirRec(self.getSummaryDir())
         
-        filename = os.path.join(self.getSummaryDir(),FINAL_COVERAGE_PLOT_FILE)
+        print "plotting final coverage"
+        filename = os.path.join(self.getSummaryDir(), FINAL_COVERAGE_PLOT_FILE)
+        plotFinalCoverage(self.meanFinalCoverage_, filename)
+        
+        print "plotting final coverage times"
+        filename = os.path.join(self.getSummaryDir(),FINAL_COVERAGE_TIME_PLOT_FILE)
         plotFinalCoverageTimes(self.meanFinalCoverage_, filename)
+        
         for algoDir in self.algorithmDirs_:
             algoDir.plot()
             

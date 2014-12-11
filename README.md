@@ -102,12 +102,13 @@ For code completion add the following directory to your tag search path.
 /usr/local/include/Stage-4.1
 ```
 
-### Gnuplot
+### Eclipse
 
-For plotting the received data Gnuplot is used.
+For Code Completion add the following directory in **Project Properties > C/C++ General > Paths and Symbols**:
 
 ```
-sudo apt-get install gnuplot gnuplot-x11
+/usr/local/include/Stage-4.1
+```
 
 ### Matplotlib
 

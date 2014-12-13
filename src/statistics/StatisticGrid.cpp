@@ -1,6 +1,7 @@
 #include <easylogging++.h>
 #include "statistics/StatisticGrid.hpp"
 #include "utils/Math.hpp"
+#include "utils/Convert.hpp"
 
 namespace mae
 {
@@ -12,7 +13,8 @@ namespace mae
          floorplanName_(p_config.floorplanName),
          grid_(),
          previousTilePosition_(simulation_->getRobots().size()),
-         coverageTimes_(),
+         coverageEvents_(),
+		 timeEvents_(),
          coveredByObstacles(p_config.coveredByObstacles)
     {
         Vector2f worldSize;
@@ -30,6 +32,8 @@ namespace mae
         
         for(double coverageEvent : p_config.coverageEvents)
             addCoverageEvent(coverageEvent);
+        for(unsigned int timeEvent: p_config.timeEvents)
+        	addTimeEvent(minToUsec(timeEvent));
 
         LOG(INFO) << "Initialized StatisticGrid";
     }
@@ -74,7 +78,16 @@ namespace mae
         time.coverage = p_coverage;
         time.reached = false;
         time.timeStamp = 0;
-        coverageTimes_.push_back(time);
+        coverageEvents_.push_back(time);
+    }
+
+    void StatisticGrid::addTimeEvent(const Stg::usec_t p_time)
+    {
+    	CoverageTime time;
+    	time.coverage = 0;
+    	time.reached = false;
+    	time.timeStamp = p_time;
+    	timeEvents_.push_back(time);
     }
 
     Vector2i StatisticGrid::getTilePosition(const Vector2f &p_position) const
@@ -138,13 +151,15 @@ namespace mae
                     covered++;
             }
         }
-
-        return ((double) covered) / ((1.0 - coveredByObstacles) * (double)(size_.x * size_.y));
+        double result = ((double) covered) / ((1.0 - coveredByObstacles) * (double)(size_.x * size_.y));
+        if(result > 1.0)
+        	result = 1.0;
+        return result;
     }
 
-    const std::vector<CoverageTime>& StatisticGrid::getCoverageTimes() const
+    const std::vector<CoverageTime>& StatisticGrid::getCoverageEvents() const
     {
-        return coverageTimes_;
+        return coverageEvents_;
     }
 
     void StatisticGrid::update()
@@ -160,18 +175,33 @@ namespace mae
         }
 
         if(visitHappened)
-            updateCoverageTimes();
+            updateCoverageEvents();
+        updateTimeEvents();
     }
 
-    void StatisticGrid::updateCoverageTimes()
+    void StatisticGrid::updateCoverageEvents()
     {
         double currentCoverage = getCoverage();
+        Stg::usec_t currentTime = simulation_->getWorld()->SimTimeNow();
 
-        for(CoverageTime &time : coverageTimes_) {
+        for(CoverageTime &time : coverageEvents_) {
             if(!time.reached && currentCoverage >= time.coverage) {
                 time.reached = true;
-                time.timeStamp = simulation_->getWorld()->SimTimeNow();
+                time.timeStamp = currentTime;
             }
         }
+    }
+
+    void StatisticGrid::updateTimeEvents()
+    {
+    	double currentCoverage = getCoverage();
+    	Stg::usec_t currentTime = simulation_->getWorld()->SimTimeNow();
+
+    	for(CoverageTime &time: timeEvents_) {
+    		if(!time.reached && currentTime >= time.timeStamp) {
+    			time.reached = true;
+    			time.coverage = currentCoverage;
+    		}
+    	}
     }
 }

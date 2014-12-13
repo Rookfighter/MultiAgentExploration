@@ -40,6 +40,7 @@ namespace mae
         const std::string floorplanName = "floorplan_name";
         const std::string tileSize = "tile_size";
         const std::string coverageEvents = "coverage_events";
+        const std::string timeEvents = "time_events";
     }
 }
 

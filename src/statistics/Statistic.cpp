@@ -136,7 +136,18 @@ namespace mae
         file.open(ss.str());
         file << "# shows coverageEvents" << std::endl;
         file << "# [coverage timeStamp(usec)]";
-        for(const CoverageTime &time : statisticGrid_.getCoverageTimes()) {
+        for(const CoverageTime &time : statisticGrid_.getCoverageEvents()) {
+            if(time.reached)
+                file << std::endl << time.coverage << " " << time.timeStamp;
+        }
+        file.close();
+
+        // save all timeEvents that occurred
+        ss << saveDirectory_ << "/" << FileNames::timeEventsFile;
+        file.open(ss.str());
+        file << "# shows timeEvents" << std::endl;
+        file << "# [coverage timeStamp(usec)]";
+        for(const CoverageTime &time : statisticGrid_.getTimeEvents()) {
             if(time.reached)
                 file << std::endl << time.coverage << " " << time.timeStamp;
         }

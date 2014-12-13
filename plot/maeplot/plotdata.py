@@ -42,8 +42,8 @@ def plotFinalCoverageBarchart(ylabel, title, data, dataIndex, outfile):
     plt.cla()
     
     fig, ax = plt.subplots()
-    ax.set_ylabel('minutes')
-    ax.set_title('Time to Coverage')
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
     colorCycle = getBarChartColorCyle();
     
     availableWorldsTmp = set()
@@ -79,7 +79,7 @@ def plotFinalCoverageBarchart(ylabel, title, data, dataIndex, outfile):
     plt.savefig(outfile, dpi=100)
 
 def plotFinalCoverageTimes(data, outfile):
-    plotFinalCoverageBarchart('minutes', 'Time to Coverage', data, 1, outfile)
+    plotFinalCoverageBarchart('minutes', 'Time to reach Coverage', data, 1, outfile)
     
 def plotFinalCoverage(data, outfile):
-    plotFinalCoverageBarchart('coverage', 'Coverage in Time', data, 0, outfile)
+    plotFinalCoverageBarchart('coverage', 'Coverage reached after Time', data, 0, outfile)

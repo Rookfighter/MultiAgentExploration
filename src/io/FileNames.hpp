@@ -17,6 +17,7 @@ namespace mae
         const std::string meanGridTimeBetweenVisitsFile =
                 "mean-grid-time-between-visits.dat";
         const std::string coverageEventsFile = "coverage-events.dat";
+        const std::string timeEventsFile = "time-events.dat";
         const std::string finalCoverageFile = "final-coverage.dat";
         const std::string experimentConfigFile = "experiment-config.dat";
     }

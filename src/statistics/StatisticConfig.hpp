@@ -13,6 +13,7 @@ namespace mae
         Vector2f tileSize;
         std::string floorplanName;
         std::vector<double> coverageEvents;
+        std::vector<unsigned int> timeEvents;
         std::string algorithmType;
         std::string worldType;
         double coveredByObstacles;

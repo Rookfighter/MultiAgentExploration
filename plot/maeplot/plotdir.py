@@ -9,8 +9,8 @@ from plotdata import plotFinalCoverage
 SUMMARY_DIRECTORY = "summary"
 PACKAGE_DIRECTORY = "maeplot"
 
-FINAL_COVERAGE_PLOT_FILE = "final-coverage.png"
-FINAL_COVERAGE_TIME_PLOT_FILE = "final-coverage-time.png"
+FINAL_COVERAGE_PLOT_FILE = "coverage-reached-after-time.png"
+FINAL_COVERAGE_TIME_PLOT_FILE = "time-to-reach-coverage.png"
 
 class PlotDirectory(object):
     
@@ -20,7 +20,7 @@ class PlotDirectory(object):
     def reset(self):
         self.directory_ = ""
         self.algorithmDirs_ = []
-        self.meanFinalCoverage_ = dict()
+        self.meanFinalCoverage_ = dict() # per algorithm per terrain
         
     def load(self, directory):
         assert(os.path.isdir(directory))

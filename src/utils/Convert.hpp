@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <stage.hh>
 
+#define USEC_PER_MIN 60000000
+
 namespace mae
 {
     inline std::string boolToStr(bool p_bool)
@@ -31,9 +33,14 @@ namespace mae
         }
     }
 
-    inline int usecToMin(const Stg::usec_t p_usec)
+    inline unsigned int usecToMin(const Stg::usec_t p_usec)
     {
-        return p_usec / 60000000;
+        return p_usec / USEC_PER_MIN;
+    }
+
+    inline Stg::usec_t minToUsec(const unsigned int p_min)
+    {
+    	return ((Stg::usec_t) p_min) * USEC_PER_MIN;
     }
 }
 

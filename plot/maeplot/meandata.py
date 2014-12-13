@@ -28,6 +28,36 @@ class MeanCoverageEvents:
             
         return result
 
+class MeanTimeEvents:
+    
+    def __init__(self):
+        self.reset()
+    
+    def reset(self):
+        # [coverage] (timeStamp, count)
+        self.timeEventsData_ = dict()
+    
+    def add(self, timeEvents):
+        assert(len(timeEvents) == 2)
+        
+        for coverage in timeEvents[0]:
+            if not coverage in self.timeEventsData_:
+                self.timeEventsData_[coverage] = [0L, 0]
+        
+        for coverage, time in zip(*timeEvents):
+            self.timeEventsData_[coverage][0] = self.timeEventsData_[coverage][0] + time
+            self.timeEventsData_[coverage][1] = self.timeEventsData_[coverage][1] + 1
+                
+    def getMean(self):
+        result = [[],[]]
+        for coverage in sorted(self.timeEventsData_):
+            result[0].append(coverage)
+            time = self.timeEventsData_[coverage][0]
+            count = self.timeEventsData_[coverage][1]
+            result[1].append(time / count)
+            
+        return result
+
 class MeanTileTimeBetweenVisits:
     
     def __init__(self):

@@ -162,6 +162,11 @@ namespace mae
         return coverageEvents_;
     }
 
+    const std::vector<CoverageTime>& StatisticGrid::getTimeEvents() const
+    {
+        return timeEvents_;
+    }
+
     void StatisticGrid::update()
     {
         bool visitHappened = false;

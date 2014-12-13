@@ -2,9 +2,10 @@ import os
 from algorithmdir import AlgorithmDirectory
 from utils import getSubdirectoriesConcat
 from utils import mkdirRec
-from meandata import MeanFinalCoverage
 from plotdata import plotFinalCoverageTimes
 from plotdata import plotFinalCoverage
+from meandata import MeanTimeEvents
+from maeplot.meandata import MeanCoverageEvents
 
 SUMMARY_DIRECTORY = "summary"
 PACKAGE_DIRECTORY = "maeplot"
@@ -20,7 +21,8 @@ class PlotDirectory(object):
     def reset(self):
         self.directory_ = ""
         self.algorithmDirs_ = []
-        self.meanFinalCoverage_ = dict() # per algorithm per terrain
+        self.timeToReachCoverage_ = dict() # per algorithm per terrain
+        self.coverageReachedAfterTime = dict() # per algorithm per terrain
         
     def load(self, directory):
         assert(os.path.isdir(directory))
@@ -37,16 +39,34 @@ class PlotDirectory(object):
             self.algorithmDirs_.append(AlgorithmDirectory())
             self.algorithmDirs_[-1].load(algoDir)
             
-            algorithmName = self.algorithmDirs_[-1].getName()
-            if not algorithmName in self.meanFinalCoverage_:
-                    self.meanFinalCoverage_[algorithmName] = dict()
+            self.updateTimeToReachCoverage()
+            self.updateCoverageReachedAfterTime()
             
-            for worldType in self.algorithmDirs_[-1].worldTypes_:
-                if not worldType in self.meanFinalCoverage_[algorithmName]:
-                    self.meanFinalCoverage_[algorithmName][worldType] = MeanFinalCoverage()
-                for finalCoverage in  self.algorithmDirs_[-1].meanFinalCoverage_[worldType].values():
-                    self.meanFinalCoverage_[algorithmName][worldType].add(finalCoverage.getMean())
-            
+     
+    def updateTimeToReachCoverage(self):
+        algorithmName = self.algorithmDirs_[-1].getName()
+        if not algorithmName in self.timeToReachCoverage_:
+                self.timeToReachCoverage_[algorithmName] = dict()
+        
+        for worldType in self.algorithmDirs_[-1].worldTypes_:
+            if not worldType in self.timeToReachCoverage_[algorithmName]:
+                self.timeToReachCoverage_[algorithmName][worldType] = MeanTimeEvents()
+                
+            for timeEvents in  self.algorithmDirs_[-1].meanTimeEvents_[worldType].values():
+                self.timeToReachCoverage_[algorithmName][worldType].add(timeEvents.getMean())
+    
+    def updateCoverageReachedAfterTime(self):
+        algorithmName = self.algorithmDirs_[-1].getName()
+        if not algorithmName in self.coverageReachedAfterTime:
+                self.coverageReachedAfterTime[algorithmName] = dict()
+        
+        for worldType in self.algorithmDirs_[-1].worldTypes_:
+            if not worldType in self.coverageReachedAfterTime[algorithmName]:
+                self.coverageReachedAfterTime[algorithmName][worldType] = MeanCoverageEvents()
+                
+            for coverageEvents in  self.algorithmDirs_[-1].meanCoverageEvents_[worldType].values():
+                self.coverageReachedAfterTime[algorithmName][worldType].add(coverageEvents.getMean())
+              
     def save(self):
         
         for algoDir in self.algorithmDirs_:

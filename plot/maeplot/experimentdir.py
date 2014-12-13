@@ -7,6 +7,7 @@ MEAN_GRID_VISITS_FILE = "mean-grid-visits.dat"
 MEAN_TILE_TIME_BEWTEEN_VISITS_FILE = "mean-tile-time-between-visits.dat"
 MEAN_GRID_TIME_BEWTEEN_VISITS_FILE = "mean-grid-time-between-visits.dat"
 COVERAGE_EVENTS_FILE = "coverage-events.dat"
+TIME_EVENTS_FILE = "time-events.dat"
 FINAL_COVERAGE_FILE = "final-coverage.dat"
 EXPERIMENT_CONFIG_FILE = "experiment-config.dat"
 
@@ -18,6 +19,7 @@ class ExperimentDirectory:
     def reset(self):
         self.directory_ = ""
         self.coverageEvents_ = []
+        self.timeEvents_ = []
         self.finalCoverage_ = []
         self.meanGridTimeBetweenVisits_ = 0L
         self.meanTileTimeBetweenVisits_ = []
@@ -38,6 +40,11 @@ class ExperimentDirectory:
         filename = os.path.join(self.directory_, COVERAGE_EVENTS_FILE)
         dataFile.load(filename)
         self.coverageEvents_= dataFile.getDataAs("fl")
+        
+        # load time events
+        filename = os.path.join(self.directory_, TIME_EVENTS_FILE)
+        dataFile.load(filename)
+        self.timeEvents_= dataFile.getDataAs("fl")
         
         # load experiment config
         filename = os.path.join(self.directory_, EXPERIMENT_CONFIG_FILE)

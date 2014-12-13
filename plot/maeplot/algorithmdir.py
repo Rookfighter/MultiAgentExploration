@@ -8,6 +8,7 @@ from plotdata import plotCoverageEventsPerCount
 
 from meandata import MeanCoverageEvents
 from meandata import MeanFinalCoverage
+from meandata import MeanTimeEvents
 from meandata import MeanGridTimeBetweenVisits
 from meandata import MeanGridVisits
 from meandata import MeanTileTimeBetweenVisits
@@ -21,6 +22,7 @@ MEAN_GRID_VISITS_FILE = "mean-grid-visits.dat"
 MEAN_TILE_TIME_BEWTEEN_VISITS_FILE = "mean-tile-time-between-visits.dat"
 MEAN_GRID_TIME_BEWTEEN_VISITS_FILE = "mean-grid-time-between-visits.dat"
 COVERAGE_EVENTS_FILE = "coverage-events.dat"
+TIME_EVENTS_FILE = "time-events.dat"
 FINAL_COVERAGE_FILE = "final-coverage.dat"
 
 # plot file names
@@ -35,6 +37,7 @@ class AlgorithmDirectory:
         self.directory_ = ""
         
         self.meanCoverageEvents_ = dict()
+        self.meanTimeEvents_ = dict()
         self.meanTileTimeBetweenVisits_ = dict()
         self.meanTileVisits_ = dict()
         self.meanGridTimeBetweenVisits_ = dict()
@@ -65,6 +68,7 @@ class AlgorithmDirectory:
             
             if not worldKey in self.meanCoverageEvents_:
                 self.meanCoverageEvents_[worldKey] = dict()
+                self.meanTimeEvents_[worldKey] = dict()
                 self.meanTileTimeBetweenVisits_[worldKey] = dict()
                 self.meanTileVisits_[worldKey] = dict()
                 self.meanGridTimeBetweenVisits_[worldKey] = dict()
@@ -73,6 +77,7 @@ class AlgorithmDirectory:
             
             if not robotKey in self.meanCoverageEvents_[worldKey]:
                 self.meanCoverageEvents_[worldKey][robotKey] = MeanCoverageEvents()
+                self.meanTimeEvents_[worldKey][robotKey] = MeanTimeEvents()
                 self.meanTileTimeBetweenVisits_[worldKey][robotKey] = MeanTileTimeBetweenVisits()
                 self.meanTileVisits_[worldKey][robotKey] = MeanTileVisits()
                 self.meanGridTimeBetweenVisits_[worldKey][robotKey] = MeanGridTimeBetweenVisits()
@@ -80,6 +85,7 @@ class AlgorithmDirectory:
                 self.meanFinalCoverage_[worldKey][robotKey] = MeanFinalCoverage()
                 
             self.meanCoverageEvents_[worldKey][robotKey].add(experimentDir.coverageEvents_)
+            self.meanTimeEvents_[worldKey][robotKey].add(experimentDir.timeEvents_)
             self.meanTileTimeBetweenVisits_[worldKey][robotKey].add(experimentDir.meanTileTimeBetweenVisits_)
             self.meanTileVisits_[worldKey][robotKey].add(experimentDir.tileVisits_)
             self.meanGridTimeBetweenVisits_[worldKey][robotKey].add(experimentDir.meanGridTimeBetweenVisits_)
@@ -107,6 +113,13 @@ class AlgorithmDirectory:
                 dataFile.reset()
                 dataFile.addComment("# [coverage meanTimestamp(usec)]")
                 data = self.meanCoverageEvents_[worldType][robotCount].getMean()
+                dataFile.setDataAs(data, "fl")
+                dataFile.save(filename)
+                
+                filename = self.getSaveFilename(worldDir, TIME_EVENTS_FILE, robotCount)
+                dataFile.reset()
+                dataFile.addComment("# [coverage meanTimestamp(usec)]")
+                data = self.meanTimeEvents_[worldType][robotCount].getMean()
                 dataFile.setDataAs(data, "fl")
                 dataFile.save(filename)
                 

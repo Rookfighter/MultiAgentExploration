@@ -2,16 +2,16 @@ import os
 from algorithmdir import AlgorithmDirectory
 from utils import getSubdirectoriesConcat
 from utils import mkdirRec
-from plotdata import plotFinalCoverageTimes
-from plotdata import plotFinalCoverage
+from plotdata import plotCoverageReachedAfterTime
+from plotdata import plotTimeToReachCoverage
 from meandata import MeanTimeEvents
 from maeplot.meandata import MeanCoverageEvents
 
 SUMMARY_DIRECTORY = "summary"
 PACKAGE_DIRECTORY = "maeplot"
 
-FINAL_COVERAGE_PLOT_FILE = "coverage-reached-after-time.png"
-FINAL_COVERAGE_TIME_PLOT_FILE = "time-to-reach-coverage.png"
+COVERAGE_REACHED_AFTER_TIME_FILE = "coverage-reached-after-time-{0}.png"
+TIME_TO_REACH_COVERAGE_FILE = "time-to-reach-coverage-{0}.png"
 
 class PlotDirectory(object):
     
@@ -75,13 +75,13 @@ class PlotDirectory(object):
     def plot(self):
         mkdirRec(self.getSummaryDir())
         
-        print "plotting final coverage"
-        filename = os.path.join(self.getSummaryDir(), FINAL_COVERAGE_PLOT_FILE)
-        plotFinalCoverage(self.meanFinalCoverage_, filename)
+        print "plotting time to reach coverage"
+        filename = os.path.join(self.getSummaryDir(), TIME_TO_REACH_COVERAGE_FILE)
+        plotTimeToReachCoverage(self.timeToReachCoverage_, filename)
         
-        print "plotting final coverage times"
-        filename = os.path.join(self.getSummaryDir(),FINAL_COVERAGE_TIME_PLOT_FILE)
-        plotFinalCoverageTimes(self.meanFinalCoverage_, filename)
+        print "plotting coverage reached after time"
+        filename = os.path.join(self.getSummaryDir(), COVERAGE_REACHED_AFTER_TIME_FILE)
+        plotCoverageReachedAfterTime(self.coverageReachedAfterTime, filename)
         
         for algoDir in self.algorithmDirs_:
             algoDir.plot()

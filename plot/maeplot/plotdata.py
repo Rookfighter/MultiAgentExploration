@@ -37,13 +37,7 @@ def plotCoverageEventsPerCount(data, outfile):
     plt.legend(loc='lower right')
     plt.savefig(outfile)
     
-def plotFinalCoverageBarchart(ylabel, title, data, dataIndex, outfile):
-    plt.figure()
-    plt.cla()
-    
-    fig, ax = plt.subplots()
-    ax.set_ylabel(ylabel)
-    ax.set_title(title)
+def plotFinalCoverageBarchart(ylabel, title, data, useTime, outfile):
     colorCycle = getBarChartColorCyle();
     
     availableWorldsTmp = set()
@@ -54,32 +48,53 @@ def plotFinalCoverageBarchart(ylabel, title, data, dataIndex, outfile):
     availableWorlds = sorted(availableWorldsTmp)
     width = 1.0 / (len(data) + 2)
     
-    algorithmCount = 0
-    for algorithm, worldDict in data.iteritems():
-        toPlot = []
-        for worldType in availableWorlds:
-            if worldType in worldDict:
-                dataVal = worldDict[worldType].getMean()[dataIndex][0]
-                if dataIndex == 1:
-                    toPlot.append(usecToMin(dataVal))
+    for line in [-1, -2]:
+        plt.figure()
+        plt.cla()
+        
+        fig, ax = plt.subplots()
+        ax.set_ylabel(ylabel)
+        
+        insertStr = ""
+        if useTime:
+            coverageVal = worldDict[worldType].getMean()[0][line]
+            insertStr = str(int(100 * coverageVal))
+        else:
+            timeVal = worldDict[worldType].getMean()[1][line]
+            insertStr = str(int(usecToMin(timeVal)))
+        
+        formatedTitle = title.format(insertStr)
+        formatedOutfile = outfile.format(insertStr)
+        ax.set_title(formatedTitle)
+        
+        algorithmCount = 0
+        for algorithm, worldDict in data.iteritems():
+            toPlot = []
+            for worldType in availableWorlds:
+                if worldType in worldDict:
+                    if useTime:
+                        dataVal = worldDict[worldType].getMean()[1][line]
+                        toPlot.append(usecToMin(dataVal))
+                    else:
+                        dataVal = worldDict[worldType].getMean()[0][line]
+                        toPlot.append(dataVal)
                 else:
-                    toPlot.append(dataVal)
-            else:
-                toPlot.append(0.0)
+                    toPlot.append(0.0)
+            
+            leftBorders = [i + (algorithmCount * width) for i in xrange(len(toPlot))]
+            ax.bar(leftBorders, toPlot, width=width, label=algorithm, color=colorCycle[algorithmCount % len(colorCycle)])
+            algorithmCount = algorithmCount + 1
+            
+        ax.set_xticks([(i + (len(availableWorlds) * width) / 2) for i in xrange(len(availableWorlds))])
+        ax.set_xticklabels(availableWorlds)
+        ax.legend(loc='upper right')
         
-        leftBorders = [i + (algorithmCount * width) for i in xrange(len(toPlot))]
-        ax.bar(leftBorders, toPlot, width=width, label=algorithm, color=colorCycle[algorithmCount % len(colorCycle)])
-        algorithmCount = algorithmCount + 1
+        fig.set_size_inches(18.5,10.5)
+        plt.savefig(formatedOutfile, dpi=100)
         
-    ax.set_xticks([(i + (len(availableWorlds) * width) / 2) for i in xrange(len(availableWorlds))])
-    ax.set_xticklabels(availableWorlds)
-    ax.legend(loc='upper right')
-    
-    fig.set_size_inches(18.5,10.5)
-    plt.savefig(outfile, dpi=100)
 
-def plotFinalCoverageTimes(data, outfile):
-    plotFinalCoverageBarchart('minutes', 'Time to reach Coverage', data, 1, outfile)
+def plotTimeToReachCoverage(data, outfile):
+    plotFinalCoverageBarchart('minutes', 'Time to reach {0}% Coverage', data, True, outfile)
     
-def plotFinalCoverage(data, outfile):
-    plotFinalCoverageBarchart('coverage', 'Coverage reached after Time', data, 0, outfile)
+def plotCoverageReachedAfterTime(data, outfile):
+    plotFinalCoverageBarchart('coverage', 'Coverage reached after {0} minutes', data, False, outfile)

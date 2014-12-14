@@ -1,3 +1,36 @@
+class MeanTimeEvents:
+    
+    def __init__(self):
+        self.reset()
+    
+    def reset(self):
+        # [timeStamp] (coverage, count)
+        self.timeEventsData_ = dict()
+    
+    def add(self, timeEvents):
+        assert(len(timeEvents) == 2)
+        
+        for time in timeEvents[1]:
+            if not time in self.timeEventsData_:
+                self.timeEventsData_[time] = [0.0, 0]
+        
+        for coverage, time in zip(*timeEvents):
+            self.timeEventsData_[time][0] = self.timeEventsData_[time][0] + coverage
+            self.timeEventsData_[time][1] = self.timeEventsData_[time][1] + 1
+                
+    def getMean(self):
+        result = [[],[]]
+        for time in sorted(self.timeEventsData_):
+            result[1].append(time)
+            coverage = self.timeEventsData_[time][0]
+            count = self.timeEventsData_[time][1]
+            result[0].append(coverage / count)
+            
+        return result
+    
+    def hasData(self):
+        return len(self.timeEventsData_) > 0
+
 class MeanCoverageEvents:
     
     def __init__(self):
@@ -27,36 +60,9 @@ class MeanCoverageEvents:
             result[1].append(time / count)
             
         return result
-
-class MeanTimeEvents:
     
-    def __init__(self):
-        self.reset()
-    
-    def reset(self):
-        # [coverage] (timeStamp, count)
-        self.timeEventsData_ = dict()
-    
-    def add(self, timeEvents):
-        assert(len(timeEvents) == 2)
-        
-        for coverage in timeEvents[0]:
-            if not coverage in self.timeEventsData_:
-                self.timeEventsData_[coverage] = [0L, 0]
-        
-        for coverage, time in zip(*timeEvents):
-            self.timeEventsData_[coverage][0] = self.timeEventsData_[coverage][0] + time
-            self.timeEventsData_[coverage][1] = self.timeEventsData_[coverage][1] + 1
-                
-    def getMean(self):
-        result = [[],[]]
-        for coverage in sorted(self.timeEventsData_):
-            result[0].append(coverage)
-            time = self.timeEventsData_[coverage][0]
-            count = self.timeEventsData_[coverage][1]
-            result[1].append(time / count)
-            
-        return result
+    def hasData(self):
+        return len(self.coverageEventsData_) > 0
 
 class MeanTileTimeBetweenVisits:
     
@@ -109,6 +115,8 @@ class MeanTileTimeBetweenVisits:
         
         return (int(values[0]), int(values[1]))
     
+    def hasData(self):
+        return len(self.tileTimeData_) > 0
     
 class MeanTileVisits:
     
@@ -133,7 +141,10 @@ class MeanTileVisits:
             key = self.valueToKey(x, y)
             
             self.tileVisitsData_[key][0] = self.tileVisitsData_[key][0] + visits
-            self.tileVisitsData_[key][1] = self.tileVisitsData_[key][1] + 1 
+            self.tileVisitsData_[key][1] = self.tileVisitsData_[key][1] + 1
+            
+    def hasData(self):
+        return len(self.tileVisitsData_) > 0
     
     def getMean(self):
         result = [[], [], []]
@@ -179,7 +190,10 @@ class MeanGridTimeBetweenVisits:
             return [[0L]]
         else:
             return [[long(self.gridTimeSum_ / self.gridTimeCount_)]]
-        
+    
+    def hasData(self):
+        return self.gridTimeCount_ > 0
+    
 class MeanGridVisits:
     
     def __init__(self):
@@ -198,7 +212,9 @@ class MeanGridVisits:
             return [[0.0]]
         else:
             return[[self.gridVisitsSum_ / self.gridVisitsCount_]]
-
+    
+    def hasData(self):
+        return self.gridVisitsCount_ > 0
 class MeanFinalCoverage:
     
     def __init__(self):
@@ -224,3 +240,6 @@ class MeanFinalCoverage:
             result[0].append(self.finalCoverageSum_ / self.finalCoverageCount_)
             result[1].append(self.finalTimeSum_ / self.finalCoverageCount_)
             return result
+    
+    def hasData(self):
+        return self.finalCoverageCount_ > 0

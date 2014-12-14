@@ -4,12 +4,7 @@
 build/
 log/
 lib/
-plot/nodecounting
-plot/wagner
-plot/lrtastar
-plot/randomwalk
-plot/compass
-plot/summary
+plot/
 
 # IDE files
 *.metadata/

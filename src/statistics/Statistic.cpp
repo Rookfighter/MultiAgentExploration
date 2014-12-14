@@ -143,6 +143,7 @@ namespace mae
         file.close();
 
         // save all timeEvents that occurred
+        ss.str(std::string());
         ss << saveDirectory_ << "/" << FileNames::timeEventsFile;
         file.open(ss.str());
         file << "# shows timeEvents" << std::endl;

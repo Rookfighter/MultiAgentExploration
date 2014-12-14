@@ -73,7 +73,7 @@ namespace mae
             config_.timeEvents.resize(timeEventNode.size());
 
             for(unsigned int i = 0; i < timeEventNode.size(); ++i)
-                config_.timeEvents[i] = coverageEventNode[i].as<unsigned int>();
+                config_.timeEvents[i] = timeEventNode[i].as<unsigned int>();
         } else {
             LOG(INFO)<< "-- no time events found";
         }

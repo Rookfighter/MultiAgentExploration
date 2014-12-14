@@ -1,6 +1,9 @@
 import os
 import errno
 
+def sameFloat(a, b, eps):
+    return abs(a - b) <= eps;
+
 def mkdirRec(directory):
     try:
         os.makedirs(directory)
@@ -17,3 +20,7 @@ def getSubdirectoriesConcat(p_dir):
     for i in xrange(0, len(subDirs)):
         subDirs[i] = os.path.join(p_dir, subDirs[i])
     return subDirs
+
+def printHelp():
+    print "Usage: python plot.py <data directory>"
+    

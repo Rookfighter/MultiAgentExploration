@@ -94,31 +94,13 @@ namespace mae
         }
 
         // check if marker block any direction
-        std::vector<bool> blockedByMarker(checkMarkerDirections.size());
-        for(unsigned int i = 0; i < blockedByMarker.size(); ++i)
-            blockedByMarker[i] = false;
-
-        for(MarkerMeasurement measurement : markerInRange_) {
-            for(unsigned int i = 0; i < checkMarkerDirections.size(); ++i) {
-                if(!blockedByMarker[i]) {
-                    double beginAngle = checkMarkerDirections[i] - (BLOCK_MARKER_FOV / 2);
-                    double endAngle = checkMarkerDirections[i] + (BLOCK_MARKER_FOV / 2);
-                    blockedByMarker[i] = angleIsBetween(measurement.relativeDirection,
-                                                        beginAngle,
-                                                        endAngle);
-                }
-            }
-        }
-
-        // mark the directions as blocked, if marker blocks that direction
-        for(unsigned int i = 0; i < checkMarkerDirections.size(); ++i) {
-            if(blockedByMarker[i]) {
-                double beginAngle = checkMarkerDirections[i] - (BLOCK_MARKER_FOV / 2);
-                double endAngle = checkMarkerDirections[i] + (BLOCK_MARKER_FOV / 2);
-                for(unsigned int j = 0; j < rangerProperties.getMeasurementCount(); ++j) {
-                    if(angleIsBetween(rangerProperties.getMeasurementOrigins()[j].yaw, beginAngle, endAngle))
-                        blockedByObstacle[j] = true;
-                }
+        for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
+            double sensorDirection = rangerProperties.getMeasurementOrigins()[i].yaw;
+            for(MarkerMeasurement measurement : markerInRange_) {
+                double beginAngle = measurement.relativeDirection - (BLOCK_MARKER_FOV / 2);
+                double endAngle = measurement.relativeDirection + (BLOCK_MARKER_FOV / 2);
+                if(angleIsBetween(sensorDirection, beginAngle, endAngle))
+                    blockedByObstacle[i] = true;
             }
         }
 

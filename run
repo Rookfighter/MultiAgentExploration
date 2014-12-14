@@ -13,6 +13,8 @@ fi
 
 cd build
 
+START_TIME=$SECONDS
+
 for algorithm in $ALGORITHMS;
 do
     for terrain in $TERRAINS;
@@ -27,3 +29,11 @@ do
         done
     done
 done
+
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+EL_HOUR=$(($ELAPSED_TIME / 3600))
+ELAPSED_TIME=$(($ELAPSED_TIME % 3600))
+EL_MIN=$(($ELAPSED_TIME / 60))
+EL_SEC=$(($ELAPSED_TIME % 60))
+
+echo "Finished. ${EL_HOUR}h ${EL_MIN}m ${EL_SEC}s taken."

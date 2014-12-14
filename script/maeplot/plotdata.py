@@ -38,7 +38,7 @@ def plotCoverageEventsPerCount(data, outfile):
         plt.plot(meanData[1], meanData[0], linestyle='-', marker='s', label=labelText)
     
     plt.legend(loc='lower right')
-    plt.savefig(outfile)       
+    plt.savefig(outfile)  
 
 def plotTimeToReachCoverage(data, outfile, coverage):
     assert(len(data) > 0)
@@ -75,7 +75,13 @@ def plotTimeToReachCoverage(data, outfile, coverage):
         
         assert(len(algorithmData) == len(AVAILABLE_WORLDS))    
         leftBorders = [i + (algoCount * barWidth) for i in xrange(len(algorithmData))]
-        ax.bar(leftBorders, algorithmData, width=barWidth, label=algorithmName, color=colorCycle[algoCount % len(colorCycle)])
+        rects = ax.bar(leftBorders, algorithmData, width=barWidth, label=algorithmName, color=colorCycle[algoCount % len(colorCycle)])
+        
+        # add value label on top of bars
+        for rect in rects:
+            barHeight = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width() / 2.0, 1.0 * barHeight, '%d'%int(barHeight),
+                    ha='center', va='bottom')
     
     ax.set_xticks([(i + (len(data) * barWidth) / 2) for i in xrange(len(AVAILABLE_WORLDS))])
     ax.set_xticklabels(AVAILABLE_WORLDS)
@@ -117,7 +123,13 @@ def plotCoverageReachedAfterTime(data, outfile, time):
         
         assert(len(algorithmData) == len(AVAILABLE_WORLDS))    
         leftBorders = [i + (algoCount * barWidth) for i in xrange(len(algorithmData))]
-        ax.bar(leftBorders, algorithmData, width=barWidth, label=algorithmName, color=colorCycle[algoCount % len(colorCycle)])
+        rects = ax.bar(leftBorders, algorithmData, width=barWidth, label=algorithmName, color=colorCycle[algoCount % len(colorCycle)])
+        
+        # add value label on top of bars
+        for rect in rects:
+            barHeight = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width() / 2.0, 1.0 * barHeight, '%.1f'%barHeight,
+                    ha='center', va='bottom')
     
     ax.set_xticks([(i + (len(data) * barWidth) / 2) for i in xrange(len(AVAILABLE_WORLDS))])
     ax.set_xticklabels(AVAILABLE_WORLDS)

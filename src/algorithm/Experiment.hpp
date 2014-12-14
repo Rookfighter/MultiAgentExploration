@@ -16,6 +16,7 @@ namespace mae
 		std::vector<Algorithm*> algorithms_;
 		ExperimentTermination experimentTermination_;
 		StopWatch algorithmWatch_;
+		std::vector<bool> robotCrashed_;
 		
 		Experiment(const ExperimentConfig &p_config);
 	public:

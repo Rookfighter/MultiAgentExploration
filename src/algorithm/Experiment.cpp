@@ -8,8 +8,11 @@ namespace mae
          statistic_(p_config.statistic),
          algorithms_(p_config.algorithms),
          experimentTermination_(p_config),
-         algorithmWatch_()
+         algorithmWatch_(),
+         robotCrashed_(algorithms_.size())
     {
+        for(unsigned int i = 0; i < robotCrashed_.size(); ++i)
+            robotCrashed_[i] = false;
     }
 
     Experiment::~Experiment()
@@ -30,6 +33,12 @@ namespace mae
     {
         if(terminated())
             return;
+
+        for(unsigned int i = 0; i < robotCrashed_.size(); ++i) {
+            if(!robotCrashed_[i] && simulation_->getRobots()[i]->collidedWithObstacle())
+                LOG(WARNING) << "robot '" << simulation_->getRobots()[i]->getName() << "' collided with obstacle!";
+            robotCrashed_[i] = simulation_->getRobots()[i]->collidedWithObstacle();
+        }
 
         algorithmWatch_.start();
         for(Algorithm *algo : algorithms_)

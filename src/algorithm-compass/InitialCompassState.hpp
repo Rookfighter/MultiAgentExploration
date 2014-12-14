@@ -9,8 +9,6 @@ namespace mae
 
     class InitialCompassState : public CompassState
     {
-    private:
-        Random random_;
     public:
         InitialCompassState(const CompassStateProperties &p_properties);
         ~InitialCompassState();

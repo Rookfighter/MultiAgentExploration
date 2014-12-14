@@ -8,16 +8,19 @@ namespace mae
 	{
 	private:
 		static bool initialized_;
+
+		static void init();
+		Random() { }
+        ~Random() { }
 	public:
-		Random();
-		~Random();
 
-		int nextInt();
-		int nextInt(const int p_range);
 
-		float nextFloat();
+		static int nextInt();
+		static int nextInt(const int p_range);
 
-		bool nextBool();
+		static float nextFloat();
+
+		static bool nextBool();
 
 	};
 

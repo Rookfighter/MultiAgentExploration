@@ -36,7 +36,7 @@ namespace mae
 
     void RandomWalk::chooseRandomDirection()
     {
-        double direction = random_.nextInt(TURN_GRANULARITY) * TURN_ANGLE;
+        double direction = Random::nextInt(TURN_GRANULARITY) * TURN_ANGLE;
 
         robotController_.turnBy(direction);
         robotController_.wanderDistance(wanderDistance_);

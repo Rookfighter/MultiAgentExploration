@@ -14,21 +14,6 @@
 
 namespace mae
 {
-    // directions for 45° FOV
-    /*static const std::vector<double> checkDirections = {
-            0               , (M_PI / 4),
-            (M_PI / 2)      , (3 * M_PI / 4),
-            (M_PI)          , (5 * M_PI / 4),
-            (3 * M_PI / 2)  , (7 * M_PI / 4)
-    };*/
-
-    // directions for 60° FOV
-   /* static const std::vector<double> checkObstacleDirections = {
-                0               , (M_PI / 3),
-                (2 * M_PI / 3)  , (M_PI),
-                (4 * M_PI / 3)  , (5 * M_PI / 3)
-    };*/
-
     static const std::vector<double> checkMarkerDirections = {
         0       , (M_PI / 2),
         (M_PI)  , (3 * M_PI / 2)
@@ -152,8 +137,7 @@ namespace mae
         }
 
         if(!possibleDirections.empty()) {
-            Random random;
-            int idx = random.nextInt(possibleDirections.size());
+            int idx = Random::nextInt(possibleDirections.size());
             properties_.angleToTurn = rangerProperties.getMeasurementOrigins()[possibleDirections[idx]].yaw;
             LOG(DEBUG) << "-- chosen: " << radianToDegree(properties_.angleToTurn) << "° (" << properties_.robot->getName() << ")";
         }
@@ -173,8 +157,7 @@ namespace mae
 
         if(possibleTargets.empty())
             return false;
-        Random rand;
-        int idx = rand.nextInt(possibleTargets.size());
+        int idx = Random::nextInt(possibleTargets.size());
         properties_.nextMarker = possibleTargets[idx].marker;
 
         return true;

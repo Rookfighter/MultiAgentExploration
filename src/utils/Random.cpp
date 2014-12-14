@@ -7,20 +7,16 @@ namespace mae
 {
 	bool Random::initialized_ = false;
 	
-	Random::Random()
+	void Random::init()
 	{
-		if(!initialized_) {
-			std::srand(static_cast<unsigned> (std::time(NULL)));
-			initialized_ = true;
-		}
+	    std::srand(static_cast<unsigned> (std::time(NULL)));
+	    initialized_ = true;
 	}
 
-	Random::~Random()
-	{
-	}
-	
 	int Random::nextInt()
 	{
+	    if(!initialized_)
+	        init();
 		return std::rand();
 	}
 	
@@ -31,7 +27,7 @@ namespace mae
 	
 	float Random::nextFloat()
 	{
-		return static_cast<float> (std::rand()) / static_cast<float> (RAND_MAX);
+		return static_cast<float>(nextInt()) / static_cast<float> (RAND_MAX);
 	}
 	
 	bool Random::nextBool()

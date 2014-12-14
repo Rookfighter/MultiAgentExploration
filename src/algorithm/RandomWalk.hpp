@@ -13,7 +13,6 @@ namespace mae
 	{
 	private:
 		MovementController robotController_;
-		Random random_;
 		double wanderDistance_;
 		
 		void chooseRandomDirection();

@@ -25,7 +25,7 @@ namespace mae
         if(markerInRange.empty()) {
             return new DeployMarker(properties_);
         } else {
-            int idx = random_.nextInt(markerInRange.size());
+            int idx = Random::nextInt(markerInRange.size());
             properties_.currentMarker = markerInRange[idx].marker;
             return new AtMarker(properties_);
         }

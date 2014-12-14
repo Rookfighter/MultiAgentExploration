@@ -1,4 +1,5 @@
 import os
+import shutil
 from algorithmdir import AlgorithmDirectory
 from utils import getSubdirectoriesConcat
 from utils import mkdirRec
@@ -74,6 +75,8 @@ class PlotDirectory(object):
             algoDir.save()
     
     def plot(self):
+        if os.path.isdir(self.getSummaryDir()):
+            shutil.rmtree(self.getSummaryDir())
         mkdirRec(self.getSummaryDir())
         
         print "plotting time to reach coverage"

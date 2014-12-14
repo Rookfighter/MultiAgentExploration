@@ -14,10 +14,10 @@
 
 namespace mae
 {
-    static const std::vector<double> checkMarkerDirections = {
+    /*static const std::vector<double> checkMarkerDirections = {
         0       , (M_PI / 2),
         (M_PI)  , (3 * M_PI / 2)
-    };
+    };*/
 
     SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
         : AntState(p_properties),

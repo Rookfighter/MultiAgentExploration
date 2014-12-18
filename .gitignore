@@ -2,6 +2,8 @@
 
 # unversioned directories
 build/
+Release/
+Debug/
 log/
 lib/
 plot/

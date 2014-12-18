@@ -20,10 +20,6 @@ include_directories("src"
                     "${YAMLCPP_INCLUDE_DIR}")
 link_directories("${STAGE_LIBRARY_DIRS}")
 
-if( ${RELEASE} )
-    add_definitions( -DNDEBUG )
-endif( ${RELEASE} )
-
 # get source files
 file(GLOB MULTI_AGENT_EXPLORATION_SRC
     "src/io/*.cpp"

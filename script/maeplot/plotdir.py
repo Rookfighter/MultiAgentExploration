@@ -59,7 +59,7 @@ class PlotDirectory(object):
         for worldType, robotCountDict in self.algorithmDirs_[-1].meanCoverageEvents_.iteritems(): 
             for coverageEvents in  robotCountDict.values():
                 if coverageEvents.hasData():
-                    self.timeToReachCoverage_[algorithmName][worldType].add(coverageEvents.getMean())
+                    self.timeToReachCoverage_[algorithmName][worldType].addMean(coverageEvents)
     
     def updateCoverageReachedAfterTime(self):
         algorithmName = self.algorithmDirs_[-1].getName()
@@ -67,7 +67,7 @@ class PlotDirectory(object):
         for worldType, robotCountDict in self.algorithmDirs_[-1].meanTimeEvents_.iteritems():
             for timeEvents in  robotCountDict.values():
                 if timeEvents.hasData():
-                    self.coverageReachedAfterTime[algorithmName][worldType].add(timeEvents.getMean())
+                    self.coverageReachedAfterTime[algorithmName][worldType].addMean(timeEvents)
               
     def save(self):
         

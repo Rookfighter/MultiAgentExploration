@@ -61,7 +61,7 @@ def plotTimeToReachCoverage(data, outfile, coverage):
         algorithmData = []
         
         for worldType in AVAILABLE_WORLDS:
-            meanData = worldDict[worldType].getMean()
+            meanData = worldDict[worldType].getMean()[:2]
             found = False
             for i, (coverageEvent, coverageTime) in enumerate(zip(*meanData)):
                 # TODO compare float
@@ -110,7 +110,7 @@ def plotCoverageReachedAfterTime(data, outfile, time):
         algorithmData = []
         
         for worldType in AVAILABLE_WORLDS:
-            meanData = worldDict[worldType].getMean()
+            meanData = worldDict[worldType].getMean()[:2]
             found = False
             for i, (coverageEvent, coverageTime) in enumerate(zip(*meanData)):
                 if int(usecToMin(coverageTime)) == time:

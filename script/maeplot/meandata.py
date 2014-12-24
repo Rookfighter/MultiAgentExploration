@@ -77,7 +77,7 @@ class MeanCoverageEvents:
     def getMean(self):
         
         # [coverage, meanTime, standardDeviation]
-        result = [[],[]]
+        result = [[],[], []]
         for coverage in sorted(self.coverageEventsData_):
             result[0].append(coverage)
             time = self.coverageEventsData_[coverage][0]
@@ -252,55 +252,6 @@ class MeanTileVisits:
         
         return (int(values[0]), int(values[1]))
 
-class MeanGridTimeBetweenVisits:
-    
-    def __init__(self):
-        self.reset()
-    
-    def reset(self):
-        self.gridTimeSum_ = 0L
-        self.gridTimes_ = []
-        
-    def add(self, timeBetweenVisits):
-        self.gridTimeSum_ = self.gridTimeSum_ + timeBetweenVisits
-        self.gridTimes_.append(timeBetweenVisits)
-
-    def getMean(self):
-        count = len(self.gridTimes_)
-        if count == 0:
-            return [[0L], [0.0]]
-        else:
-            meanVal = long(self.gridTimeSum_ / count)
-            stdDev = calcStandardDeviation(self.gridTimes_, meanVal)
-            return [[meanVal], [stdDev]]
-    
-    def hasData(self):
-        return len(self.gridTimes_) > 0
-    
-class MeanGridVisits:
-    
-    def __init__(self):
-        self.reset()
-    
-    def reset(self):
-        self.gridVisitsSum_ = 0.0
-        self.gridVisits_ = []
-        
-    def add(self, gridVisits):
-        self.gridVisitsSum_ = self.gridVisitsSum_ + gridVisits
-        self.gridVisits_.append(gridVisits)
-        
-    def getMean(self):
-        count = len(self.gridVisits_)
-        if count == 0:
-            return [[0.0], [0.0]]
-        else:
-            meanVal = self.gridVisitsSum_ / count
-            stdDev = calcStandardDeviation(self.gridVisits_, meanVal)
-            return[[meanVal], [stdDev]]
-    
-    def hasData(self):
-        return self.gridVisitsCount_ > 0
 class MeanFinalCoverage:
     
     def __init__(self):

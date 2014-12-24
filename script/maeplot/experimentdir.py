@@ -3,9 +3,7 @@ from datafile import DataFile
 
 # all files that are in an experiment directory
 TILE_VISITS_FILE = "tile-visits.dat"
-MEAN_GRID_VISITS_FILE = "mean-grid-visits.dat"
 MEAN_TILE_TIME_BEWTEEN_VISITS_FILE = "mean-tile-time-between-visits.dat"
-MEAN_GRID_TIME_BEWTEEN_VISITS_FILE = "mean-grid-time-between-visits.dat"
 COVERAGE_EVENTS_FILE = "coverage-events.dat"
 TIME_EVENTS_FILE = "time-events.dat"
 FINAL_COVERAGE_FILE = "final-coverage.dat"
@@ -21,10 +19,8 @@ class ExperimentDirectory:
         self.coverageEvents_ = []
         self.timeEvents_ = []
         self.finalCoverage_ = []
-        self.meanGridTimeBetweenVisits_ = 0L
         self.meanTileTimeBetweenVisits_ = []
         self.tileVisits_ = []
-        self.meanGridVisits_ = 0.0
     
     def load(self, directory):
         assert(os.path.isdir(directory))
@@ -57,11 +53,6 @@ class ExperimentDirectory:
         dataFile.load(filename)
         self.finalCoverage_ = dataFile.getDataAs("fl")
         
-        # load meanGridTimeBetweenVisits
-        filename = os.path.join(self.directory_, MEAN_GRID_TIME_BEWTEEN_VISITS_FILE)
-        dataFile.load(filename)
-        self.meanGridTimeBetweenVisits_ = dataFile.getDataAs("l")[0][0]
-        
         # load meanTileTimeBetweenVisits
         filename = os.path.join(self.directory_, MEAN_TILE_TIME_BEWTEEN_VISITS_FILE)
         dataFile.load(filename)
@@ -71,11 +62,6 @@ class ExperimentDirectory:
         filename = os.path.join(self.directory_, TILE_VISITS_FILE)
         dataFile.load(filename)
         self.tileVisits_ = dataFile.getDataAs("iii")
-        
-        # load meanGridVisits
-        filename = os.path.join(self.directory_, MEAN_GRID_VISITS_FILE)
-        dataFile.load(filename)
-        self.meanGridVisits_ = dataFile.getDataAs("f")[0][0]
         
     def getName(self):
         return os.path.basename(os.path.normpath(self.directory_))

@@ -1,10 +1,12 @@
+from utils import calcStandardDeviation
+
 class MeanTimeEvents:
     
     def __init__(self):
         self.reset()
     
     def reset(self):
-        # [timeStamp] (coverage, count)
+        # [timeStamp] (coverageSum, [coverages])
         self.timeEventsData_ = dict()
     
     def add(self, timeEvents):
@@ -12,19 +14,32 @@ class MeanTimeEvents:
         
         for time in timeEvents[1]:
             if not time in self.timeEventsData_:
-                self.timeEventsData_[time] = [0.0, 0]
+                self.timeEventsData_[time] = [0.0, []]
         
         for coverage, time in zip(*timeEvents):
             self.timeEventsData_[time][0] = self.timeEventsData_[time][0] + coverage
-            self.timeEventsData_[time][1] = self.timeEventsData_[time][1] + 1
+            self.timeEventsData_[time][1].append(coverage)
+            
+    def addMean(self, meanData):
+        for time in meanData.timeEventsData_:
+            if not time in self.timeEventsData_:
+                self.timeEventsData_[time] = [0.0, []]
+                
+            self.timeEventsData_[time][0] = self.timeEventsData_[time][0] + meanData.timeEventsData_[time][0]
+            self.timeEventsData_[time][1] = self.timeEventsData_[time][1] + meanData.timeEventsData_[time][1]
                 
     def getMean(self):
-        result = [[],[]]
+        
+        # [meanCoverage, time, standardDeviation]
+        result = [[],[], []]
+        
         for time in sorted(self.timeEventsData_):
             result[1].append(time)
-            coverage = self.timeEventsData_[time][0]
-            count = self.timeEventsData_[time][1]
-            result[0].append(coverage / count)
+            coverageSum = self.timeEventsData_[time][0]
+            count = len(self.timeEventsData_[time][1])
+            result[0].append(coverageSum / count)
+            standardDeviation = calcStandardDeviation(self.timeEventsData_[time][1], result[0][-1])
+            result[2].append(standardDeviation)
             
         return result
     
@@ -37,7 +52,7 @@ class MeanCoverageEvents:
         self.reset()
     
     def reset(self):
-        # [coverage] (timeStamp, count)
+        # [coverage] (timeStampSum, [timeStamps])
         self.coverageEventsData_ = dict()
     
     def add(self, coverageEvents):
@@ -45,19 +60,31 @@ class MeanCoverageEvents:
         
         for coverage in coverageEvents[0]:
             if not coverage in self.coverageEventsData_:
-                self.coverageEventsData_[coverage] = [0L, 0]
+                self.coverageEventsData_[coverage] = [0L, []]
         
         for coverage, time in zip(*coverageEvents):
             self.coverageEventsData_[coverage][0] = self.coverageEventsData_[coverage][0] + time
-            self.coverageEventsData_[coverage][1] = self.coverageEventsData_[coverage][1] + 1
+            self.coverageEventsData_[coverage][1].append(time)
+            
+    def addMean(self, meanData):
+        for coverage in meanData.coverageEventsData_:
+            if not coverage in self.coverageEventsData_:
+                self.coverageEventsData_[coverage] = [0L, []]
+                
+            self.coverageEventsData_[coverage][0] = self.coverageEventsData_[coverage][0] + meanData.coverageEventsData_[coverage][0]
+            self.coverageEventsData_[coverage][1] = self.coverageEventsData_[coverage][1] + meanData.coverageEventsData_[coverage][1]
                 
     def getMean(self):
+        
+        # [coverage, meanTime, standardDeviation]
         result = [[],[]]
         for coverage in sorted(self.coverageEventsData_):
             result[0].append(coverage)
             time = self.coverageEventsData_[coverage][0]
-            count = self.coverageEventsData_[coverage][1]
+            count = len(self.coverageEventsData_[coverage][1])
             result[1].append(time / count)
+            standardDeviation = calcStandardDeviation(self.coverageEventsData_[coverage][1], result[0][-1])
+            result[2].append(standardDeviation)
             
         return result
     
@@ -70,7 +97,7 @@ class MeanTileTimeBetweenVisits:
         self.reset()
     
     def reset(self):
-        # [x,y] (time, count)
+        # [x,y] (timeSum, [times])
         self.tileTimeData_ = dict()
     
     def add(self, tileTimeBetweenVisits):
@@ -79,7 +106,7 @@ class MeanTileTimeBetweenVisits:
         if len(self.tileTimeData_) == 0:
             for x,y in zip(tileTimeBetweenVisits[0], tileTimeBetweenVisits[1]):
                 key = self.valueToKey(x,y)
-                self.tileTimeData_[key] = [0L, 0]
+                self.tileTimeData_[key] = [0L, []]
                 
         assert(len(tileTimeBetweenVisits[0]) == len(self.tileTimeData_))
         
@@ -88,23 +115,50 @@ class MeanTileTimeBetweenVisits:
             assert(key in self.tileTimeData_)
             if tileTime > 0:
                 self.tileTimeData_[key][0] = self.tileTimeData_[key][0] + tileTime
-                self.tileTimeData_[key][1] = self.tileTimeData_[key][1] + 1
+                self.tileTimeData_[key][1].append(tileTime)
+    
+    def addMean(self, meanData):
+        for key in meanData.tileTimeData_:
+            if not key in self.tileTimeData_:
+                self.tileTimeData_[key] = [0L, []]
+                
+            self.tileTimeData_[key][0] = self.tileTimeData_[key][0] + meanData.tileTimeData_[key][0]
+            self.tileTimeData_[key][1] = self.tileTimeData_[key][1] + meanData.tileTimeData_[key][1]
                                
-    def getMean(self):
-        result = [[],[],[]]
+    def getMeanGrid(self):
+        
+        # [x, y, meanTileTimeBetweenVisits, standardDeviation]
+        result = [[], [], [], []]
         
         for key in sorted(self.tileTimeData_):
             coord = self.keyToValue(key)
             result[0].append(coord[0])
             result[1].append(coord[1])
             values = self.tileTimeData_[key]
-            if values[1] == 0:
+            count = len(values[1])
+            if count == 0:
                 result[2].append(0L)
+                result[3].append(0.0)
             else:
-                result[2].append(long(values[0] / values[1]))
+                result[2].append(long(values[0] / count))
+                standardDeviation = calcStandardDeviation(values[1], result[2][-1])
+                result[3].append(standardDeviation)
             
         return result 
+    
+    def getMeanValue(self):
+        
+        allTimes = []
+        timeSum = 0L
+        for values in self.tileTimeData_.itervalues():
+            allTimes = allTimes + values[1]
+            timeSum = timeSum + values[0]
             
+        meanVal = long(timeSum / len(allTimes))
+        stdDev = calcStandardDeviation(allTimes, meanVal)
+        
+        return (meanVal, stdDev)
+        
     def valueToKey(self, x, y):
         result = str(x) + "," + str(y)
         return result
@@ -124,7 +178,7 @@ class MeanTileVisits:
         self.reset()
     
     def reset(self):
-        # [x,y] (visits, count)
+        # [x,y] (visitsSum, [visits])
         self.tileVisitsData_ = dict()
     
     def add(self, tileVisits):
@@ -133,7 +187,7 @@ class MeanTileVisits:
         if(len(self.tileVisitsData_) == 0):
             for x,y in zip(tileVisits[0], tileVisits[1]):
                 key = self.valueToKey(x, y)
-                self.tileVisitsData_[key] = [0, 0]
+                self.tileVisitsData_[key] = [0, []]
         
         assert(len(tileVisits[0]) == len(self.tileVisitsData_))
         
@@ -141,26 +195,52 @@ class MeanTileVisits:
             key = self.valueToKey(x, y)
             
             self.tileVisitsData_[key][0] = self.tileVisitsData_[key][0] + visits
-            self.tileVisitsData_[key][1] = self.tileVisitsData_[key][1] + 1
+            self.tileVisitsData_[key][1].append(visits)
+            
+    def addMean(self, meanData):
+        for key in meanData.tileVisitsData_:
+            if not key in self.tileVisitsData_:
+                self.tileVisitsData_[key] = [0L, []]
+                
+            self.tileVisitsData_[key][0] = self.tileVisitsData_[key][0] + meanData.tileVisitsData_[key][0]
+            self.tileVisitsData_[key][1] = self.tileVisitsData_[key][1] + meanData.tileVisitsData_[key][1]
             
     def hasData(self):
         return len(self.tileVisitsData_) > 0
     
-    def getMean(self):
-        result = [[], [], []]
+    def getMeanGrid(self):
+        # [x, y, meanTileVisits, standardDeviation]
+        result = [[], [], [], []]
         
         for key in sorted(self.tileVisitsData_):
             coord = self.keyToValue(key)
             result[0].append(coord[0])
             result[1].append(coord[1])
             values = self.tileVisitsData_[key]
-
-            if values[1] == 0:
+            count = len(values[1])
+            
+            if count == 0:
                 result[2].append(0.0)
+                result[3].append(0.0)
             else:
-                result[2].append(float(values[0]) / float(values[1]))
+                result[2].append(float(values[0]) / float(count))
+                standardDeviation = calcStandardDeviation(values[1], result[2][-1])
+                result[3].append(standardDeviation)
             
         return result
+    
+    def getMeanValue(self):
+        
+        allVisits = []
+        visitSum = 0
+        for values in self.tileVisitsData_.itervalues():
+            allVisits = allVisits + values[1]
+            visitSum = visitSum + values[0]
+            
+        meanVal = long(visitSum / len(allVisits))
+        stdDev = calcStandardDeviation(allVisits, meanVal)
+        
+        return (meanVal, stdDev)
     
     def valueToKey(self, x, y):
         result = str(x) + "," + str(y)
@@ -179,20 +259,23 @@ class MeanGridTimeBetweenVisits:
     
     def reset(self):
         self.gridTimeSum_ = 0L
-        self.gridTimeCount_ = 0
+        self.gridTimes_ = []
         
     def add(self, timeBetweenVisits):
         self.gridTimeSum_ = self.gridTimeSum_ + timeBetweenVisits
-        self.gridTimeCount_ = self.gridTimeCount_ + 1
-        
+        self.gridTimes_.append(timeBetweenVisits)
+
     def getMean(self):
-        if self.gridTimeCount_ == 0:
-            return [[0L]]
+        count = len(self.gridTimes_)
+        if count == 0:
+            return [[0L], [0.0]]
         else:
-            return [[long(self.gridTimeSum_ / self.gridTimeCount_)]]
+            meanVal = long(self.gridTimeSum_ / count)
+            stdDev = calcStandardDeviation(self.gridTimes_, meanVal)
+            return [[meanVal], [stdDev]]
     
     def hasData(self):
-        return self.gridTimeCount_ > 0
+        return len(self.gridTimes_) > 0
     
 class MeanGridVisits:
     
@@ -201,17 +284,20 @@ class MeanGridVisits:
     
     def reset(self):
         self.gridVisitsSum_ = 0.0
-        self.gridVisitsCount_ = 0
+        self.gridVisits_ = []
         
     def add(self, gridVisits):
         self.gridVisitsSum_ = self.gridVisitsSum_ + gridVisits
-        self.gridVisitsCount_ = self.gridVisitsCount_ + 1
+        self.gridVisits_.append(gridVisits)
         
     def getMean(self):
-        if self.gridVisitsCount_ == 0:
-            return [[0.0]]
+        count = len(self.gridVisits_)
+        if count == 0:
+            return [[0.0], [0.0]]
         else:
-            return[[self.gridVisitsSum_ / self.gridVisitsCount_]]
+            meanVal = self.gridVisitsSum_ / count
+            stdDev = calcStandardDeviation(self.gridVisits_, meanVal)
+            return[[meanVal], [stdDev]]
     
     def hasData(self):
         return self.gridVisitsCount_ > 0

@@ -1,5 +1,6 @@
 import os
 import errno
+import math
 
 def sameFloat(a, b, eps):
     return abs(a - b) <= eps;
@@ -23,4 +24,16 @@ def getSubdirectoriesConcat(p_dir):
 
 def printHelp():
     print "Usage: python plot.py <data directory>"
+    
+def calcStandardDeviation(data, meanValue):
+    assert(len(data) > 0)
+    
+    diffSum = 0.0
+    count = float(len(data))
+    for value in data:
+        diffVal = float(value - meanValue)
+        diffSum = diffSum + (diffVal * diffVal)
+        
+    return math.sqrt(diffSum / count) 
+        
     

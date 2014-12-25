@@ -184,7 +184,7 @@ class MeanTimeBetweenVisitsEvents:
         return result
     
     def hasData(self):
-        return len(self.coverageEventsData_) > 0
+        return len(self.timeBetweenVisitsData_) > 0
 
 class MeanVisitsEvents:
     
@@ -245,7 +245,7 @@ class MeanVisitsEvents:
         return result
     
     def hasData(self):
-        return len(self.coverageEventsData_) > 0
+        return len(self.visitsData_) > 0
 
 
 class MeanTimeBetweenVisits:

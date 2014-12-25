@@ -6,7 +6,7 @@ from maeplot.plotdata import plotCoverageReachedAfterTime, plotTimeToReachCovera
     plotNumberOfVisits, plotTimeBetweenVisits
 from maeplot.experiment import AVAILABLE_WORLDS, AVAILABLE_ALGORITHMS
 from maeplot.meandata import MeanVisits, MeanCoverageEvents, MeanTimeEvents,\
-    MeanTimeBetweenVisits
+    MeanTimeBetweenVisits, MeanVisitsEvents, MeanTimeBetweenVisitsEvents
 
 SUMMARY_DIRECTORY = "summary"
 
@@ -34,8 +34,8 @@ class PlotDirectory(object):
             self.meanNumberOfVisitsEvents_[worldType] = dict()
             self.meanTimeBetweenVisitsEvents_[worldType] = dict()
             for algorithm in AVAILABLE_ALGORITHMS:
-                self.meanNumberOfVisitsEvents_[worldType][algorithm] = MeanVisits()
-                self.meanTimeBetweenVisitsEvents_[worldType][algorithm] = MeanTimeBetweenVisits()
+                self.meanNumberOfVisitsEvents_[worldType][algorithm] = MeanVisitsEvents()
+                self.meanTimeBetweenVisitsEvents_[worldType][algorithm] = MeanTimeBetweenVisitsEvents()
         
     def load(self, directory):
         assert(os.path.isdir(directory))

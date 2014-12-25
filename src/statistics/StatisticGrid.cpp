@@ -197,7 +197,7 @@ namespace mae
             if(!time.reached && currentCoverage >= time.coverage) {
                 time.reached = true;
                 time.timeStamp = currentTime;
-                time.meanTimeBetweenVisits =getMeanTimeBetweenVisits();
+                time.meanTimeBetweenVisits = getMeanTimeBetweenVisits();
                 time.meanVisits = getMeanVisitCount();
             }
         }

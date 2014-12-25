@@ -5,8 +5,8 @@ from maeplot.utils import getSubdirectoriesConcat, mkdirRec
 from maeplot.plotdata import plotCoverageReachedAfterTime, plotTimeToReachCoverage,\
     plotNumberOfVisits, plotTimeBetweenVisits
 from maeplot.experiment import AVAILABLE_WORLDS, AVAILABLE_ALGORITHMS
-from maeplot.meandata import MeanVisits, MeanCoverageEvents, MeanTimeEvents,\
-    MeanTimeBetweenVisits, MeanVisitsEvents, MeanTimeBetweenVisitsEvents
+from maeplot.meandata import MeanCoverageEvents, MeanTimeEvents,\
+    MeanVisitsEvents, MeanTimeBetweenVisitsEvents
 
 SUMMARY_DIRECTORY = "summary"
 
@@ -100,7 +100,7 @@ class PlotDirectory(object):
             shutil.rmtree(self.getSummaryDir())
         mkdirRec(self.getSummaryDir())
         
-        coverage = 0.90
+        coverage = 0.85
         
         print "plotting time to reach coverage"
         plotTimeToReachCoverage(self.timeToReachCoverage_, self.getSummaryDir(), coverage)

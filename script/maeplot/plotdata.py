@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from utils import sameFloat
 from experiment import AVAILABLE_WORLDS
+from maeplot.utils import usecToMin, coverageToPercent
 
 def getBarChartColorCyle():
     colorCycle = []
@@ -15,9 +16,6 @@ def getBarChartColorCyle():
     
     return colorCycle
 
-def usecToMin(usec):
-    return float(usec / 1000) / 60000
-
 def plotCoverageEventsPerCount(data, outfile):
     plt.figure()
     plt.cla()
@@ -26,9 +24,7 @@ def plotCoverageEventsPerCount(data, outfile):
     plt.title('Coverage per amount of Robots')
     
     for robotCount in sorted(data):
-        meanData = data[robotCount].getMean()
-        meanData[0] = [(100 * coverage) for coverage in meanData[0]]
-        meanData[1] = [usecToMin(time) for time in meanData[1]]
+        meanData = data[robotCount].getMean(convertTime=usecToMin, convertCoverage=coverageToPercent)
         labelText = ""
         
         if robotCount == 1:
@@ -59,23 +55,26 @@ def plotTimeToReachCoverage(data, outfile, coverage):
     
     for algoCount, (algorithmName, worldDict) in enumerate(data.iteritems()):
         algorithmData = []
+        algorithmErr = []
         
         for worldType in AVAILABLE_WORLDS:
-            meanData = worldDict[worldType].getMean()[:2]
+            meanData = worldDict[worldType].getMean(convertTime=usecToMin)
             found = False
-            for i, (coverageEvent, coverageTime) in enumerate(zip(*meanData)):
+            for i, (coverageEvent, coverageTime, stdDev) in enumerate(zip(*meanData)):
                 # TODO compare float
                 if sameFloat(coverageEvent, coverage, 0.01):
                     found = True
-                    algorithmData.append(usecToMin(coverageTime))
+                    algorithmData.append(coverageTime)
+                    algorithmErr.append(stdDev)
                     break
                 
             if not found:
                 algorithmData.append(0)
+                algorithmErr.append(0.0)
         
         assert(len(algorithmData) == len(AVAILABLE_WORLDS))    
         leftBorders = [i + (algoCount * barWidth) for i in xrange(len(algorithmData))]
-        rects = ax.bar(leftBorders, algorithmData, width=barWidth, label=algorithmName, color=colorCycle[algoCount % len(colorCycle)])
+        rects = ax.bar(leftBorders, algorithmData, yerr=algorithmErr, width=barWidth, label=algorithmName, color=colorCycle[algoCount % len(colorCycle)])
         
         # add value label on top of bars
         for rect in rects:
@@ -108,22 +107,25 @@ def plotCoverageReachedAfterTime(data, outfile, time):
     
     for algoCount, (algorithmName, worldDict) in enumerate(data.iteritems()):
         algorithmData = []
+        algorithmErr = []
         
         for worldType in AVAILABLE_WORLDS:
-            meanData = worldDict[worldType].getMean()[:2]
+            meanData = worldDict[worldType].getMean(convertTime=usecToMin, convertCoverage=coverageToPercent)
             found = False
-            for i, (coverageEvent, coverageTime) in enumerate(zip(*meanData)):
-                if int(usecToMin(coverageTime)) == time:
+            for i, (coverageEvent, coverageTime, stdDev) in enumerate(zip(*meanData)):
+                if int(coverageTime) == time:
                     found = True
-                    algorithmData.append(100 * coverageEvent)
+                    algorithmData.append(coverageEvent)
+                    algorithmErr.append(stdDev)
                     break
                 
             if not found:
                 algorithmData.append(0)
+                algorithmErr.append(0.0)
         
         assert(len(algorithmData) == len(AVAILABLE_WORLDS))    
         leftBorders = [i + (algoCount * barWidth) for i in xrange(len(algorithmData))]
-        rects = ax.bar(leftBorders, algorithmData, width=barWidth, label=algorithmName, color=colorCycle[algoCount % len(colorCycle)])
+        rects = ax.bar(leftBorders, algorithmData, yerr=algorithmErr, width=barWidth, label=algorithmName, color=colorCycle[algoCount % len(colorCycle)])
         
         # add value label on top of bars
         for rect in rects:

@@ -8,8 +8,8 @@ from plotdata import plotCoverageEventsPerCount
 
 from meandata import MeanFinalCoverage
 from meandata import MeanCoverageEvents
-from meandata import MeanTileTimeBetweenVisits
-from meandata import MeanTileVisits
+from meandata import MeanTimeBetweenVisits
+from meandata import MeanVisits
 from meandata import MeanTimeEvents
 from experiment import AVAILABLE_ROBOT_COUNTS
 from experiment import AVAILABLE_WORLDS
@@ -51,8 +51,8 @@ class AlgorithmDirectory:
             for robotCount in AVAILABLE_ROBOT_COUNTS:
                 self.meanCoverageEvents_[worldType][robotCount] = MeanCoverageEvents()
                 self.meanTimeEvents_[worldType][robotCount] = MeanTimeEvents()
-                self.meanTileTimeBetweenVisits_[worldType][robotCount] = MeanTileTimeBetweenVisits()
-                self.meanTileVisits_[worldType][robotCount] = MeanTileVisits()
+                self.meanTileTimeBetweenVisits_[worldType][robotCount] = MeanTimeBetweenVisits()
+                self.meanTileVisits_[worldType][robotCount] = MeanVisits()
                 self.meanFinalCoverage_[worldType][robotCount] = MeanFinalCoverage()
         
     def load(self, directory):

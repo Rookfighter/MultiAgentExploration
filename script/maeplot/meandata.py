@@ -28,18 +28,32 @@ class MeanTimeEvents:
             self.timeEventsData_[time][0] = self.timeEventsData_[time][0] + meanData.timeEventsData_[time][0]
             self.timeEventsData_[time][1] = self.timeEventsData_[time][1] + meanData.timeEventsData_[time][1]
                 
-    def getMean(self):
+    def getMean(self, convertTime=None, convertCoverage=None):
         
         # [meanCoverage, time, standardDeviation]
         result = [[],[], []]
         
         for time in sorted(self.timeEventsData_):
-            result[1].append(time)
+            timeToAdd = time
             coverageSum = self.timeEventsData_[time][0]
-            count = len(self.timeEventsData_[time][1])
-            result[0].append(coverageSum / count)
-            standardDeviation = calcStandardDeviation(self.timeEventsData_[time][1], result[0][-1])
-            result[2].append(standardDeviation)
+            coverages = self.timeEventsData_[time][1]
+            count = len(coverages)
+            
+            if convertTime != None:
+                timeToAdd = convertTime(timeToAdd)
+            if convertCoverage != None:
+                coverageSum = convertCoverage(coverageSum)
+                coverages = [convertCoverage(cov) for cov in coverages]
+            
+            meanVal = 0.0
+            stdDev = 0.0
+            if count > 0:
+                meanVal = coverageSum / count
+                stdDev = calcStandardDeviation(coverages, meanVal)
+            
+            result[0].append(meanVal)
+            result[1].append(timeToAdd)
+            result[2].append(stdDev)
             
         return result
     
@@ -74,24 +88,39 @@ class MeanCoverageEvents:
             self.coverageEventsData_[coverage][0] = self.coverageEventsData_[coverage][0] + meanData.coverageEventsData_[coverage][0]
             self.coverageEventsData_[coverage][1] = self.coverageEventsData_[coverage][1] + meanData.coverageEventsData_[coverage][1]
                 
-    def getMean(self):
+    def getMean(self, convertTime=None, convertCoverage=None):
         
         # [coverage, meanTime, standardDeviation]
         result = [[],[], []]
         for coverage in sorted(self.coverageEventsData_):
-            result[0].append(coverage)
-            time = self.coverageEventsData_[coverage][0]
-            count = len(self.coverageEventsData_[coverage][1])
-            result[1].append(time / count)
-            standardDeviation = calcStandardDeviation(self.coverageEventsData_[coverage][1], result[0][-1])
-            result[2].append(standardDeviation)
+            
+            coverageToAdd = coverage
+            timeSum = self.coverageEventsData_[coverage][0]
+            timeData = self.coverageEventsData_[coverage][1]
+            count = len(timeData)
+            
+            if convertTime != None:
+                timeSum = convertTime(timeSum)
+                timeData = [convertTime(time) for time in timeData]
+            if convertCoverage != None:
+                coverageToAdd = convertCoverage(coverageToAdd)
+            
+            meanVal = 0.0
+            stdDev = 0.0
+            if count > 0:
+                meanVal = timeSum / count
+                stdDev = calcStandardDeviation(timeData, meanVal)
+            
+            result[0].append(coverageToAdd)
+            result[1].append(meanVal)
+            result[2].append(stdDev)
             
         return result
     
     def hasData(self):
         return len(self.coverageEventsData_) > 0
 
-class MeanTileTimeBetweenVisits:
+class MeanTimeBetweenVisits:
     
     def __init__(self):
         self.reset()
@@ -125,39 +154,55 @@ class MeanTileTimeBetweenVisits:
             self.tileTimeData_[key][0] = self.tileTimeData_[key][0] + meanData.tileTimeData_[key][0]
             self.tileTimeData_[key][1] = self.tileTimeData_[key][1] + meanData.tileTimeData_[key][1]
                                
-    def getMeanGrid(self):
+    def getMeanGrid(self, convertTime=None):
         
         # [x, y, meanTileTimeBetweenVisits, standardDeviation]
         result = [[], [], [], []]
         
         for key in sorted(self.tileTimeData_):
             coord = self.keyToValue(key)
+            timeSum = self.tileTimeData_[key][0]
+            times = self.tileTimeData_[key][1]
+            count = len(times)
+            
+            if convertTime != None:
+                timeSum = convertTime(timeSum)
+                times = [convertTime(time) for time in times]
+            
+            meanVal = 0.0
+            stdDev = 0.0
+            
+            if count > 0:
+                meanVal = timeSum / count
+                stdDev = calcStandardDeviation(times, meanVal)
+                
             result[0].append(coord[0])
             result[1].append(coord[1])
-            values = self.tileTimeData_[key]
-            count = len(values[1])
-            if count == 0:
-                result[2].append(0L)
-                result[3].append(0.0)
-            else:
-                result[2].append(long(values[0] / count))
-                standardDeviation = calcStandardDeviation(values[1], result[2][-1])
-                result[3].append(standardDeviation)
+            result[2].append(meanVal)
+            result[3].append(stdDev)
             
         return result 
     
-    def getMeanValue(self):
+    def getMeanValue(self, convertTime=None):
         
         allTimes = []
         timeSum = 0L
         for values in self.tileTimeData_.itervalues():
             allTimes = allTimes + values[1]
             timeSum = timeSum + values[0]
-            
-        meanVal = long(timeSum / len(allTimes))
-        stdDev = calcStandardDeviation(allTimes, meanVal)
         
-        return (meanVal, stdDev)
+        count = len(allTimes)
+        meanVal = 0.0
+        stdDev = 0.0
+        if count > 0:
+            if convertTime != None:
+                allTimes = [convertTime(time) for time in allTimes]
+                timeSum = convertTime(timeSum)
+            
+            meanVal = timeSum / count
+            stdDev = calcStandardDeviation(allTimes, meanVal)
+        
+        return [meanVal, stdDev]
         
     def valueToKey(self, x, y):
         result = str(x) + "," + str(y)
@@ -172,7 +217,7 @@ class MeanTileTimeBetweenVisits:
     def hasData(self):
         return len(self.tileTimeData_) > 0
     
-class MeanTileVisits:
+class MeanVisits:
     
     def __init__(self):
         self.reset()
@@ -214,18 +259,21 @@ class MeanTileVisits:
         
         for key in sorted(self.tileVisitsData_):
             coord = self.keyToValue(key)
+            visitsSum = self.tileVisitsData_[key][0]
+            visitsData = self.tileVisitsData_[key][1]
+            count = len(visitsData)
+            
+            meanVal = 0.0
+            stdDev = 0.0
+            if count > 0:
+                meanVal = float(visitsSum) / float(count)
+                standardDeviation = calcStandardDeviation(visitsData, meanVal)
+                result[3].append(standardDeviation)
+                
             result[0].append(coord[0])
             result[1].append(coord[1])
-            values = self.tileVisitsData_[key]
-            count = len(values[1])
-            
-            if count == 0:
-                result[2].append(0.0)
-                result[3].append(0.0)
-            else:
-                result[2].append(float(values[0]) / float(count))
-                standardDeviation = calcStandardDeviation(values[1], result[2][-1])
-                result[3].append(standardDeviation)
+            result[2].append(meanVal)
+            result[3].append(stdDev)
             
         return result
     
@@ -236,11 +284,15 @@ class MeanTileVisits:
         for values in self.tileVisitsData_.itervalues():
             allVisits = allVisits + values[1]
             visitSum = visitSum + values[0]
-            
-        meanVal = long(visitSum / len(allVisits))
-        stdDev = calcStandardDeviation(allVisits, meanVal)
         
-        return (meanVal, stdDev)
+        count = len(allVisits)
+        meanVal = 0.0
+        stdDev = 0.0
+        if count > 0:
+            meanVal = float(visitSum) / float(count)
+            stdDev = calcStandardDeviation(allVisits, meanVal)
+        
+        return [meanVal, stdDev]
     
     def valueToKey(self, x, y):
         result = str(x) + "," + str(y)

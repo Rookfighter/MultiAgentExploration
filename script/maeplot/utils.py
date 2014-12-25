@@ -2,6 +2,15 @@ import os
 import errno
 import math
 
+MSEC_TO_MIN_FACTOR = 1.0 / 60000.0
+USEC_TO_MIN_FACTOR = 1.0 / 60000000.0
+
+def usecToMin(usec):
+    return float(usec / 1000) / 60000
+
+def coverageToPercent(cov):
+    return cov * 100
+
 def sameFloat(a, b, eps):
     return abs(a - b) <= eps;
 
@@ -26,7 +35,8 @@ def printHelp():
     print "Usage: python plot.py <data directory>"
     
 def calcStandardDeviation(data, meanValue):
-    assert(len(data) > 0)
+    if len(data) == 0:
+        return 0.0
     
     diffSum = 0.0
     count = float(len(data))
@@ -34,6 +44,11 @@ def calcStandardDeviation(data, meanValue):
         diffVal = float(value - meanValue)
         diffSum = diffSum + (diffVal * diffVal)
         
-    return math.sqrt(diffSum / count) 
+    return math.sqrt(diffSum / count)
+
+def calcMean(dataSum, dataCount):
+    result = 0.0
+    if dataCount > 0:
+        result = float(dataSum) / float(dataCount)
         
-    
+    return result

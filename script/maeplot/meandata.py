@@ -21,6 +21,8 @@ class MeanTimeEvents:
             self.timeEventsData_[time][1].append(coverage)
             
     def addMean(self, meanData):
+        assert(meanData.__class__ == self.__class__)
+        
         for time in meanData.timeEventsData_:
             if not time in self.timeEventsData_:
                 self.timeEventsData_[time] = [0.0, []]
@@ -81,6 +83,8 @@ class MeanCoverageEvents:
             self.coverageEventsData_[coverage][1].append(time)
             
     def addMean(self, meanData):
+        assert(meanData.__class__ == self.__class__)
+        
         for coverage in meanData.coverageEventsData_:
             if not coverage in self.coverageEventsData_:
                 self.coverageEventsData_[coverage] = [0L, []]
@@ -120,6 +124,130 @@ class MeanCoverageEvents:
     def hasData(self):
         return len(self.coverageEventsData_) > 0
 
+class MeanTimeBetweenVisitsEvents:
+    
+    def __init__(self):
+        self.reset()
+    
+    def reset(self):
+        # [coverage] (timeDiffSum, [timeDiffs])
+        self.timeBetweenVisitsData_ = dict()
+    
+    def add(self, timeBetweenVisits):
+        assert(len(timeBetweenVisits) == 2)
+        
+        for coverage in timeBetweenVisits[0]:
+            if not coverage in self.timeBetweenVisitsData_:
+                self.timeBetweenVisitsData_[coverage] = [0L, []]
+        
+        for coverage, time in zip(*timeBetweenVisits):
+            self.timeBetweenVisitsData_[coverage][0] = self.timeBetweenVisitsData_[coverage][0] + time
+            self.timeBetweenVisitsData_[coverage][1].append(time)
+            
+    def addMean(self, meanData):
+        assert(meanData.__class__ == self.__class__)
+        
+        for coverage in meanData.timeBetweenVisitsData_:
+            if not coverage in self.timeBetweenVisitsData_:
+                self.timeBetweenVisitsData_[coverage] = [0L, []]
+                
+            self.timeBetweenVisitsData_[coverage][0] = self.timeBetweenVisitsData_[coverage][0] + meanData.timeBetweenVisitsData_[coverage][0]
+            self.timeBetweenVisitsData_[coverage][1] = self.timeBetweenVisitsData_[coverage][1] + meanData.timeBetweenVisitsData_[coverage][1]
+                
+    def getMean(self, convertTime=None, convertCoverage=None):
+        
+        # [coverage, meanTime, standardDeviation]
+        result = [[],[], []]
+        for coverage in sorted(self.timeBetweenVisitsData_):
+            
+            coverageToAdd = coverage
+            timeSum = self.timeBetweenVisitsData_[coverage][0]
+            timeData = self.timeBetweenVisitsData_[coverage][1]
+            count = len(timeData)
+            
+            if convertTime != None:
+                timeSum = convertTime(timeSum)
+                timeData = [convertTime(time) for time in timeData]
+            if convertCoverage != None:
+                coverageToAdd = convertCoverage(coverageToAdd)
+            
+            meanVal = 0.0
+            stdDev = 0.0
+            if count > 0:
+                meanVal = timeSum / count
+                stdDev = calcStandardDeviation(timeData, meanVal)
+            
+            result[0].append(coverageToAdd)
+            result[1].append(meanVal)
+            result[2].append(stdDev)
+            
+        return result
+    
+    def hasData(self):
+        return len(self.coverageEventsData_) > 0
+
+class MeanVisitsEvents:
+    
+    def __init__(self):
+        self.reset()
+    
+    def reset(self):
+        # [coverage] (visitsSum, [visits])
+        self.visitsData_ = dict()
+    
+    def add(self, meanVisits):
+        assert(len(meanVisits) == 2)
+        
+        for coverage in meanVisits[0]:
+            if not coverage in self.visitsData_:
+                self.visitsData_[coverage] = [0L, []]
+        
+        for coverage, visits in zip(*meanVisits):
+            self.visitsData_[coverage][0] = self.visitsData_[coverage][0] + visits
+            self.visitsData_[coverage][1].append(visits)
+            
+    def addMean(self, meanData):
+        assert(meanData.__class__ == self.__class__)
+        
+        for coverage in meanData.visitsData_:
+            if not coverage in self.visitsData_:
+                self.visitsData_[coverage] = [0L, []]
+                
+            self.visitsData_[coverage][0] = self.visitsData_[coverage][0] + meanData.visitsData_[coverage][0]
+            self.visitsData_[coverage][1] = self.visitsData_[coverage][1] + meanData.visitsData_[coverage][1]
+                
+    def getMean(self, convertTime=None, convertCoverage=None):
+        # [coverage, meanTime, standardDeviation]
+        result = [[],[], []]
+        for coverage in sorted(self.visitsData_):
+            
+            coverageToAdd = coverage
+            timeSum = self.visitsData_[coverage][0]
+            timeData = self.visitsData_[coverage][1]
+            count = len(timeData)
+            
+            if convertTime != None:
+                timeSum = convertTime(timeSum)
+                timeData = [convertTime(time) for time in timeData]
+            if convertCoverage != None:
+                coverageToAdd = convertCoverage(coverageToAdd)
+            
+            meanVal = 0.0
+            stdDev = 0.0
+            if count > 0:
+                meanVal = timeSum / count
+                stdDev = calcStandardDeviation(timeData, meanVal)
+            
+            result[0].append(coverageToAdd)
+            result[1].append(meanVal)
+            result[2].append(stdDev)
+            
+        return result
+    
+    def hasData(self):
+        return len(self.coverageEventsData_) > 0
+
+
 class MeanTimeBetweenVisits:
     
     def __init__(self):
@@ -147,6 +275,8 @@ class MeanTimeBetweenVisits:
                 self.tileTimeData_[key][1].append(tileTime)
     
     def addMean(self, meanData):
+        assert(meanData.__class__ == self.__class__)
+        
         for key in meanData.tileTimeData_:
             if not key in self.tileTimeData_:
                 self.tileTimeData_[key] = [0L, []]
@@ -244,6 +374,8 @@ class MeanVisits:
             self.tileVisitsData_[key][1].append(visits)
             
     def addMean(self, meanData):
+        assert(meanData.__class__ == self.__class__)
+        
         for key in meanData.tileVisitsData_:
             if not key in self.tileVisitsData_:
                 self.tileVisitsData_[key] = [0L, []]

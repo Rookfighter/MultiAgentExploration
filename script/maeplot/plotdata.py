@@ -112,11 +112,12 @@ def plotBarChartPerTerrainPerAlgorithm(data, dataErr=None, outfile="", yAxLabel=
     else:
         plt.show()    
 
-def plotTimeToReachCoverage(data, outdir, coverage):
+def plotTimeToReachCoverage(data, outdir, coverageToPlot):
     assert(len(data) > 0)
     assert(len(data.values()[0]) > 0)
     
-    TIME_TO_REACH_COVERAGE_FILE = "time-to-reach-coverage-{0}.png"
+    coveragePercent = int(coverageToPercent(coverageToPlot))
+    TIME_TO_REACH_COVERAGE_FILE = "time-to-reach-coverage-{0}.png".format(coveragePercent)
     
     dataPerAlgo = dict()
     errPerAlgo = dict()
@@ -128,8 +129,8 @@ def plotTimeToReachCoverage(data, outdir, coverage):
         for worldType in AVAILABLE_WORLDS:
             meanData = worldDict[worldType].getMean(convertTime=usecToMin)
             found = False
-            for coverageEvent, coverageTime, stdDev in zip(*meanData):
-                if sameFloat(coverageEvent, coverage, 0.01):
+            for coverage, coverageTime, stdDev in zip(*meanData):
+                if sameFloat(coverage, coverageToPlot, 0.01):
                     found = True
                     algoData.append(coverageTime)
                     algoErr.append(stdDev)
@@ -142,9 +143,8 @@ def plotTimeToReachCoverage(data, outdir, coverage):
         dataPerAlgo[algoName] = algoData
         errPerAlgo[algoName] = algoErr
         
-    coveragePercent = int(100 * coverage)
     title = "Time to reach {0}% Coverage".format(coveragePercent)
-    outfile = os.path.join(outdir, TIME_TO_REACH_COVERAGE_FILE).format(coveragePercent)
+    outfile = os.path.join(outdir, TIME_TO_REACH_COVERAGE_FILE)
     yAxLabel = "minutes"
     plotBarChartPerAlgorithmPerTerrain(dataPerAlgo, dataErr=errPerAlgo, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title)
 
@@ -161,8 +161,8 @@ def plotCoverageReachedAfterTime(data, outdir, time):
         algoData = []
         algoErr = []
         
-        for meanCoverage in worldDict.values():
-            meanData = meanCoverage.getMean(convertTime=usecToMin, convertCoverage=coverageToPercent)
+        for worldName in AVAILABLE_WORLDS:
+            meanData = worldDict[worldName].getMean(convertTime=usecToMin, convertCoverage=coverageToPercent)
             found = False
             # search for time in mean values
             for coverageEvent, coverageTime, stdDev in zip(*meanData):
@@ -184,11 +184,12 @@ def plotCoverageReachedAfterTime(data, outdir, time):
     yAxLabel = "coverage"
     plotBarChartPerAlgorithmPerTerrain(dataPerAlgo, dataErr=errPerAlgo, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title)
 
-def plotNumberOfVisits(data, outdir):
+def plotNumberOfVisits(data, outdir, coverageToPlot):
     assert(len(data) > 0)
     
-    MEAN_NUMBER_OF_VISITS_FILE = "number-of-visits-mean.png"
-    STD_DEV_NUMBER_OF_VISITS_FILE = "number-of-visits-standard-deviation.png"
+    coveragePercent = int(coverageToPercent(coverageToPlot))
+    MEAN_NUMBER_OF_VISITS_FILE = "number-of-visits-mean-to-{0}-coverage.png".format(coveragePercent)
+    STD_DEV_NUMBER_OF_VISITS_FILE = "number-of-visits-standard-deviation-to-{0}-coverage.png".format(coveragePercent)
     
     dataPerWorld = dict()
     errPerWorld = dict()
@@ -196,29 +197,38 @@ def plotNumberOfVisits(data, outdir):
         worldData = []
         worldErr = []
         
-        for meanVisits in algoDict.values():
-            meanData = meanVisits.getMeanValue()
-            worldData.append(meanData[0])
-            worldErr.append(meanData[1])
+        for algoName in AVAILABLE_ALGORITHMS:
+            meanData = algoDict[algoName].getMean()
+            found = False
+            for coverage, visits, stdDev in zip(*meanData):
+                if sameFloat(coverageToPlot, coverage, 0.01):
+                    worldData.append(visits)
+                    worldErr.append(stdDev)
+                    found = True
+                    break
+            if not found:
+                worldData.append(0.0)
+                worldErr.append(0.0)
             
         dataPerWorld[worldName] = worldData
         errPerWorld[worldName] = worldErr
     
     outfile = os.path.join(outdir, MEAN_NUMBER_OF_VISITS_FILE)
-    title = "Mean Number of Visits"
+    title = "Mean Number of Visits to {0}% Coverage".format(coveragePercent)
     yAxisLabel = "visits"   
     plotBarChartPerTerrainPerAlgorithm(dataPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title)
     
     outfile = os.path.join(outdir, STD_DEV_NUMBER_OF_VISITS_FILE)
-    title = "Standard Deviation of Number of Visits"
+    title = "Standard Deviation of Number of Visits to {0}% Coverage".format(coveragePercent)
     yAxisLabel = "standard deviation"
     plotBarChartPerTerrainPerAlgorithm(errPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title)
     
-def plotTimeBetweenVisits(data, outdir):
+def plotTimeBetweenVisits(data, outdir, coverageToPlot):
     assert(len(data) > 0)
     
-    MEAN_NUMBER_OF_VISITS_FILE = "time-between-visits-mean.png"
-    STD_DEV_NUMBER_OF_VISITS_FILE = "time-between-visits-standard-deviation.png"
+    coveragePercent = int(coverageToPercent(coverageToPlot))
+    MEAN_NUMBER_OF_VISITS_FILE = "time-between-visits-mean-to-{0}-coverage.png".format(coveragePercent)
+    STD_DEV_NUMBER_OF_VISITS_FILE = "time-between-visits-standard-deviation-to-{0}-coverage.png".format(coveragePercent)
     
     dataPerWorld = dict()
     errPerWorld = dict()
@@ -226,20 +236,29 @@ def plotTimeBetweenVisits(data, outdir):
         worldData = []
         worldErr = []
         
-        for meanTime in algoDict.values():
-            meanData = meanTime.getMeanValue(convertTime=usecToMin)
-            worldData.append(meanData[0])
-            worldErr.append(meanData[1])
+        for algoName in AVAILABLE_ALGORITHMS:
+            meanData = algoDict[algoName].getMean(convertTime=usecToMin)
+            found = False
+            for coverage, time, stdDev in zip(*meanData):
+                if sameFloat(coverageToPlot, coverage, 0.01):
+                    worldData.append(time)
+                    worldErr.append(stdDev)
+                    found = True
+                    break
             
+            if not found:
+                worldData.append(0)
+                worldErr.append(0.0)
+                
         dataPerWorld[worldName] = worldData
         errPerWorld[worldName] = worldErr
     
     outfile = os.path.join(outdir, MEAN_NUMBER_OF_VISITS_FILE)
-    title = "Mean Time between Visits"
+    title = "Mean Time between Visits to {0}% Coverage".format(coveragePercent)
     yAxisLabel = "minutes"   
     plotBarChartPerTerrainPerAlgorithm(dataPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title)
     
     outfile = os.path.join(outdir, STD_DEV_NUMBER_OF_VISITS_FILE)
-    title = "Standard Deviation of Time between Visits"
+    title = "Standard Deviation of Time between Visits to {0}% Coverage".format(coveragePercent)
     yAxisLabel = "standard deviation"
     plotBarChartPerTerrainPerAlgorithm(errPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title)

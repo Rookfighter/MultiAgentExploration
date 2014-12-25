@@ -13,6 +13,7 @@ from meandata import MeanVisits
 from meandata import MeanTimeEvents
 from experiment import AVAILABLE_ROBOT_COUNTS
 from experiment import AVAILABLE_WORLDS
+from maeplot.meandata import MeanVisitsEvents, MeanTimeBetweenVisitsEvents
 
 SUMMARY_DIRECTORY = "summary"
 
@@ -40,6 +41,8 @@ class AlgorithmDirectory:
         self.meanTileTimeBetweenVisits_ = dict()
         self.meanTileVisits_ = dict()
         self.meanFinalCoverage_ = dict()
+        self.meanVisitsEvents_ = dict()
+        self.meanTimeBetweenVisitsEvents_ = dict()
         
         for worldType in AVAILABLE_WORLDS:
             self.meanCoverageEvents_[worldType] = dict()
@@ -47,6 +50,8 @@ class AlgorithmDirectory:
             self.meanTileTimeBetweenVisits_[worldType] = dict()
             self.meanTileVisits_[worldType] = dict()
             self.meanFinalCoverage_[worldType] = dict()
+            self.meanVisitsEvents_[worldType] = dict()
+            self.meanTimeBetweenVisitsEvents_[worldType] = dict()
             
             for robotCount in AVAILABLE_ROBOT_COUNTS:
                 self.meanCoverageEvents_[worldType][robotCount] = MeanCoverageEvents()
@@ -54,6 +59,8 @@ class AlgorithmDirectory:
                 self.meanTileTimeBetweenVisits_[worldType][robotCount] = MeanTimeBetweenVisits()
                 self.meanTileVisits_[worldType][robotCount] = MeanVisits()
                 self.meanFinalCoverage_[worldType][robotCount] = MeanFinalCoverage()
+                self.meanVisitsEvents_[worldType][robotCount] = MeanVisitsEvents()
+                self.meanTimeBetweenVisitsEvents_[worldType][robotCount] = MeanTimeBetweenVisitsEvents()
         
     def load(self, directory):
         assert(os.path.isdir(directory))
@@ -81,6 +88,8 @@ class AlgorithmDirectory:
             self.meanTileTimeBetweenVisits_[worldType][robotCount].add(experimentDir.meanTileTimeBetweenVisits_)
             self.meanTileVisits_[worldType][robotCount].add(experimentDir.tileVisits_)
             self.meanFinalCoverage_[worldType][robotCount].add(experimentDir.finalCoverage_)
+            self.meanVisitsEvents_[worldType][robotCount].add(experimentDir.visitsEvents_)
+            self.meanTimeBetweenVisitsEvents_[worldType][robotCount].add(experimentDir.timeBetweenVisitsEvents_)
   
     def save(self):
         print "saving summary of '" + self.getName() + "'..."

@@ -3,6 +3,8 @@ from datafile import DataFile
 
 # all files that are in an experiment directory
 TILE_VISITS_FILE = "tile-visits.dat"
+VISITS_EVENTS_FILE = "visits-events.dat"
+TIME_BETWEEN_VISITS_EVENTS_FILE = "time-between-visits-events.dat"
 MEAN_TILE_TIME_BEWTEEN_VISITS_FILE = "mean-tile-time-between-visits.dat"
 COVERAGE_EVENTS_FILE = "coverage-events.dat"
 TIME_EVENTS_FILE = "time-events.dat"
@@ -19,8 +21,10 @@ class ExperimentDirectory:
         self.coverageEvents_ = []
         self.timeEvents_ = []
         self.finalCoverage_ = []
+        self.timeBetweenVisitsEvents_ = []
         self.meanTileTimeBetweenVisits_ = []
         self.tileVisits_ = []
+        self.visitsEvents_ = []
     
     def load(self, directory):
         assert(os.path.isdir(directory))
@@ -62,6 +66,16 @@ class ExperimentDirectory:
         filename = os.path.join(self.directory_, TILE_VISITS_FILE)
         dataFile.load(filename)
         self.tileVisits_ = dataFile.getDataAs("iii")
+        
+        # load visitsEvents
+        filename = os.path.join(self.directory_, VISITS_EVENTS_FILE)
+        dataFile.load(filename)
+        self.visitsEvents_ = dataFile.getDataAs("ff")
+        
+        # load timeBetweenVisitsEvents
+        filename = os.path.join(self.directory_, TIME_BETWEEN_VISITS_EVENTS_FILE)
+        dataFile.load(filename)
+        self.timeBetweenVisitsEvents_ = dataFile.getDataAs("fl")
         
     def getName(self):
         return os.path.basename(os.path.normpath(self.directory_))

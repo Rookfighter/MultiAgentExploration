@@ -195,11 +195,12 @@ class MeanTimeBetweenVisits:
         meanVal = 0.0
         stdDev = 0.0
         if count > 0:
+            meanVal = timeSum / count
+            
             if convertTime != None:
                 allTimes = [convertTime(time) for time in allTimes]
-                timeSum = convertTime(timeSum)
+                meanVal = convertTime(meanVal)
             
-            meanVal = timeSum / count
             stdDev = calcStandardDeviation(allTimes, meanVal)
         
         return [meanVal, stdDev]

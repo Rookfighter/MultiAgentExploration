@@ -78,6 +78,8 @@ namespace mae
         time.coverage = p_coverage;
         time.reached = false;
         time.timeStamp = 0;
+        time.meanTimeBetweenVisits = 0;
+        time.meanVisits = 0;
         coverageEvents_.push_back(time);
     }
 
@@ -87,6 +89,8 @@ namespace mae
     	time.coverage = 0;
     	time.reached = false;
     	time.timeStamp = p_time;
+    	time.meanTimeBetweenVisits = 0;
+        time.meanVisits = 0;
     	timeEvents_.push_back(time);
     }
 
@@ -193,6 +197,8 @@ namespace mae
             if(!time.reached && currentCoverage >= time.coverage) {
                 time.reached = true;
                 time.timeStamp = currentTime;
+                time.meanTimeBetweenVisits =getMeanTimeBetweenVisits();
+                time.meanVisits = getMeanVisitCount();
             }
         }
     }

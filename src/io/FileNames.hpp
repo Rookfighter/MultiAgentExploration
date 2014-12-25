@@ -10,12 +10,12 @@ namespace mae
         const std::string logFile = "multi-agent-exploration.log";
         const std::string logFilePath = "../log/" + logFile;
 
-        const std::string tileVisitsFile = "tile-visits.dat";
-        const std::string meanGridVisitsFile = "mean-grid-visits.dat";
-        const std::string meanTileTimeBetweenVisitsFile =
+        const std::string numberOfVisitsFile = "tile-visits.dat";
+        const std::string meanNumberOfVisitsEventsFile = "visits-events.dat";
+        const std::string meanTimeBetweenVisitsFile =
                 "mean-tile-time-between-visits.dat";
-        const std::string meanGridTimeBetweenVisitsFile =
-                "mean-grid-time-between-visits.dat";
+        const std::string timeBetweenVisitsEventsFile =
+                "time-between-visits-events.dat";
         const std::string coverageEventsFile = "coverage-events.dat";
         const std::string timeEventsFile = "time-events.dat";
         const std::string finalCoverageFile = "final-coverage.dat";

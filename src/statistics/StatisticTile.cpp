@@ -35,7 +35,7 @@ namespace mae
     
     std::vector<Stg::usec_t> StatisticTile::getTimeBetweenVisits() const
     {
-        if(visits_.empty())
+        if(visits_.size() < 2)
             return std::vector<Stg::usec_t>();
             
         std::vector<Stg::usec_t> result(visits_.size() - 1);
@@ -56,6 +56,9 @@ namespace mae
     Stg::usec_t StatisticTile::getMeanTimeBetweenVisits() const
     {
         std::vector<Stg::usec_t> timeBetweenVisits = getTimeBetweenVisits();
+        if(timeBetweenVisits.empty())
+            return 0;
+
         Stg::usec_t sum = 0;
 
         for(Stg::usec_t timeDiff : timeBetweenVisits)

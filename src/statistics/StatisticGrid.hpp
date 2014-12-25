@@ -12,6 +12,8 @@ namespace mae
     struct CoverageTime {
         double coverage;
         Stg::usec_t timeStamp;
+        Stg::usec_t meanTimeBetweenVisits;
+        double meanVisits;
         bool reached;
     };
 

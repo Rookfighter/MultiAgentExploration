@@ -79,25 +79,28 @@ namespace mae
     void Statistic::saveVisits()
     {
         std::stringstream ss;
-        ss << saveDirectory_ << "/" << FileNames::tileVisitsFile;
+        ss << saveDirectory_ << "/" << FileNames::numberOfVisitsFile;
 
         // save all visitCounts of each tile
         std::ofstream file;
         file.open(ss.str());
-        file << "# shows visitCount of each tile" << std::endl;
-        file << "# [x y visitCount]";
+        file << "# shows numberOfVisits of each tile" << std::endl;
+        file << "# [x y numberOfVisits]";
         for(int x = 0; x < statisticGrid_.getGridSize().x; ++x)
             for(int y = 0; y < statisticGrid_.getGridSize().y; ++y)
                 file << std::endl << x << " " << y << " " << statisticGrid_.getTile(Vector2i(x,y)).getVisitCount();
         file.close();
 
-        // save mean meanVisitCount of whole grid
+        // save meanNumberOfVistsEvents of whole grid
         ss.str(std::string());
-        ss << saveDirectory_ << "/" << FileNames::meanGridVisitsFile;
+        ss << saveDirectory_ << "/" << FileNames::meanNumberOfVisitsEventsFile;
         file.open(ss.str());
-        file << "# shows mean visitCount of whole map" << std::endl;
-        file << "# [meanVisitCount]";
-        file << std::endl << statisticGrid_.getMeanVisitCount();
+        file << "# shows mean numberOfVisits of grid" << std::endl;
+        file << "# [coverage numberOfVisits]";
+        for(const CoverageTime &event : statisticGrid_.getCoverageEvents()) {
+            if(event.reached)
+                file << std::endl << event.coverage << " " << event.meanVisits;
+        }
         file.close();
     }
 
@@ -107,7 +110,7 @@ namespace mae
         std::ofstream file;
 
         // save all meanTimeBetweenVisits of each tile
-        ss << saveDirectory_ << "/" << FileNames::meanTileTimeBetweenVisitsFile;
+        ss << saveDirectory_ << "/" << FileNames::meanTimeBetweenVisitsFile;
         file.open(ss.str());
         file << "# shows meanTimeBetweenVisits of each tile" << std::endl;
         file << "# [x y meanTimeBetweenVisits(usec)]";
@@ -118,11 +121,14 @@ namespace mae
 
         // save mean meanTimeBetweenVisits of whole grid
         ss.str(std::string());
-        ss << saveDirectory_ << "/" << FileNames::meanGridTimeBetweenVisitsFile;
+        ss << saveDirectory_ << "/" << FileNames::timeBetweenVisitsEventsFile;
         file.open(ss.str());
-        file << "# shows mean TimeBetweenVisits of whole map" << std::endl;
-        file << "# [meanTimeBetweenVisits(usec)]";
-        file << std::endl << statisticGrid_.getMeanTimeBetweenVisits();
+        file << "# shows mean TimeBetweenVisits of grid" << std::endl;
+        file << "# [coverage meanTimeBetweenVisits(usec)]";
+        for(const CoverageTime &event : statisticGrid_.getCoverageEvents()) {
+            if(event.reached)
+                file << std::endl << event.coverage << " " << event.meanTimeBetweenVisits;
+        }
         file.close();
     }
 

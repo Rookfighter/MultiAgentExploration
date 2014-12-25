@@ -1,14 +1,10 @@
 import os
 import shutil
 from algorithmdir import AlgorithmDirectory
-from utils import getSubdirectoriesConcat
-from utils import mkdirRec
-from plotdata import plotCoverageReachedAfterTime
-from plotdata import plotTimeToReachCoverage
-from meandata import MeanCoverageEvents
-from meandata import MeanTimeEvents
-from experiment import AVAILABLE_WORLDS
-from experiment import AVAILABLE_ALGORITHMS
+from utils import getSubdirectoriesConcat, mkdirRec
+from plotdata import plotCoverageReachedAfterTime, plotTimeToReachCoverage
+from meandata import MeanCoverageEvents, MeanTimeEvents
+from experiment import AVAILABLE_WORLDS, AVAILABLE_ALGORITHMS
 
 SUMMARY_DIRECTORY = "summary"
 
@@ -81,7 +77,7 @@ class PlotDirectory(object):
         
         print "plotting time to reach coverage"
         filename = os.path.join(self.getSummaryDir(), TIME_TO_REACH_COVERAGE_FILE)
-        plotTimeToReachCoverage(self.timeToReachCoverage_, filename, 0.85)
+        plotTimeToReachCoverage(self.timeToReachCoverage_, filename, 0.90)
         
         print "plotting coverage reached after time"
         filename = os.path.join(self.getSummaryDir(), COVERAGE_REACHED_AFTER_TIME_FILE)

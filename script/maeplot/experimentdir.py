@@ -21,9 +21,9 @@ class ExperimentDirectory:
         self.coverageEvents_ = []
         self.timeEvents_ = []
         self.finalCoverage_ = []
-        self.timeBetweenVisitsEvents_ = []
         self.meanTileTimeBetweenVisits_ = []
         self.tileVisits_ = []
+        self.timeBetweenVisitsEvents_ = []
         self.visitsEvents_ = []
     
     def load(self, directory):

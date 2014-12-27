@@ -4,8 +4,6 @@
 
 namespace mae
 {
-	
-	
 	Pose::Pose()
 	:Pose(0,0,0)
 	{	}

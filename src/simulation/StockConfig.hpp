@@ -7,16 +7,21 @@
 namespace mae
 {
 
-	class StockConfig
-	{
-	public:
-		Stg::World *world;
-		
-		int refillCount;
-		
-		StockConfig() { }
-		~StockConfig() { }
-	};
+    class StockConfig
+    {
+    public:
+        Stg::World *world;
+
+        int refillCount;
+
+        StockConfig()
+                : world(NULL), refillCount(-1)
+        {
+        }
+        ~StockConfig()
+        {
+        }
+    };
 
 }
 

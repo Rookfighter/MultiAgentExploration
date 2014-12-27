@@ -8,7 +8,7 @@ namespace mae
 	{
 	public:
 		Observer();
-		~Observer();
+		virtual ~Observer();
 		
 		virtual void notify(void *p_data) = 0;
 	};

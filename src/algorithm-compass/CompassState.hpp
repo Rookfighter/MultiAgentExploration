@@ -5,36 +5,43 @@
 
 namespace mae
 {
-	class CompassStateProperties
-	{
-	public:
+    class CompassStateProperties
+    {
+    public:
         ExplorationBot *robot;
-		Marker *currentMarker;
+        Marker *currentMarker;
         Marker *lastMarker;
-        
+
         double obstacleStopDistance;
         double obstacleAvoidDistance;
         double markerDeployDistance;
         double collisionResolveDistance;
-		
-		CompassStateProperties()
-		:currentMarker(NULL), lastMarker(NULL) { }
-	};
 
-	class CompassState
-	{
-	protected:
-		CompassStateProperties properties_;
-	public:
-		CompassState(const CompassStateProperties &p_properties)
-			:properties_(p_properties)
-		{ }
-		
-		virtual ~CompassState() { }
+        CompassStateProperties()
+                : robot(NULL), currentMarker(NULL), lastMarker(NULL), obstacleStopDistance(
+                        -1), obstacleAvoidDistance(-1), markerDeployDistance(
+                        -1), collisionResolveDistance(-1)
+        {
+        }
+    };
 
-		virtual CompassState* update() = 0;
+    class CompassState
+    {
+    protected:
+        CompassStateProperties properties_;
+    public:
+        CompassState(const CompassStateProperties &p_properties)
+                : properties_(p_properties)
+        {
+        }
 
-	};
+        virtual ~CompassState()
+        {
+        }
+
+        virtual CompassState* update() = 0;
+
+    };
 
 }
 

@@ -11,6 +11,7 @@ namespace mae
         :model_(NULL),
          id_(p_id),
          highlighted_(false),
+         isLocked_(false),
          value_(0),
          compass_(),
          directionInfos_(4)

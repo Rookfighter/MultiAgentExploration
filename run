@@ -11,7 +11,7 @@ then
     COUNT=$#
 fi
 
-cd build
+cd Release
 
 START_TIME=$SECONDS
 

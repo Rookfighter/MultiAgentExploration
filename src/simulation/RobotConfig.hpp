@@ -9,23 +9,29 @@
 namespace mae
 {
 
-	class RobotConfig
-	{
-	public:
-		Stg::World *world;
-		MarkerStock *stock;
-		
-		std::string name;
-		int rangerIndex;
-		
-		Velocity maxVelocity;
-		Velocity minVelocity;
-		
-		double markerSensorMaxRange;
-		
-		RobotConfig() { }
-		~RobotConfig() { }
-	};
+    class RobotConfig
+    {
+    public:
+        Stg::World *world;
+        MarkerStock *stock;
+
+        std::string name;
+        int rangerIndex;
+
+        Velocity maxVelocity;
+        Velocity minVelocity;
+
+        double markerSensorMaxRange;
+
+        RobotConfig()
+                : world(NULL), stock(NULL), rangerIndex(-1), markerSensorMaxRange(
+                        1.0)
+        {
+        }
+        ~RobotConfig()
+        {
+        }
+    };
 
 }
 

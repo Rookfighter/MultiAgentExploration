@@ -8,6 +8,8 @@ namespace mae
 
 	class DroppingMarker : public AntState
 	{
+	private:
+	    bool hasTooCloseMarker() const;
 	public:
 		DroppingMarker(const AntStateProperties &p_properties);
 		~DroppingMarker();

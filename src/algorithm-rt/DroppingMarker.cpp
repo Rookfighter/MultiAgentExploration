@@ -17,11 +17,20 @@ namespace mae
 
 	AntState* DroppingMarker::update()
 	{
-		Marker* dropped = properties_.robot->dropMarker();
-		properties_.currentMarker = dropped;
-        LOG(DEBUG) << "-- dropped marker id " << dropped->getID() << " (" << properties_.robot->getName() << ")";
+	    properties_.currentMarker = NULL;
+	    if(!hasTooCloseMarker()) {
+            Marker* dropped = properties_.robot->dropMarker();
+            properties_.currentMarker = dropped;
+            LOG(DEBUG) << "-- dropped marker id " << dropped->getID() << " (" << properties_.robot->getName() << ")";
+	    }
         
 		return new SelectingTarget(properties_);
 	}
+
+	bool DroppingMarker::hasTooCloseMarker() const
+    {
+	    MarkerMeasurement measurement = properties_.robot->getMarkerSensor().getClosestMarker();
+        return (measurement.marker != NULL) && (measurement.relativeDistance.lengthSQ() <= properties_.markerTooCloseDistance * properties_.markerTooCloseDistance);
+    }
 
 }

@@ -44,11 +44,7 @@ namespace mae
             properties_.robot->getMotor().stop();
             properties_.currentMarker = NULL;
 
-            if(hasTooCloseMarker()) {
-                return new SelectingTarget(properties_);
-            } else {
-                return new DroppingMarker(properties_);
-            }
+            return new DroppingMarker(properties_);
         }
 
         movementController_.update();
@@ -61,10 +57,5 @@ namespace mae
         return obstacleDetector_.check(-FRONT_OBSTACLE_FOV / 2,
                                        FRONT_OBSTACLE_FOV / 2,
                                        properties_.obstacleStopDistance);
-    }
-
-    bool MovingToDirection::hasTooCloseMarker() const
-    {
-        return properties_.robot->getMarkerSensor().getClosestMarker().relativeDistance.lengthSQ() <= properties_.markerTooCloseDistance * properties_.markerTooCloseDistance;
     }
 }

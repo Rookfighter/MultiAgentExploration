@@ -58,6 +58,10 @@ namespace mae
     {
         bool initialized = false;
         MarkerMeasurement result;
+        result.marker = NULL;
+        if(p_marker.empty())
+            return result;
+
         for(MarkerMeasurement measurement : p_marker) {
             if(!initialized ||
                     measurement.relativeDistance.lengthSQ() < result.relativeDistance.lengthSQ()) {

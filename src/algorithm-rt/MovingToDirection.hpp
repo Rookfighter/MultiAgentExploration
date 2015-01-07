@@ -15,7 +15,6 @@ namespace mae
 		ObstacleDetector obstacleDetector_;
 		
 		bool hasFrontObstacle() const;
-		bool hasTooCloseMarker() const;
 	public:
 		MovingToDirection(const AntStateProperties &p_properties);
 		~MovingToDirection();

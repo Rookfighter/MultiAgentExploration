@@ -2,6 +2,7 @@
 #include "algorithm-compass/SearchMarker.hpp"
 #include "algorithm-compass/AtMarker.hpp"
 #include "algorithm-compass/DeployMarker.hpp"
+#include "utils/Random.hpp"
 
 #define TURN_FACTOR 0.8
 
@@ -78,7 +79,8 @@ namespace mae
 
         if(!foundCurrent && !markerWithoutLast.empty()) {
             // only set new marker after we lost signal
-            newMarker_ = properties_.robot->getMarkerSensor().getClosestMarker(markerWithoutLast).marker;
+            int idx = Random::nextInt(markerWithoutLast.size());
+            newMarker_ = markerWithoutLast[idx].marker;
         }
     }
 }

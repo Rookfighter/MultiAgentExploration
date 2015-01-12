@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from maeplot.utils import sameFloat, usecToMin, coverageToPercent
 from maeplot.experiment import AVAILABLE_WORLDS, AVAILABLE_ALGORITHMS, ALGORITHM_NAMES,\
-    getAlgorithmNames
+    getAlgorithmNames, AVAILABLE_ROBOT_COUNTS
 import os
 
 class ColorCyle:
@@ -82,8 +82,6 @@ def plotBarChartPerTerrainPerAlgorithm(data, dataErr=None, outfile="", yAxLabel=
     colors = ColorCyle()
     barWidth = 1.0 / (len(data) + 2)
     
-    #plt.figure()
-    #plt.cla()
     fig, ax = plt.subplots()
     ax.set_ylabel(yAxLabel)
     ax.set_title(plotTitle)
@@ -111,6 +109,46 @@ def plotBarChartPerTerrainPerAlgorithm(data, dataErr=None, outfile="", yAxLabel=
         plt.savefig(outfile, dpi=100)
     else:
         plt.show()    
+
+def plotBarChartPerRobotCountPerAlgorithm(data, dataErr=None, outfile="", yAxLabel="", plotTitle=""):
+    assert(len(data) == len(AVAILABLE_ROBOT_COUNTS))
+    
+    colors = ColorCyle()
+    barWidth = 1.0 / (len(data) + 2)
+    
+    fig, ax = plt.subplots()
+    ax.set_ylabel(yAxLabel)
+    ax.set_title(plotTitle)
+    
+    for robotNum, robotCount in enumerate(AVAILABLE_ROBOT_COUNTS):
+        robotCountData = data[robotCount]
+        robotCountErr = None
+        if dataErr != None:
+            robotCountErr = dataErr[robotCount]
+            
+        leftBorders = [i + (robotNum * barWidth) for i in xrange(len(robotCountData))]
+        
+        labelStr = ""
+        if robotCount == 1:
+            labelStr = "1 Robot"
+        else:
+            labelStr = str(robotCount) + " Robots"
+        rects = ax.bar(leftBorders, robotCountData, yerr=robotCountErr, width=barWidth, label=labelStr, color=colors.next())
+        # add value label on top of bars
+        for rect in rects:
+            barHeight = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width() / 2.0, 1.0 * barHeight, '%.1f'%barHeight,
+                    ha='center', va='bottom')
+            
+    ax.set_xticks([(i + (len(data) * barWidth) / 2) for i in xrange(len(AVAILABLE_ALGORITHMS))])
+    ax.set_xticklabels(getAlgorithmNames())
+    ax.legend(loc='upper right')
+    
+    fig.set_size_inches(18.5,10.5)
+    if len(outfile) > 0:
+        plt.savefig(outfile, dpi=100)
+    else:
+        plt.show() 
 
 def plotTimeToReachCoverage(data, outdir, coverageToPlot):
     assert(len(data) > 0)
@@ -262,3 +300,75 @@ def plotTimeBetweenVisits(data, outdir, coverageToPlot):
     title = "Standard Deviation of Time between Visits to {0}% Coverage".format(coveragePercent)
     yAxisLabel = "standard deviation"
     plotBarChartPerTerrainPerAlgorithm(errPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title)
+    
+def plotTimeToReachCoveragePerRobotCount(data, outdir, coverageToPlot):
+    assert(len(data) > 0)
+    assert(len(data.values()[0]) > 0)
+    
+    coveragePercent = int(coverageToPercent(coverageToPlot))
+    TIME_TO_REACH_COVERAGE_FILE = "time-to-reach-coverage-{0}-per-robot-count.png".format(coveragePercent)
+    
+    dataPerRobotCount = dict()
+    errPerRobotCount = dict()
+    
+    for robotCount, algoDict in data.iteritems():
+        robotCountData = []
+        robotCountErr = []
+        
+        for algorithm in AVAILABLE_ALGORITHMS:
+            meanData = algoDict[algorithm].getMean(convertTime=usecToMin)
+            found = False
+            for coverage, coverageTime, stdDev in zip(*meanData):
+                if sameFloat(coverage, coverageToPlot, 0.01):
+                    found = True
+                    robotCountData.append(coverageTime)
+                    robotCountErr.append(stdDev)
+                    break
+            if not found:
+                robotCountData.append(0)
+                robotCountErr.append(0.0)
+        
+        assert(len(robotCountData) == len(AVAILABLE_ALGORITHMS))    
+        dataPerRobotCount[robotCount] = robotCountData
+        errPerRobotCount[robotCount] = robotCountErr
+        
+    title = "Time to reach {0}% Coverage".format(coveragePercent)
+    outfile = os.path.join(outdir, TIME_TO_REACH_COVERAGE_FILE)
+    yAxLabel = "minutes"
+    plotBarChartPerRobotCountPerAlgorithm(dataPerRobotCount, dataErr=errPerRobotCount, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title)
+    
+def plotCoverageReachedAfterTimePerRobotCount(data, outdir, time):
+    assert(len(data) > 0)
+    assert(len(data.values()[0]) > 0)
+    
+    COVERAGE_REACHED_AFTER_TIME_FILE = "coverage-reached-after-time-{0}-per-robot-count.png"
+    
+    dataPerRobotCount = dict()
+    errPerRobotCount = dict()
+    
+    for robotCount, algoDict in data.iteritems():
+        robotCountData = []
+        robotCountErr = []
+        
+        for algorithm in AVAILABLE_ALGORITHMS:
+            meanData = algoDict[algorithm].getMean(convertTime=usecToMin, convertCoverage=coverageToPercent)
+            found = False
+            # search for time in mean values
+            for coverageEvent, coverageTime, stdDev in zip(*meanData):
+                if int(coverageTime) == time:
+                    found = True
+                    robotCountData.append(coverageEvent)
+                    robotCountErr.append(stdDev)
+                    break
+            if not found:
+                robotCountData.append(0)
+                robotCountErr.append(0.0)
+        
+        assert(len(robotCountData) == len(AVAILABLE_ALGORITHMS))    
+        dataPerRobotCount[robotCount] = robotCountData
+        errPerRobotCount[robotCount] = robotCountErr
+    
+    title = "Coverage reached after {0} minutes".format(time)
+    outfile = os.path.join(outdir, COVERAGE_REACHED_AFTER_TIME_FILE).format(time)
+    yAxLabel = "coverage"
+    plotBarChartPerRobotCountPerAlgorithm(dataPerRobotCount, dataErr=errPerRobotCount, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title)

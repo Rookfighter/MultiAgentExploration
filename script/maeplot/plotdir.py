@@ -3,8 +3,11 @@ import shutil
 from maeplot.algorithmdir import AlgorithmDirectory
 from maeplot.utils import getSubdirectoriesConcat, mkdirRec
 from maeplot.plotdata import plotCoverageReachedAfterTime, plotTimeToReachCoverage,\
-    plotNumberOfVisits, plotTimeBetweenVisits
-from maeplot.experiment import AVAILABLE_WORLDS, AVAILABLE_ALGORITHMS
+    plotNumberOfVisits, plotTimeBetweenVisits,\
+    plotTimeToReachCoveragePerRobotCount,\
+    plotCoverageReachedAfterTimePerRobotCount
+from maeplot.experiment import AVAILABLE_WORLDS, AVAILABLE_ALGORITHMS,\
+    AVAILABLE_ROBOT_COUNTS
 from maeplot.meandata import MeanCoverageEvents, MeanTimeEvents,\
     MeanVisitsEvents, MeanTimeBetweenVisitsEvents
 
@@ -36,6 +39,15 @@ class PlotDirectory(object):
             for algorithm in AVAILABLE_ALGORITHMS:
                 self.meanNumberOfVisitsEvents_[worldType][algorithm] = MeanVisitsEvents()
                 self.meanTimeBetweenVisitsEvents_[worldType][algorithm] = MeanTimeBetweenVisitsEvents()
+                
+        self.timeToReachCoveragePerRobotCount_ = dict()
+        self.coverageReachedAfterTimePerRobotCount_ = dict()
+        for robotCount in AVAILABLE_ROBOT_COUNTS:
+            self.timeToReachCoveragePerRobotCount_[robotCount] = dict()
+            self.coverageReachedAfterTimePerRobotCount_[robotCount] = dict()
+            for algorithm in AVAILABLE_ALGORITHMS:
+                self.timeToReachCoveragePerRobotCount_[robotCount][algorithm] = MeanCoverageEvents()
+                self.coverageReachedAfterTimePerRobotCount_[robotCount][algorithm] = MeanTimeEvents()
         
     def load(self, directory):
         assert(os.path.isdir(directory))
@@ -55,8 +67,12 @@ class PlotDirectory(object):
             
             self.updateTimeToReachCoverage()
             self.updateCoverageReachedAfterTime()
+            
             self.updateNumberOfVisitsEvents()
             self.updateTimeBetweenVisitsEvents()
+            
+            self.updateTimeToReachCoveragePerRobotCount()
+            self.updateCoverageReachedAfterTimePerRobotCount()
      
     def updateTimeToReachCoverage(self):
         algorithmName = self.algorithmDirs_[-1].getName()
@@ -89,6 +105,22 @@ class PlotDirectory(object):
             for meanTime in robotCountDict.values():
                 if meanTime.hasData():
                     self.meanTimeBetweenVisitsEvents_[worldType][algorithmName].addMean(meanTime)
+    
+    def updateTimeToReachCoveragePerRobotCount(self):
+        algorithmName = self.algorithmDirs_[-1].getName()
+        
+        for robotCountDict in self.algorithmDirs_[-1].meanCoverageEvents_.values(): 
+            for robotCount, coverageEvents in  robotCountDict.iteritems():
+                if coverageEvents.hasData():
+                    self.timeToReachCoveragePerRobotCount_[robotCount][algorithmName].addMean(coverageEvents)
+        
+    def updateCoverageReachedAfterTimePerRobotCount(self):
+        algorithmName = self.algorithmDirs_[-1].getName()
+        
+        for robotCountDict in self.algorithmDirs_[-1].meanTimeEvents_.values():
+            for robotCount, timeEvents in  robotCountDict.iteritems():
+                if timeEvents.hasData():
+                    self.coverageReachedAfterTimePerRobotCount_[robotCount][algorithmName].addMean(timeEvents)
         
     def save(self):
         
@@ -101,18 +133,25 @@ class PlotDirectory(object):
         mkdirRec(self.getSummaryDir())
         
         coverage = 0.85
+        minutes = 60
         
         print "plotting time to reach coverage"
         plotTimeToReachCoverage(self.timeToReachCoverage_, self.getSummaryDir(), coverage)
         
         print "plotting coverage reached after time"
-        plotCoverageReachedAfterTime(self.coverageReachedAfterTime_, self.getSummaryDir(), 60)
+        plotCoverageReachedAfterTime(self.coverageReachedAfterTime_, self.getSummaryDir(), minutes)
         
         print "plotting number of visits"
         plotNumberOfVisits(self.meanNumberOfVisitsEvents_, self.getSummaryDir(), coverage)
         
         print "plotting time between visits"
         plotTimeBetweenVisits(self.meanTimeBetweenVisitsEvents_, self.getSummaryDir(), coverage)
+        
+        print "plotting time to reach coverage per robot count"
+        plotTimeToReachCoveragePerRobotCount(self.timeToReachCoveragePerRobotCount_, self.getSummaryDir(), coverage)
+        
+        print "plotting  coverage reached after time per robot count"
+        plotCoverageReachedAfterTimePerRobotCount(self.coverageReachedAfterTimePerRobotCount_, self.getSummaryDir(), minutes)
         
         for algoDir in self.algorithmDirs_:
             algoDir.plot()

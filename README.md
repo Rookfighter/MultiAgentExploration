@@ -94,14 +94,6 @@ concatened like this ```"bla"m"bla"```. Instead it should be like this
 To get rid of these warnings open the file ```/usr/local/include/Stage4.1/stage.hh```
 and replace ```"m"``` with ```" m "```. All warnings should be gone now.
 
-### Code Lite
-
-For code completion add the following directory to your tag search path.
-
-```
-/usr/local/include/Stage-4.1
-```
-
 ### Eclipse
 
 For Code Completion add the following directory in **Project Properties > C/C++ General > Paths and Symbols**:

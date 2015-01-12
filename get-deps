@@ -1,0 +1,62 @@
+#!/bin/sh
+
+get_easylogging()
+{
+    # Information for getting Easylogging++
+    DEP_TARGET_DIR="$1"
+    EASYLOG_ARCH_NAME="easylogging++.tar.gz"
+    EASYLOG_ARCH_PATH="$DEP_TARGET_DIR/$EASYLOG_ARCH_NAME"
+    EASYLOG_RESULT_NAME="easylogging++"
+    EASYLOG_RESULT_DIR="$DEP_TARGET_DIR/$EASYLOG_RESULT_NAME"
+    EASYLOG_DONWLOAD_URL="https://github.com/easylogging/easyloggingpp/releases/download/v9.75/easyloggingpp_v9.75.tar.gz"
+    
+    if [ -d $EASYLOG_RESULT_DIR ]; then
+        echo "-- $EASYLOG_RESULT_NAME already exists"
+    else
+        echo "-- Getting $EASYLOG_RESULT_NAME"
+        wget "$EASYLOG_DONWLOAD_URL" -O "$EASYLOG_ARCH_NAME"
+        mkdir -p "$EASYLOG_RESULT_NAME"
+        tar xzf "$EASYLOG_ARCH_NAME" -C "$EASYLOG_RESULT_NAME"
+        rm -f "$EASYLOG_ARCH_NAME"
+    fi
+}
+
+get_yamlcpp()
+{
+    # Information for getting Easylogging++
+    DEP_TARGET_DIR="$1"
+    YAMLCPP_ARCH_NAME="yaml-cpp.tar.gz"
+    YAMLCPP_ARCH_PATH="$DEP_TARGET_DIR/$EASYLOG_ARCH_NAME"
+    YAMLCPP_RESULT_NAME="yaml-cpp"
+    YAMLCPP_RESULT_DIR="$DEP_TARGET_DIR/$EASYLOG_RESULT_NAME"
+    YAMLCPP_DONWLOAD_URL="https://yaml-cpp.googlecode.com/files/yaml-cpp-0.5.1.tar.gz"
+    
+    if [ -d $YAMLCPP_RESULT_DIR ]; then
+        echo "-- $YAMLCPP_RESULT_NAME already exists"
+    else
+        echo "-- Getting $YAMLCPP_RESULT_NAME"
+        wget "$YAMLCPP_DONWLOAD_URL" -O "$YAMLCPP_ARCH_NAME"
+        mkdir -p "$YAMLCPP_RESULT_NAME"
+        tar xzf "$YAMLCPP_ARCH_NAME" -C "$YAMLCPP_RESULT_NAME"
+        rm -f "$YAMLCPP_ARCH_NAME"
+        cd "$YAMLCPP_RESULT_NAME"
+        mkdir -p bin
+        cd bin
+        cmake ..
+        make -j 8
+        cd "$DEP_TARGET_DIR"
+    fi
+}
+
+CURRDIR=$PWD
+BASEDIR=$(cd "$(dirname "$0")"; pwd)
+echo $BASEDIR
+
+DEP_INSTALL_DIR="$BASEDIR/lib"
+
+echo "Getting dependencies"
+mkdir -p $DEP_INSTALL_DIR
+cd $DEP_INSTALL_DIR
+
+get_easylogging "$DEP_INSTALL_DIR"
+get_yamlcpp "$DEP_INSTALL_DIR"

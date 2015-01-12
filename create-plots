@@ -1,0 +1,14 @@
+#!/bin/sh
+
+START_TIME=$SECONDS
+
+python script/plot.py plot
+
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+EL_HOUR=$(($ELAPSED_TIME / 3600))
+ELAPSED_TIME=$(($ELAPSED_TIME % 3600))
+EL_MIN=$(($ELAPSED_TIME / 60))
+EL_SEC=$(($ELAPSED_TIME % 60))
+
+echo "Finished. ${EL_HOUR}h ${EL_MIN}m ${EL_SEC}s taken."
+

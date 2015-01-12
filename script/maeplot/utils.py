@@ -2,11 +2,11 @@ import os
 import errno
 import math
 
-MSEC_TO_MIN_FACTOR = 1.0 / 60000.0
-USEC_TO_MIN_FACTOR = 1.0 / 60000000.0
+def msecToMin(msec):
+    return float(msec) / 60000.0
 
 def usecToMin(usec):
-    return float(usec / 1000) / 60000
+    return msecToMin(usec / 1000)
 
 def coverageToPercent(cov):
     return cov * 100

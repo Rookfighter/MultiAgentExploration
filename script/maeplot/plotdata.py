@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
-from maeplot.utils import sameFloat, usecToMin, coverageToPercent
+from maeplot.utils import sameFloat, coverageToPercent, msecToMin
 from maeplot.experiment import AVAILABLE_WORLDS, AVAILABLE_ALGORITHMS, ALGORITHM_NAMES,\
     getAlgorithmNames, AVAILABLE_ROBOT_COUNTS
 import os
@@ -30,7 +30,7 @@ def plotCoverageEventsPerCount(data, outfile):
     plt.title('Coverage per amount of Robots')
     
     for robotCount in sorted(data):
-        meanData = data[robotCount].getMean(convertTime=usecToMin, convertCoverage=coverageToPercent)
+        meanData = data[robotCount].getMean(convertTime=msecToMin, convertCoverage=coverageToPercent)
         labelText = ""
         
         if robotCount == 1:
@@ -165,7 +165,7 @@ def plotTimeToReachCoverage(data, outdir, coverageToPlot):
         algoErr = []
         
         for worldType in AVAILABLE_WORLDS:
-            meanData = worldDict[worldType].getMean(convertTime=usecToMin)
+            meanData = worldDict[worldType].getMean(convertTime=msecToMin)
             found = False
             for coverage, coverageTime, stdDev in zip(*meanData):
                 if sameFloat(coverage, coverageToPlot, 0.01):
@@ -200,7 +200,7 @@ def plotCoverageReachedAfterTime(data, outdir, time):
         algoErr = []
         
         for worldName in AVAILABLE_WORLDS:
-            meanData = worldDict[worldName].getMean(convertTime=usecToMin, convertCoverage=coverageToPercent)
+            meanData = worldDict[worldName].getMean(convertTime=msecToMin, convertCoverage=coverageToPercent)
             found = False
             # search for time in mean values
             for coverageEvent, coverageTime, stdDev in zip(*meanData):
@@ -275,7 +275,7 @@ def plotTimeBetweenVisits(data, outdir, coverageToPlot):
         worldErr = []
         
         for algoName in AVAILABLE_ALGORITHMS:
-            meanData = algoDict[algoName].getMean(convertTime=usecToMin)
+            meanData = algoDict[algoName].getMean(convertTime=msecToMin)
             found = False
             for coverage, time, stdDev in zip(*meanData):
                 if sameFloat(coverageToPlot, coverage, 0.01):
@@ -316,7 +316,7 @@ def plotTimeToReachCoveragePerRobotCount(data, outdir, coverageToPlot):
         robotCountErr = []
         
         for algorithm in AVAILABLE_ALGORITHMS:
-            meanData = algoDict[algorithm].getMean(convertTime=usecToMin)
+            meanData = algoDict[algorithm].getMean(convertTime=msecToMin)
             found = False
             for coverage, coverageTime, stdDev in zip(*meanData):
                 if sameFloat(coverage, coverageToPlot, 0.01):
@@ -351,7 +351,7 @@ def plotCoverageReachedAfterTimePerRobotCount(data, outdir, time):
         robotCountErr = []
         
         for algorithm in AVAILABLE_ALGORITHMS:
-            meanData = algoDict[algorithm].getMean(convertTime=usecToMin, convertCoverage=coverageToPercent)
+            meanData = algoDict[algorithm].getMean(convertTime=msecToMin, convertCoverage=coverageToPercent)
             found = False
             # search for time in mean values
             for coverageEvent, coverageTime, stdDev in zip(*meanData):

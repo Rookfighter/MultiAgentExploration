@@ -5,10 +5,13 @@
 #include <algorithm>
 #include <stage.hh>
 
+#define USEC_PER_MSEC 1000
 #define USEC_PER_MIN 60000000
+
 
 namespace mae
 {
+
     inline std::string boolToStr(bool p_bool)
     {
         return p_bool ? "true" : "false";
@@ -31,6 +34,11 @@ namespace mae
             p_string.erase(pos, p_find.length());
             p_string.insert(pos, p_replacement);
         }
+    }
+
+    inline unsigned int usecToMsec(const Stg::usec_t p_usec)
+    {
+        return p_usec / USEC_PER_MSEC;
     }
 
     inline unsigned int usecToMin(const Stg::usec_t p_usec)

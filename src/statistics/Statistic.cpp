@@ -5,6 +5,7 @@
 #include "statistics/Statistic.hpp"
 #include "io/File.hpp"
 #include "io/FileNames.hpp"
+#include "utils/Convert.hpp"
 
 namespace mae
 {
@@ -113,10 +114,10 @@ namespace mae
         ss << saveDirectory_ << "/" << FileNames::meanTimeBetweenVisitsFile;
         file.open(ss.str());
         file << "# shows meanTimeBetweenVisits of each tile" << std::endl;
-        file << "# [x y meanTimeBetweenVisits(usec)]";
+        file << "# [x y meanTimeBetweenVisits(msec)]";
         for(int x = 0; x < statisticGrid_.getGridSize().x; ++x)
             for(int y = 0; y < statisticGrid_.getGridSize().y; ++y)
-                file << std::endl << x << " " << y << " " << statisticGrid_.getTile(Vector2i(x,y)).getMeanTimeBetweenVisits();
+                file << std::endl << x << " " << y << " " << usecToMsec(statisticGrid_.getTile(Vector2i(x,y)).getMeanTimeBetweenVisits());
         file.close();
 
         // save mean meanTimeBetweenVisits of whole grid
@@ -124,10 +125,10 @@ namespace mae
         ss << saveDirectory_ << "/" << FileNames::timeBetweenVisitsEventsFile;
         file.open(ss.str());
         file << "# shows mean TimeBetweenVisits of grid" << std::endl;
-        file << "# [coverage meanTimeBetweenVisits(usec)]";
+        file << "# [coverage meanTimeBetweenVisits(msec)]";
         for(const CoverageTime &event : statisticGrid_.getCoverageEvents()) {
             if(event.reached)
-                file << std::endl << event.coverage << " " << event.meanTimeBetweenVisits;
+                file << std::endl << event.coverage << " " << usecToMsec(event.meanTimeBetweenVisits);
         }
         file.close();
     }
@@ -141,10 +142,10 @@ namespace mae
         ss << saveDirectory_ << "/" << FileNames::coverageEventsFile;
         file.open(ss.str());
         file << "# shows coverageEvents" << std::endl;
-        file << "# [coverage timeStamp(usec)]";
+        file << "# [coverage timeStamp(msec)]";
         for(const CoverageTime &time : statisticGrid_.getCoverageEvents()) {
             if(time.reached)
-                file << std::endl << time.coverage << " " << time.timeStamp;
+                file << std::endl << time.coverage << " " << usecToMsec(time.timeStamp);
         }
         file.close();
 
@@ -153,10 +154,10 @@ namespace mae
         ss << saveDirectory_ << "/" << FileNames::timeEventsFile;
         file.open(ss.str());
         file << "# shows timeEvents" << std::endl;
-        file << "# [coverage timeStamp(usec)]";
+        file << "# [coverage timeStamp(msec)]";
         for(const CoverageTime &time : statisticGrid_.getTimeEvents()) {
             if(time.reached)
-                file << std::endl << time.coverage << " " << time.timeStamp;
+                file << std::endl << time.coverage << " " << usecToMsec(time.timeStamp);
         }
         file.close();
 
@@ -166,7 +167,7 @@ namespace mae
         file.open(ss.str());
         file << "# shows final coverage" << std::endl;
         file << "# [coverage timeStamp(usec)]" << std::endl;
-        file << statisticGrid_.getCoverage() << " " << simulation_->getWorld()->SimTimeNow();
+        file << statisticGrid_.getCoverage() << " " << usecToMsec(simulation_->getWorld()->SimTimeNow());
         file.close();
     }
     

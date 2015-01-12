@@ -20,13 +20,15 @@ namespace mae
     bool ExperimentTermination::terminated() const
     {
         int currentMinutes = usecToMin(simulation_->getWorld()->SimTimeNow());
-        if(terminationMinutes_ > 0 && terminationMinutes_ <= currentMinutes)
-            return true;
+        bool result = false;
 
-        if(terminationCoverage_ > 0 && terminationCoverage_ <= statistic_->getStatisticGrid().getCoverage())
-            return true;
+        if(terminationMinutes_ > 0 || terminationCoverage_ > 0) {
+            bool terminateMinutes = terminationMinutes_ <= 0 || terminationMinutes_ <= currentMinutes;
+            bool terminateCoverage = terminationCoverage_ <= 0 || terminationCoverage_ <= statistic_->getStatisticGrid().getCoverage();
+            result = terminateCoverage && terminateMinutes;
+        }
 
-        return false;
+        return result;
     }
 
 }

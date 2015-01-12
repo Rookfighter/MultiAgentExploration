@@ -11,7 +11,10 @@ then
     COUNT=$#
 fi
 
-cd Release
+mkdir -p build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j 8
 
 START_TIME=$SECONDS
 
@@ -24,7 +27,7 @@ do
             for i in $(seq 1 $COUNT);
             do
                 echo "executing '$algorithm' in '$terrain' with $robots robots ($i)"
-                ./MultiAgentExploration -f config/$terrain/$algorithm-$robots.yaml -t 90 -g
+                ./MultiAgentExploration -f config/$terrain/$algorithm-$robots.yaml -t 90 -c 85 -g
             done
         done
     done

@@ -5,6 +5,7 @@ build/
 Release/
 Debug/
 log/
+logs/
 lib/
 plot/
 

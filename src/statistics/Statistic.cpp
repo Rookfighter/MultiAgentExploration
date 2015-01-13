@@ -63,16 +63,11 @@ namespace mae
 
     std::string Statistic::getCurrentTime()
     {
-        time_t currentTime = time(NULL);
-        struct tm localTime = *localtime(&currentTime);
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
 
         std::stringstream ss;
-        ss << localTime.tm_year + 1900 << "-" <<
-           localTime.tm_mon + 1 << "-" <<
-           localTime.tm_wday + 1 << "-" <<
-           localTime.tm_hour << "-" <<
-           localTime.tm_min << "-" <<
-           localTime.tm_sec;
+        ss << tv.tv_sec << "-" << tv.tv_usec;
 
         return ss.str();
     }

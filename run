@@ -6,9 +6,9 @@ TERRAINS="open obstructed office"
 ROBOT_COUNTS="1 2 4 8"
 ALGORITHMS="nodecounting lrtastar wagner compass randomwalk"
 
-if [ $# -gt 1 ]
+if [ $# -gt 0 ]
 then
-    COUNT=$#
+    COUNT=$1
 fi
 
 mkdir -p build

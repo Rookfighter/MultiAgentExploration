@@ -5,6 +5,8 @@
 
 namespace mae
 {
+    /*TODO if robot stuck bug also appears in MovingToDirection State
+      only source of bug can be MovementController or Wander. */
 
     MovementController::MovementController(ExplorationBot *p_robot,
                                            const double p_obstacleStopDistance,
@@ -76,6 +78,8 @@ namespace mae
 
     bool MovementController::isAvoidingObstacle() const
     {
+        //TODO maybe add '&& collisionResolver_.finished()'
+        //or else may return true when we are resolving a crash
         return wander_.isAvoidingObstacle();
     }
 

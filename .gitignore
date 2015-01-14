@@ -8,6 +8,7 @@ log/
 logs/
 lib/
 plot/
+archive/
 
 # IDE files
 *.metadata/

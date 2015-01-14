@@ -50,9 +50,9 @@ get_yamlcpp()
 
 CURRDIR=$PWD
 BASEDIR=$(cd "$(dirname "$0")"; pwd)
-echo $BASEDIR
 
-DEP_INSTALL_DIR="$BASEDIR/lib"
+cd "$BASEDIR/.."
+DEP_INSTALL_DIR="$PWD/lib"
 
 echo "Getting dependencies"
 mkdir -p $DEP_INSTALL_DIR

@@ -9,6 +9,7 @@
 #define BLOCK_MARKER_FOV (M_PI / 2) // 90°
 
 #define MARKER_OBSTACLE_FOV (M_PI / 4) // 45°
+#define RANDOM_DIRECTION (M_PI / 4) // 45°
 
 #define MARKER_VALUE_EPS 0.01
 
@@ -52,10 +53,14 @@ namespace mae
             if(findNextMarker()) {
                 properties_.nextMarker->setAsTarget();
                 LOG(DEBUG) << "-- found next marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
-            } else
-                LOG(DEBUG) << "-- no fitting next marker found (" << properties_.robot->getName() << ")";
-        } else
+            } else {
+                LOG(WARNING) << "-- no blank and no next marker found (" << properties_.robot->getName() << ")";
+                // randomly turn in one of 4 directions
+                properties_.angleToTurn = Random::nextInt(4) * RANDOM_DIRECTION;
+            }
+        } else {
             LOG(DEBUG) << "-- found blank (" << properties_.robot->getName() << ")";
+        }
 
         return new UpdatingValue(properties_);
     }

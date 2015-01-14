@@ -57,7 +57,7 @@ namespace mae
         updateTargetMeasurement();
 
         if(!foundMarker_) {
-            LOG(DEBUG) << "-- signal to target marker " << properties_.nextMarker->getID() << " lost (" << properties_.robot->getName() << ")";
+            LOG(WARNING) << "-- signal to target marker " << properties_.nextMarker->getID() << " lost (" << properties_.robot->getName() << ")";
             properties_.currentMarker = NULL;
             properties_.robot->getMotor().stop();
             return new SelectingTarget(properties_);

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+CURRDIR=$PWD
+BASEDIR=$(cd "$(dirname "$0")"; pwd)
+
+cd "$BASEDIR/.."
+
 START_TIME=$SECONDS
 
 python script/plot.py plot
@@ -9,6 +14,7 @@ EL_HOUR=$(($ELAPSED_TIME / 3600))
 ELAPSED_TIME=$(($ELAPSED_TIME % 3600))
 EL_MIN=$(($ELAPSED_TIME / 60))
 EL_SEC=$(($ELAPSED_TIME % 60))
+
 
 echo "Finished. ${EL_HOUR}h ${EL_MIN}m ${EL_SEC}s taken."
 

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+CURRDIR=$PWD
+BASEDIR=$(cd "$(dirname "$0")"; pwd)
+cd "$BASEDIR/.."
+
 declare -i COUNT
 COUNT=1
 TERRAINS="open obstructed office"

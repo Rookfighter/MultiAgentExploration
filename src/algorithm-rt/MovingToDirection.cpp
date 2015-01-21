@@ -17,14 +17,13 @@ namespace mae
 {
 
     MovingToDirection::MovingToDirection(const AntStateProperties &p_properties)
-        : AntState(p_properties),
-          movementController_(p_properties.robot,
-                              p_properties.obstacleStopDistance,
-                              p_properties.obstacleAvoidDistance,
-                              p_properties.collisionResolveDistance),
-          obstacleDetector_(p_properties.robot)
+            : AntState(p_properties), movementController_(p_properties.robot,
+                    p_properties.obstacleStopDistance,
+                    p_properties.obstacleAvoidDistance,
+                    p_properties.collisionResolveDistance), obstacleDetector_(
+                    p_properties.robot)
     {
-        LOG(DEBUG) << "Changed to MovingToDirection state (" << properties_.robot->getName() << ")";
+        LOG(DEBUG)<< "Changed to MovingToDirection state (" << properties_.robot->getName() << ")";
         movementController_.setAngleEps(ANGLE_EPS);
         movementController_.setTurnFactor(TURN_FACTOR);
         movementController_.turnBy(properties_.angleToTurn);
@@ -38,9 +37,9 @@ namespace mae
 
     AntState* MovingToDirection::update()
     {
-        if(movementController_.reachedDirection() &&
-                (movementController_.reachedDistance() || hasFrontObstacle())) {
-            LOG(DEBUG) << "-- reached distance or had obstacle (" << properties_.robot->getName() << ")";
+        if(movementController_.reachedDirection()
+                && (movementController_.reachedDistance() || hasFrontObstacle())) {
+            LOG(DEBUG)<< "-- reached distance or had obstacle (" << properties_.robot->getName() << ")";
             properties_.robot->getMotor().stop();
             properties_.currentMarker = NULL;
 
@@ -54,8 +53,9 @@ namespace mae
 
     bool MovingToDirection::hasFrontObstacle() const
     {
-        return obstacleDetector_.check(-FRONT_OBSTACLE_FOV / 2,
-                                       FRONT_OBSTACLE_FOV / 2,
-                                       properties_.obstacleStopDistance);
+        return obstacleDetector_.check(Ranger::SENSOR_P10,
+                properties_.obstacleStopDistance)
+                && obstacleDetector_.check(Ranger::SENSOR_N10,
+                        properties_.obstacleStopDistance);
     }
 }

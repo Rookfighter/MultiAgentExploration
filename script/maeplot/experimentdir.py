@@ -52,9 +52,6 @@ class ExperimentDirectory:
         self.robotCount_ = int(dataFile.data_[0][0]);
         self.worldType_ = dataFile.data_[0][1];
         
-        if self.robotCount_ == 8:
-            print "ROBOTS"
-        
         # load final coverage
         filename = os.path.join(self.directory_, FINAL_COVERAGE_FILE)
         dataFile.load(filename)

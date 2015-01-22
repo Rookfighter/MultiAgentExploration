@@ -20,11 +20,6 @@ namespace mae
 		return getMinDistance(p_beginAngle,p_endAngle) < p_distance;
 	}
 
-	bool ObstacleDetector::check(const int p_sensor, const double p_distance) const
-	{
-	    return robot_->getRanger().getDistance(p_sensor) <= p_distance;
-	}
-
 	double ObstacleDetector::getMinDistance(const double p_beginAngle,
 	                                        const double p_endAngle) const
 	{

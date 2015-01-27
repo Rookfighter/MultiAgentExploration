@@ -10,7 +10,7 @@ namespace mae
     struct VisitInfo {
         Stg::usec_t timeStamp;
     };
-    
+
     class StatisticTile
     {
     private:

@@ -1,6 +1,7 @@
 #ifndef MAE_STATISTIC_GRID_HPP
 #define MAE_STATISTIC_GRID_HPP
 
+#include <array>
 #include "statistics/StatisticTile.hpp"
 #include "statistics/StatisticConfig.hpp"
 #include "simulation/Simulation.hpp"
@@ -12,8 +13,10 @@ namespace mae
     struct CoverageTime {
         double coverage;
         Stg::usec_t timeStamp;
-        Stg::usec_t meanTimeBetweenVisits;
+        int meanTimeBetweenVisits; //msec
+        int stdTimeBetweenVisits; // msec
         double meanVisits;
+        double stdVisits;
         bool reached;
     };
 
@@ -55,8 +58,8 @@ namespace mae
         const Vector2f& getWorldSize() const;
         const Vector2i& getGridSize() const;
 
-        double getMeanVisitCount() const;
-        Stg::usec_t getMeanTimeBetweenVisits() const;
+        std::array<double, 2> getMeanVisitCount() const;
+        std::array<int, 2> getMeanTimeBetweenVisits() const;
         const std::vector<CoverageTime>& getCoverageEvents() const;
         const std::vector<CoverageTime>& getTimeEvents() const;
         double getCoverage() const;

@@ -92,10 +92,10 @@ namespace mae
         ss << saveDirectory_ << "/" << FileNames::meanNumberOfVisitsEventsFile;
         file.open(ss.str());
         file << "# shows mean numberOfVisits of grid" << std::endl;
-        file << "# [coverage numberOfVisits]";
+        file << "# [coverage meanVisits stdVisits]";
         for(const CoverageTime &event : statisticGrid_.getCoverageEvents()) {
             if(event.reached)
-                file << std::endl << event.coverage << " " << event.meanVisits;
+                file << std::endl << event.coverage << " " << event.meanVisits << " " << event.stdVisits;
         }
         file.close();
     }
@@ -109,7 +109,7 @@ namespace mae
         ss << saveDirectory_ << "/" << FileNames::meanTimeBetweenVisitsFile;
         file.open(ss.str());
         file << "# shows meanTimeBetweenVisits of each tile" << std::endl;
-        file << "# [x y meanTimeBetweenVisits(msec)]";
+        file << "# [x y meanTime(msec)]";
         for(int x = 0; x < statisticGrid_.getGridSize().x; ++x)
             for(int y = 0; y < statisticGrid_.getGridSize().y; ++y)
                 file << std::endl << x << " " << y << " " << usecToMsec(statisticGrid_.getTile(Vector2i(x,y)).getMeanTimeBetweenVisits());
@@ -120,10 +120,10 @@ namespace mae
         ss << saveDirectory_ << "/" << FileNames::timeBetweenVisitsEventsFile;
         file.open(ss.str());
         file << "# shows mean TimeBetweenVisits of grid" << std::endl;
-        file << "# [coverage meanTimeBetweenVisits(msec)]";
+        file << "# [coverage meanTime(msec) stdTime(msec)]";
         for(const CoverageTime &event : statisticGrid_.getCoverageEvents()) {
             if(event.reached)
-                file << std::endl << event.coverage << " " << usecToMsec(event.meanTimeBetweenVisits);
+                file << std::endl << event.coverage << " " << event.meanTimeBetweenVisits << " " << event.stdTimeBetweenVisits;
         }
         file.close();
     }

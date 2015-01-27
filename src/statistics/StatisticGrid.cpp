@@ -122,28 +122,71 @@ namespace mae
         return size_;
     }
 
-    double StatisticGrid::getMeanVisitCount() const
+    std::array<double, 2> StatisticGrid::getMeanVisitCount() const
     {
-        double sum = 0;
+        std::array<double, 2> result;
+        double mean = 0;
+        double std = 0;
+        double diffSum = 0;
+        double reachableCells = (1.0 - coveredByObstacles) * ((double)(size_.x * size_.y));
+        //int notReachableCells = coveredByObstacles * ((double)(size_.x * size_.y));
 
         for(int x = 0; x < size_.x; ++x) {
             for(int y = 0; y < size_.y; ++y)
-                sum += grid_[x][y].getVisitCount();
+                mean += grid_[x][y].getVisitCount();
         }
+        mean /= reachableCells;
 
-        return sum / ((double)(size_.x * size_.y));
+        for(int x = 0; x < size_.x; ++x) {
+            for(int y = 0; y < size_.y; ++y) {
+                int visitCount = grid_[x][y].getVisitCount();
+                // skip not reachable cells
+                if(visitCount == 0)
+                    continue;
+
+                double diffVal = mean - ((double) visitCount);
+                diffSum += (diffVal * diffVal);
+            }
+        }
+        std = sqrt(diffSum / reachableCells);
+
+        result[0] = mean;
+        result[1] = std;
+
+        return result;
     }
 
-    Stg::usec_t StatisticGrid::getMeanTimeBetweenVisits() const
+    std::array<int, 2> StatisticGrid::getMeanTimeBetweenVisits() const
     {
-        Stg::usec_t sum = 0;
+        std::array<int, 2> result;
+        double mean = 0;
+        double diffSum = 0;
+        double std = 0;
+        double reachableCells = (1.0 - coveredByObstacles) * ((double)(size_.x * size_.y));
+        //int notReachableCells = coveredByObstacles * ((double)(size_.x * size_.y));
 
         for(int x = 0; x < size_.x; ++x) {
             for(int y = 0; y < size_.y; ++y)
-                sum += grid_[x][y].getMeanTimeBetweenVisits();
+                mean += grid_[x][y].getMeanTimeBetweenVisits();
         }
+        mean /= reachableCells;
 
-        return sum / (size_.x * size_.y);
+        for(int x = 0; x < size_.x; ++x) {
+            for(int y = 0; y < size_.y; ++y) {
+                int visitCount = grid_[x][y].getVisitCount();
+                // skip not reachable cells
+                if(visitCount < 2)
+                    continue;
+
+                double diffVal = mean - ((double) usecToMsec(grid_[x][y].getMeanTimeBetweenVisits()));
+                diffSum += (diffVal * diffVal);
+            }
+        }
+        std = sqrt(diffSum / reachableCells);
+
+        result[0] = mean;
+        result[1] = std;
+        return result;
     }
 
     double StatisticGrid::getCoverage() const
@@ -195,10 +238,15 @@ namespace mae
 
         for(CoverageTime &time : coverageEvents_) {
             if(!time.reached && currentCoverage >= time.coverage) {
+                std::array<int, 2> meanTime = getMeanTimeBetweenVisits();
+                std::array<double, 2> meanCount = getMeanVisitCount();
+
                 time.reached = true;
                 time.timeStamp = currentTime;
-                time.meanTimeBetweenVisits = getMeanTimeBetweenVisits();
-                time.meanVisits = getMeanVisitCount();
+                time.meanTimeBetweenVisits = meanTime[0];
+                time.stdTimeBetweenVisits = meanTime[1];
+                time.meanVisits = meanCount[0];
+                time.stdVisits = meanCount[1];
             }
         }
     }

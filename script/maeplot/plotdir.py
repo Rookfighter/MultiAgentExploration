@@ -133,7 +133,7 @@ class PlotDirectory(object):
         mkdirRec(self.getSummaryDir())
         
         coverage = 0.85
-        minutes = 45
+        minutes = 15
         
         print "plotting time to reach coverage"
         plotTimeToReachCoverage(self.timeToReachCoverage_, self.getSummaryDir(), coverage)

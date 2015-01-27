@@ -17,6 +17,7 @@ namespace mae
 
         double angleToTurn_;
         double distanceToMove_;
+        double minDistanceToMove_;
 
         double angleEps_;
 
@@ -39,10 +40,12 @@ namespace mae
 
         void turnBy(const double p_angle);
         void wanderDistance(const double p_distance);
+        void wanderMinDistance(const double p_distance);
         void stopWandering();
         void stopTurning();
 
         bool reachedDistance() const;
+        bool reachedMinDistance() const;
         bool reachedDirection() const;
         bool finished() const;
         bool isAvoidingObstacle() const;

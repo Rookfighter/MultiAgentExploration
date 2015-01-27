@@ -70,12 +70,12 @@ class ExperimentDirectory:
         # load visitsEvents
         filename = os.path.join(self.directory_, VISITS_EVENTS_FILE)
         dataFile.load(filename)
-        self.visitsEvents_ = dataFile.getDataAs("ff")
+        self.visitsEvents_ = dataFile.getDataAs("fff")
         
         # load timeBetweenVisitsEvents
         filename = os.path.join(self.directory_, TIME_BETWEEN_VISITS_EVENTS_FILE)
         dataFile.load(filename)
-        self.timeBetweenVisitsEvents_ = dataFile.getDataAs("fl")
+        self.timeBetweenVisitsEvents_ = dataFile.getDataAs("fll")
         
     def getName(self):
         return os.path.basename(os.path.normpath(self.directory_))

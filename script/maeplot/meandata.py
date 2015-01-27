@@ -130,52 +130,54 @@ class MeanTimeBetweenVisitsEvents:
         self.reset()
     
     def reset(self):
-        # [coverage] (timeDiffSum, [timeDiffs])
+        # [coverage] (meanSum, stdSum, count)
         self.timeBetweenVisitsData_ = dict()
     
     def add(self, timeBetweenVisits):
-        assert(len(timeBetweenVisits) == 2)
+        assert(len(timeBetweenVisits) == 3)
         
         for coverage in timeBetweenVisits[0]:
             if not coverage in self.timeBetweenVisitsData_:
-                self.timeBetweenVisitsData_[coverage] = [0L, []]
+                self.timeBetweenVisitsData_[coverage] = [0L, 0L, 0]
         
-        for coverage, time in zip(*timeBetweenVisits):
-            self.timeBetweenVisitsData_[coverage][0] = self.timeBetweenVisitsData_[coverage][0] + time
-            self.timeBetweenVisitsData_[coverage][1].append(time)
+        for coverage, meanVal, stdVal in zip(*timeBetweenVisits):
+            self.timeBetweenVisitsData_[coverage][0] = self.timeBetweenVisitsData_[coverage][0] + meanVal
+            self.timeBetweenVisitsData_[coverage][1] = self.timeBetweenVisitsData_[coverage][1] + stdVal
+            self.timeBetweenVisitsData_[coverage][2] = self.timeBetweenVisitsData_[coverage][2] + 1
             
     def addMean(self, meanData):
         assert(meanData.__class__ == self.__class__)
         
         for coverage in meanData.timeBetweenVisitsData_:
             if not coverage in self.timeBetweenVisitsData_:
-                self.timeBetweenVisitsData_[coverage] = [0L, []]
+                self.timeBetweenVisitsData_[coverage] = [0L, 0L, 0]
                 
             self.timeBetweenVisitsData_[coverage][0] = self.timeBetweenVisitsData_[coverage][0] + meanData.timeBetweenVisitsData_[coverage][0]
             self.timeBetweenVisitsData_[coverage][1] = self.timeBetweenVisitsData_[coverage][1] + meanData.timeBetweenVisitsData_[coverage][1]
+            self.timeBetweenVisitsData_[coverage][2] = self.timeBetweenVisitsData_[coverage][2] + meanData.timeBetweenVisitsData_[coverage][2]
                 
     def getMean(self, convertTime=None, convertCoverage=None):
         
-        # [coverage, meanTime, standardDeviation]
-        result = [[],[], []]
+        # [coverage, mean, std]
+        result = [[],[],[]]
         for coverage in sorted(self.timeBetweenVisitsData_):
             
             coverageToAdd = coverage
-            timeSum = self.timeBetweenVisitsData_[coverage][0]
-            timeData = self.timeBetweenVisitsData_[coverage][1]
-            count = len(timeData)
+            meanSum = self.timeBetweenVisitsData_[coverage][0]
+            stdSum = self.timeBetweenVisitsData_[coverage][1]
+            count = self.timeBetweenVisitsData_[coverage][2]
             
             if convertTime != None:
-                timeSum = convertTime(timeSum)
-                timeData = [convertTime(time) for time in timeData]
+                meanSum = convertTime(meanSum)
+                stdSum = convertTime(stdSum)
             if convertCoverage != None:
                 coverageToAdd = convertCoverage(coverageToAdd)
             
             meanVal = 0.0
             stdDev = 0.0
             if count > 0:
-                meanVal = timeSum / count
-                stdDev = calcStandardDeviation(timeData, meanVal)
+                meanVal = meanSum / count
+                stdDev = stdSum / count
             
             result[0].append(coverageToAdd)
             result[1].append(meanVal)
@@ -192,29 +194,31 @@ class MeanVisitsEvents:
         self.reset()
     
     def reset(self):
-        # [coverage] (visitsSum, [visits])
+        # [coverage] (meanSum, stdSum, count)
         self.visitsData_ = dict()
     
     def add(self, meanVisits):
-        assert(len(meanVisits) == 2)
+        assert(len(meanVisits) == 3)
         
         for coverage in meanVisits[0]:
             if not coverage in self.visitsData_:
-                self.visitsData_[coverage] = [0L, []]
+                self.visitsData_[coverage] = [0L, 0L, 0]
         
-        for coverage, visits in zip(*meanVisits):
-            self.visitsData_[coverage][0] = self.visitsData_[coverage][0] + visits
-            self.visitsData_[coverage][1].append(visits)
+        for coverage, meanVal, stdVal in zip(*meanVisits):
+            self.visitsData_[coverage][0] = self.visitsData_[coverage][0] + meanVal
+            self.visitsData_[coverage][1] = self.visitsData_[coverage][1] + stdVal
+            self.visitsData_[coverage][2] = self.visitsData_[coverage][2] + 1
             
     def addMean(self, meanData):
         assert(meanData.__class__ == self.__class__)
         
         for coverage in meanData.visitsData_:
             if not coverage in self.visitsData_:
-                self.visitsData_[coverage] = [0L, []]
+                self.visitsData_[coverage] = [0L, 0L, 0]
                 
             self.visitsData_[coverage][0] = self.visitsData_[coverage][0] + meanData.visitsData_[coverage][0]
             self.visitsData_[coverage][1] = self.visitsData_[coverage][1] + meanData.visitsData_[coverage][1]
+            self.visitsData_[coverage][2] = self.visitsData_[coverage][2] + meanData.visitsData_[coverage][2]
                 
     def getMean(self, convertTime=None, convertCoverage=None):
         # [coverage, meanTime, standardDeviation]
@@ -222,21 +226,21 @@ class MeanVisitsEvents:
         for coverage in sorted(self.visitsData_):
             
             coverageToAdd = coverage
-            timeSum = self.visitsData_[coverage][0]
-            timeData = self.visitsData_[coverage][1]
-            count = len(timeData)
+            meanSum = self.visitsData_[coverage][0]
+            stdSum = self.visitsData_[coverage][1]
+            count = self.visitsData_[coverage][2]
             
             if convertTime != None:
-                timeSum = convertTime(timeSum)
-                timeData = [convertTime(time) for time in timeData]
+                meanSum = convertTime(meanSum)
+                stdSum = convertTime(stdSum)
             if convertCoverage != None:
                 coverageToAdd = convertCoverage(coverageToAdd)
             
             meanVal = 0.0
             stdDev = 0.0
             if count > 0:
-                meanVal = timeSum / count
-                stdDev = calcStandardDeviation(timeData, meanVal)
+                meanVal = meanSum / count
+                stdDev = stdSum / count
             
             result[0].append(coverageToAdd)
             result[1].append(meanVal)

@@ -167,7 +167,7 @@ namespace mae
 
         for(int x = 0; x < size_.x; ++x) {
             for(int y = 0; y < size_.y; ++y)
-                mean += grid_[x][y].getMeanTimeBetweenVisits();
+                mean += usecToMsec(grid_[x][y].getMeanTimeBetweenVisits());
         }
         mean /= reachableCells;
 

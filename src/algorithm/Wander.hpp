@@ -11,6 +11,9 @@ namespace mae
 	class Wander
 	{
 	private:
+	    static const std::vector<int> LEFT_SENSORS;
+	    static const std::vector<int> RIGHT_SENSORS;
+
 		ExplorationBot *robot_;
 		ObstacleDetector obstacleDetector_;
 		Velocity velocity_;

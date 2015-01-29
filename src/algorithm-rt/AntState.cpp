@@ -7,7 +7,6 @@ namespace mae
 		:robot(NULL),
 		 currentMarker(NULL),
          nextMarker(NULL),
-         angleToTurn(0),
          obstacleStopDistance(-1),
 		 obstacleAvoidDistance(-1),
          obstacleMarkerDistance(-1),

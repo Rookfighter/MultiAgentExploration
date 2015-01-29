@@ -1,8 +1,6 @@
 #include "algorithm/CollisionResolver.hpp"
 #include "utils/Math.hpp"
 
-#define BACK_OBSTACLE_FOV (M_PI / 3) // 60°
-
 namespace mae
 {
 
@@ -65,9 +63,7 @@ namespace mae
 
     bool CollisionResolver::hasBackObstacle() const
     {
-        return obstacleDetector_.check(M_PI - (BACK_OBSTACLE_FOV / 2),
-                                       M_PI + (BACK_OBSTACLE_FOV / 2),
-                                       backStopDistance_);
+        return obstacleDetector_.checkBack(backStopDistance_);
     }
 
 

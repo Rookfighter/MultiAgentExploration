@@ -22,12 +22,16 @@ namespace mae
     SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
         : AntState(p_properties),
           markerInRange_(),
+          directionsInfos_(),
+          state_(Init),
+          nextDirectionIdx_(-1),
           obstacleDetector_(p_properties.robot),
           movementController_(p_properties.robot,
                               p_properties.obstacleStopDistance,
                               p_properties.obstacleAvoidDistance,
                               p_properties.collisionResolveDistance),
-          obstacleMarkerDistance_(p_properties.obstacleMarkerDistance)
+          obstacleMarkerDistance_(p_properties.obstacleMarkerDistance),
+          facingDirection_(0)
 
     {
         LOG(DEBUG) << "Changed to SelectingTarget state (" << properties_.robot->getName() << ")";
@@ -37,6 +41,7 @@ namespace mae
             LOG(DEBUG) << "-- current marker is NULL (" << properties_.robot->getName() << ")";
 
         movementController_.setAngleEps(ANGLE_EPS);
+        initDirectionInfos();
     }
 
     void SelectingTarget::initDirectionInfos()
@@ -106,6 +111,9 @@ namespace mae
         directionsInfos_[11].sensordIdx.resize(2);
         directionsInfos_[11].sensordIdx[0] = Ranger::SENSOR_P170;
         directionsInfos_[11].sensordIdx[1] = Ranger::SENSOR_N170;
+
+        for(unsigned int i = 0; i < directionsInfos_.size(); ++i)
+            directionsInfos_[i].blocked = false;
     }
 
     SelectingTarget::~SelectingTarget()
@@ -114,34 +122,90 @@ namespace mae
 
     AntState* SelectingTarget::update()
     {
-        if(properties_.nextMarker != NULL)
-            properties_.nextMarker->releaseAsTarget();
-        properties_.nextMarker = NULL;
-        properties_.angleToTurn = 0;
+        State oldState;
+        AntState *result;
 
-        getMarkerInRange();
-        // check if there is any direction without marker to take
-        if(!checkBlankSpace()) {
-            LOG(DEBUG) << "-- no blank found (" << properties_.robot->getName() << ")";
-            // check if we can find any marker
-            if(findNextMarker()) {
-                properties_.nextMarker->setAsTarget();
-                LOG(DEBUG) << "-- found next marker " << properties_.nextMarker->getID() << " (" << properties_.robot->getName() << ")";
-            } else {
-                LOG(WARNING) << "-- no blank and no next marker found (" << properties_.robot->getName() << ")";
-                // randomly turn in one of 4 directions
-                properties_.angleToTurn = Random::nextInt(4) * RANDOM_DIRECTION;
-            }
-        } else {
-            LOG(DEBUG) << "-- found blank (" << properties_.robot->getName() << ")";
+        oldState = state_;
+        result = executeState();
+        while(result == NULL && oldState != state_) {
+            oldState = state_;
+            result = executeState();
         }
 
-        return new UpdatingValue(properties_);
+        return result;
+    }
+
+    AntState* SelectingTarget::executeState()
+    {
+        switch(state_) {
+        case Init:
+            if(properties_.nextMarker != NULL) {
+                properties_.nextMarker->releaseAsTarget();
+                properties_.nextMarker = NULL;
+            }
+
+            state_ = CheckingSurrounding;
+            break;
+        case CheckingSurrounding:
+            checkSourrounding();
+            state_ = SelectingBlank;
+            break;
+        case SelectingBlank:
+            selectBlankSpace();
+            if(foundBlankSpace()) {
+                turnToBlank();
+                state_ = TurningToBlank;
+            } else {
+                state_ = SelectingMarker;
+            }
+            break;
+        case TurningToBlank:
+            if(movementController_.reachedDirection()) {
+                state_ = CheckingFront;
+            } else {
+                movementController_.update();
+            }
+            break;
+        case CheckingFront:
+            if(!obstacleDetector_.checkFront(obstacleMarkerDistance_)) {
+                // found a blank space and front is not blocked
+                return new UpdatingValue(properties_);
+            } else {
+                // front is blocked
+                directionsInfos_[nextDirectionIdx_].blocked = true;
+                facingDirection_ = directionsInfos_[nextDirectionIdx_].direction;
+                state_ = SelectingBlank;
+            }
+            break;
+        case SelectingMarker:
+            selectNextMarker();
+            if(properties_.nextMarker == NULL) {
+                LOG(WARNING) << "-- no blank and no next marker found (" << properties_.robot->getName() << ")";
+                int randIdx = Random::nextInt(directionsInfos_.size());
+                movementController_.turnBy(directionsInfos_[randIdx].direction);
+                state_ = TurningToDirection;
+            } else {
+                return new UpdatingValue(properties_);
+            }
+            break;
+        case TurningToDirection:
+            if(movementController_.reachedDirection()) {
+                return new UpdatingValue(properties_);
+            } else {
+                movementController_.update();
+            }
+            break;
+        }
+
+        return NULL;
     }
 
     void SelectingTarget::checkSourrounding()
     {
+        facingDirection_ = 0;
 
+        getMarkerInRange();
+        checkBlankSpace();
     }
 
     void SelectingTarget::getMarkerInRange()
@@ -166,67 +230,81 @@ namespace mae
             LOG(DEBUG) << "--> id: " << measurement.marker->getID() << " value: " << measurement.marker->getValue() << " (" << properties_.robot->getName() << ")";
     }
 
-    bool SelectingTarget::checkBlankSpace()
+    void SelectingTarget::checkBlankSpace()
     {
-        RangerProperties rangerProperties = properties_.robot->getRanger().getProperties();
+        for(unsigned int i = 0; i < directionsInfos_.size(); ++i)
+            directionsInfos_[i].blocked = false;
 
-        // check if obstacles block any directions
-        std::vector<bool> blockedByObstacle(rangerProperties.getMeasurementCount());
-        for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
-            double distance = properties_.robot->getRanger().getDistance(i);
-            blockedByObstacle[i] = distance <= obstacleMarkerDistance_;
+        // check if obstacles block any direction
+        for(unsigned int i = 0; i < directionsInfos_.size(); ++i) {
+            for(unsigned j = 0; j < directionsInfos_[i].sensordIdx.size(); ++j) {
+                // check if there is an obstacle in that direction
+                if(obstacleDetector_.check(directionsInfos_[i].sensordIdx[j], obstacleMarkerDistance_))
+                    directionsInfos_[i].blocked = true;
+            }
         }
 
         // check if marker block any direction
-        for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
-            double sensorDirection = rangerProperties.getMeasurementOrigins()[i].yaw;
+        for(unsigned int i = 0; i < directionsInfos_.size(); ++i) {
             for(MarkerMeasurement measurement : markerInRange_) {
                 double beginAngle = measurement.relativeDirection - (BLOCK_MARKER_FOV / 2);
                 double endAngle = measurement.relativeDirection + (BLOCK_MARKER_FOV / 2);
-                if(angleIsBetween(sensorDirection, beginAngle, endAngle))
-                    blockedByObstacle[i] = true;
+                if(angleIsBetween(directionsInfos_[i].direction, beginAngle, endAngle))
+                    directionsInfos_[i].blocked = true;
             }
         }
 
         std::stringstream ss;
         ss << "-- ";
-        for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i)
-            ss << radianToDegree(rangerProperties.getMeasurementOrigins()[i].yaw) << "°=" << boolToStr(blockedByObstacle[i]) << " ";
+        for(unsigned int i = 0; i < directionsInfos_.size(); ++i)
+            ss << radianToDegree(directionsInfos_[i].direction) << "°=" << boolToStr(directionsInfos_[i].blocked) << " ";
         ss << "(" << properties_.robot->getName() << ")";
         LOG(DEBUG) << ss.str();
+    }
+
+    void SelectingTarget::selectBlankSpace()
+    {
+        nextDirectionIdx_ = -1;
 
         std::vector<unsigned int> possibleDirections;
-        for(unsigned int i = 0; i < rangerProperties.getMeasurementCount(); ++i) {
-            if(!blockedByObstacle[i]) {
+        for(unsigned int i = 0; i < directionsInfos_.size(); ++i) {
+            if(!directionsInfos_[i].blocked)
                 possibleDirections.push_back(i);
-            }
         }
 
         if(!possibleDirections.empty()) {
-            int idx = Random::nextInt(possibleDirections.size());
-            properties_.angleToTurn = rangerProperties.getMeasurementOrigins()[possibleDirections[idx]].yaw;
-            LOG(DEBUG) << "-- chosen: " << radianToDegree(properties_.angleToTurn) << "° (" << properties_.robot->getName() << ")";
+            int randIdx = Random::nextInt(possibleDirections.size());
+            nextDirectionIdx_ = possibleDirections[randIdx];
         }
-
-        return !possibleDirections.empty();
     }
 
-    bool SelectingTarget::findNextMarker()
+    bool SelectingTarget::foundBlankSpace()
+    {
+        return nextDirectionIdx_ >= 0;
+    }
+
+    void SelectingTarget::turnToBlank()
+    {
+        double angleToTurn = directionsInfos_[nextDirectionIdx_].direction - facingDirection_;
+        movementController_.turnBy(angleToTurn);
+    }
+
+    void SelectingTarget::selectNextMarker()
     {
         assert(properties_.robot->getMarkerSensor().getMaxRange() <
                properties_.robot->getRanger().getProperties().getMaxRange());
+        properties_.nextMarker = NULL;
 
         if(markerInRange_.empty())
-            return false;
+            return;
 
         std::vector<MarkerMeasurement> possibleTargets = getPossibleTargets();
 
         if(possibleTargets.empty())
-            return false;
+            return;
+
         int idx = Random::nextInt(possibleTargets.size());
         properties_.nextMarker = possibleTargets[idx].marker;
-
-        return true;
     }
 
     std::vector<MarkerMeasurement> SelectingTarget::getPossibleTargets()

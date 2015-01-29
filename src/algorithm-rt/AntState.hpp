@@ -14,7 +14,6 @@ namespace mae
 
 		Marker *currentMarker;
 		Marker *nextMarker;
-		double angleToTurn;
 		
 		std::function<void(Marker*,Marker*)> updateValue;
 		std::function<double(Marker*,Marker*)> calcValue;

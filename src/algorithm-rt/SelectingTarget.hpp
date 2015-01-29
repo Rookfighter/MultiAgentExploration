@@ -11,24 +11,31 @@ namespace mae
 	class SelectingTarget : public AntState
 	{
 	private:
+	    enum State {Init, CheckingSurrounding, SelectingBlank, TurningToBlank, CheckingFront, SelectingMarker, TurningToDirection};
 	    struct DirectionInfo {
 	        double direction;
 	        std::vector<int> sensordIdx;
-	        bool useable;
+	        bool blocked;
 	    };
 
 		std::vector<MarkerMeasurement> markerInRange_;
 		std::vector<DirectionInfo> directionsInfos_;
+		State state_;
+		int nextDirectionIdx_;
 		ObstacleDetector obstacleDetector_;
 		MovementController movementController_;
 		double obstacleMarkerDistance_;
-
+		double facingDirection_;
 
 		void initDirectionInfos();
+		AntState* executeState();
 		void checkSourrounding();
 		void getMarkerInRange();
-		bool checkBlankSpace();
-		bool findNextMarker();
+		void checkBlankSpace();
+		void selectBlankSpace();
+		bool foundBlankSpace();
+		void turnToBlank();
+		void selectNextMarker();
 		std::vector<MarkerMeasurement> getPossibleTargets();
 		double getMinNonObstructedMarkerValue();
         bool isPossibleTarget(const MarkerMeasurement &p_marker);

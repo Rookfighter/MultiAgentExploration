@@ -2,17 +2,13 @@
 #include "algorithm/Wander.hpp"
 #include "utils/Math.hpp"
 
-#define LEFT_ANGLE_BEGIN (M_PI / 6) // 30°
-#define LEFT_ANGLE_END (7 * M_PI / 12) // 105°
-#define RIGHT_ANGLE_BEGIN (-7 * M_PI / 12) // -105°
-#define RIGHT_ANGLE_END (-M_PI / 6) // -30°
-#define FRONT_ANGLE_BEGIN (-M_PI / 6) // -30°
-#define FRONT_ANGLE_END (M_PI / 6) // 30
-
 #define NEARBY_SAFETY_DISTANCE 0.2
 
 namespace mae
 {
+    const std::vector<int> Wander::LEFT_SENSORS = {Ranger::SENSOR_P30, Ranger::SENSOR_P50, Ranger::SENSOR_P90F, Ranger::SENSOR_P90B, Ranger::SENSOR_P130};
+    const std::vector<int> Wander::RIGHT_SENSORS = {Ranger::SENSOR_N30, Ranger::SENSOR_N50, Ranger::SENSOR_N90F, Ranger::SENSOR_N90B, Ranger::SENSOR_N130};
+
 	Wander::Wander(ExplorationBot *p_robot,
 	               const double p_frontStopDistance,
                    const double p_avoidDistance)
@@ -32,33 +28,29 @@ namespace mae
 
 	bool Wander::hasLeftObstacle() const
 	{
-	    return obstacleDetector_.check(LEFT_ANGLE_BEGIN,
-	                                   LEFT_ANGLE_END,
+	    return obstacleDetector_.check(LEFT_SENSORS,
 	                                   avoidDistance_);
 	}
 
     bool Wander::hasRightObstacle() const
     {
-        return obstacleDetector_.check(RIGHT_ANGLE_BEGIN,
-                                       RIGHT_ANGLE_END,
+        return obstacleDetector_.check(RIGHT_SENSORS,
                                        avoidDistance_);
     }
     
     bool Wander::hasfrontStopObstacle() const
     {
-        return obstacleDetector_.check(FRONT_ANGLE_BEGIN,
-                                       FRONT_ANGLE_END,
-                                       frontStopDistance_);
+        return obstacleDetector_.checkFront(frontStopDistance_);
     }
 
     double Wander::getLeftMinDistance() const
     {
-        return obstacleDetector_.getMinDistance(LEFT_ANGLE_BEGIN, LEFT_ANGLE_END);
+        return obstacleDetector_.getMinDistance(LEFT_SENSORS);
     }
 
     double Wander::getRightMinDistance() const
     {
-        return obstacleDetector_.getMinDistance(RIGHT_ANGLE_BEGIN, RIGHT_ANGLE_END);
+        return obstacleDetector_.getMinDistance(RIGHT_SENSORS);
     }
 
     bool Wander::isAvoidingObstacle() const

@@ -4,14 +4,8 @@
 #include "algorithm-rt/SelectingTarget.hpp"
 #include "utils/Math.hpp"
 
-/* determines how much of the max angular
- * velocity is used */
-#define TURN_FACTOR 0.8
-
 /* precision of turn angle check */
 #define ANGLE_EPS ((M_PI / 180) * 5) // precision 5°
-
-#define FRONT_OBSTACLE_FOV (M_PI / 3) // 60°
 
 namespace mae
 {
@@ -27,8 +21,6 @@ namespace mae
         assert(properties_.markerTooCloseDistance < properties_.markerDeployDistance);
         LOG(DEBUG) << "Changed to MovingToDirection state (" << properties_.robot->getName() << ")";
         movementController_.setAngleEps(ANGLE_EPS);
-        movementController_.setTurnFactor(TURN_FACTOR);
-        movementController_.turnBy(properties_.angleToTurn);
         movementController_.wanderDistance(properties_.markerDeployDistance);
         LOG(DEBUG) << "-- moving " << properties_.markerDeployDistance << "m (" << properties_.robot->getName() << ")";
     }
@@ -39,8 +31,7 @@ namespace mae
 
     AntState* MovingToDirection::update()
     {
-        if(movementController_.reachedDirection() &&
-                (movementController_.reachedDistance() || hasFrontObstacle())) {
+        if((movementController_.reachedDistance() || hasFrontObstacle())) {
             LOG(DEBUG) << "-- reached distance or had obstacle (" << properties_.robot->getName() << ")";
             properties_.robot->getMotor().stop();
             properties_.currentMarker = NULL;
@@ -55,8 +46,6 @@ namespace mae
 
     bool MovingToDirection::hasFrontObstacle() const
     {
-        return obstacleDetector_.check(-FRONT_OBSTACLE_FOV / 2,
-                                       FRONT_OBSTACLE_FOV / 2,
-                                       properties_.obstacleStopDistance);
+        return obstacleDetector_.checkFront(properties_.obstacleStopDistance);
     }
 }

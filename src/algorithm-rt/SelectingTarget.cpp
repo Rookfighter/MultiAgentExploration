@@ -5,9 +5,7 @@
 #include "utils/Convert.hpp"
 #include "utils/Random.hpp"
 
-#define BLOCK_OBSTACLE_FOV (M_PI / 3) // 60°
 #define BLOCK_MARKER_FOV (M_PI / 2) // 90°
-
 #define MARKER_OBSTACLE_FOV (M_PI / 4) // 45°
 #define RANDOM_DIRECTION (M_PI / 4) // 45°
 
@@ -70,7 +68,7 @@ namespace mae
         directionsInfos_[3].sensordIdx[0] = Ranger::SENSOR_P50;
 
         //right 50° sensor
-        directionsInfos_[4].direction = degreeToRadian(-45);
+        directionsInfos_[4].direction = degreeToRadian(-50);
         directionsInfos_[4].sensordIdx.resize(1);
         directionsInfos_[4].sensordIdx[0] = Ranger::SENSOR_N50;
 
@@ -169,9 +167,11 @@ namespace mae
         case CheckingFront:
             if(!obstacleDetector_.checkFront(obstacleMarkerDistance_)) {
                 // found a blank space and front is not blocked
+                LOG(DEBUG) << "-- found blank in " << radianToDegree(directionsInfos_[nextDirectionIdx_].direction) << "°";
                 return new UpdatingValue(properties_);
             } else {
                 // front is blocked
+                LOG(DEBUG) << "-- front (" << radianToDegree(directionsInfos_[nextDirectionIdx_].direction) << "°)" << " is blocked";
                 directionsInfos_[nextDirectionIdx_].blocked = true;
                 facingDirection_ = directionsInfos_[nextDirectionIdx_].direction;
                 state_ = SelectingBlank;
@@ -185,6 +185,8 @@ namespace mae
                 movementController_.turnBy(directionsInfos_[randIdx].direction);
                 state_ = TurningToDirection;
             } else {
+                LOG(DEBUG) << "-- found target marker: " << properties_.nextMarker->getID();
+                properties_.nextMarker->setAsTarget();
                 return new UpdatingValue(properties_);
             }
             break;
@@ -237,11 +239,8 @@ namespace mae
 
         // check if obstacles block any direction
         for(unsigned int i = 0; i < directionsInfos_.size(); ++i) {
-            for(unsigned j = 0; j < directionsInfos_[i].sensordIdx.size(); ++j) {
-                // check if there is an obstacle in that direction
-                if(obstacleDetector_.check(directionsInfos_[i].sensordIdx[j], obstacleMarkerDistance_))
-                    directionsInfos_[i].blocked = true;
-            }
+            if(obstacleDetector_.check(directionsInfos_[i].sensordIdx, obstacleMarkerDistance_))
+                directionsInfos_[i].blocked = true;
         }
 
         // check if marker block any direction

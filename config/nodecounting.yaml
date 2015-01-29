@@ -7,7 +7,7 @@ algorithm:
     type: nodecounting
     obstacle_stop_distance: 0.5 # m
     obstacle_avoid_distance: 0.5 # m
-    obstacle_marker_distance: 2.0 # m
+    obstacle_marker_distance: 1.4 # m
     marker_deploy_distance: 1.6 # m
     collision_resolve_distance: 0.5 # m
     marker_too_close_distance: 0.5 # m

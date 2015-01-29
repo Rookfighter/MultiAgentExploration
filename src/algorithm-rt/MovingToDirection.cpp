@@ -30,7 +30,6 @@ namespace mae
         movementController_.setTurnFactor(TURN_FACTOR);
         movementController_.turnBy(properties_.angleToTurn);
         movementController_.wanderDistance(properties_.markerDeployDistance);
-        movementController_.wanderMinDistance(properties_.markerTooCloseDistance);
         LOG(DEBUG) << "-- moving " << properties_.markerDeployDistance << "m (" << properties_.robot->getName() << ")";
     }
 
@@ -40,7 +39,7 @@ namespace mae
 
     AntState* MovingToDirection::update()
     {
-        if(movementController_.reachedDirection() && movementController_.reachedMinDistance() &&
+        if(movementController_.reachedDirection() &&
                 (movementController_.reachedDistance() || hasFrontObstacle())) {
             LOG(DEBUG) << "-- reached distance or had obstacle (" << properties_.robot->getName() << ")";
             properties_.robot->getMotor().stop();

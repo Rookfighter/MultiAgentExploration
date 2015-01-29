@@ -22,7 +22,6 @@ namespace mae
         lastPose_(robot_->getMotor().getPose()),
         angleToTurn_(0),
         distanceToMove_(0),
-        minDistanceToMove_(0),
         angleEps_(DEF_ANGLE_EPS),
         turnFactor_(1.0)
     {
@@ -52,15 +51,9 @@ namespace mae
         distanceToMove_ = p_distance;
     }
 
-    void MovementController::wanderMinDistance(const double p_distance)
-    {
-        minDistanceToMove_ = p_distance;
-    }
-
     void MovementController::stopWandering()
     {
         wanderDistance(0);
-        wanderMinDistance(0);
     }
 
     void MovementController::stopTurning()
@@ -71,11 +64,6 @@ namespace mae
     bool MovementController::reachedDistance() const
     {
         return distanceToMove_ <= 0;
-    }
-
-    bool MovementController::reachedMinDistance() const
-    {
-        return minDistanceToMove_ <= 0;
     }
 
     bool MovementController::reachedDirection() const
@@ -121,10 +109,6 @@ namespace mae
         double distance = (currentPose.position - lastPose_.position).length();
         if(!reachedDistance()) {
             distanceToMove_ -= distance;
-        }
-
-        if(!reachedMinDistance()) {
-            minDistanceToMove_ -= distance;
         }
 
         lastPose_ = currentPose;

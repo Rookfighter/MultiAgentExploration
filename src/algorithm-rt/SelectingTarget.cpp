@@ -13,17 +13,20 @@
 
 #define MARKER_VALUE_EPS 0.01
 
+/* precision of turn angle check */
+#define ANGLE_EPS ((M_PI / 180) * 5) // precision 5°
+
 namespace mae
 {
-    /*static const std::vector<double> checkMarkerDirections = {
-        0       , (M_PI / 2),
-        (M_PI)  , (3 * M_PI / 2)
-    };*/
 
     SelectingTarget::SelectingTarget(const AntStateProperties &p_properties)
         : AntState(p_properties),
           markerInRange_(),
           obstacleDetector_(p_properties.robot),
+          movementController_(p_properties.robot,
+                              p_properties.obstacleStopDistance,
+                              p_properties.obstacleAvoidDistance,
+                              p_properties.collisionResolveDistance),
           obstacleMarkerDistance_(p_properties.obstacleMarkerDistance)
 
     {
@@ -32,6 +35,77 @@ namespace mae
             LOG(DEBUG) << "-- current marker " << properties_.currentMarker->getID() << " (" << properties_.robot->getName() << ")";
         else
             LOG(DEBUG) << "-- current marker is NULL (" << properties_.robot->getName() << ")";
+
+        movementController_.setAngleEps(ANGLE_EPS);
+    }
+
+    void SelectingTarget::initDirectionInfos()
+    {
+        directionsInfos_.resize(12);
+
+        // front sensors
+        directionsInfos_[0].direction = degreeToRadian(0);
+        directionsInfos_[0].sensordIdx.resize(2);
+        directionsInfos_[0].sensordIdx[0] = Ranger::SENSOR_N10;
+        directionsInfos_[0].sensordIdx[1] = Ranger::SENSOR_P10;
+
+        // left 30° sensor
+        directionsInfos_[1].direction = degreeToRadian(30);
+        directionsInfos_[1].sensordIdx.resize(1);
+        directionsInfos_[1].sensordIdx[0] = Ranger::SENSOR_P30;
+
+        // right 30° sensor
+        directionsInfos_[2].direction = degreeToRadian(-30);
+        directionsInfos_[2].sensordIdx.resize(1);
+        directionsInfos_[2].sensordIdx[0] = Ranger::SENSOR_N30;
+
+        // left 50° sensor
+        directionsInfos_[3].direction = degreeToRadian(50);
+        directionsInfos_[3].sensordIdx.resize(1);
+        directionsInfos_[3].sensordIdx[0] = Ranger::SENSOR_P50;
+
+        //right 50° sensor
+        directionsInfos_[4].direction = degreeToRadian(-45);
+        directionsInfos_[4].sensordIdx.resize(1);
+        directionsInfos_[4].sensordIdx[0] = Ranger::SENSOR_N50;
+
+        // left 90° sensors
+        directionsInfos_[5].direction = degreeToRadian(90);
+        directionsInfos_[5].sensordIdx.resize(2);
+        directionsInfos_[5].sensordIdx[0] = Ranger::SENSOR_P90F;
+        directionsInfos_[5].sensordIdx[1] = Ranger::SENSOR_P90B;
+
+        // right 90° sensors
+        directionsInfos_[6].direction = degreeToRadian(-90);
+        directionsInfos_[6].sensordIdx.resize(2);
+        directionsInfos_[6].sensordIdx[0] = Ranger::SENSOR_N90F;
+        directionsInfos_[6].sensordIdx[1] = Ranger::SENSOR_N90B;
+
+        // left 130° sensor
+        directionsInfos_[7].direction = degreeToRadian(130);
+        directionsInfos_[7].sensordIdx.resize(1);
+        directionsInfos_[7].sensordIdx[0] = Ranger::SENSOR_P130;
+
+        // right 130° sensor
+        directionsInfos_[8].direction = degreeToRadian(-130);
+        directionsInfos_[8].sensordIdx.resize(1);
+        directionsInfos_[8].sensordIdx[0] = Ranger::SENSOR_N130;
+
+        // left 150° sensor
+        directionsInfos_[9].direction = degreeToRadian(150);
+        directionsInfos_[9].sensordIdx.resize(1);
+        directionsInfos_[9].sensordIdx[0] = Ranger::SENSOR_P150;
+
+        // right 150° sensor
+        directionsInfos_[10].direction = degreeToRadian(-150);
+        directionsInfos_[10].sensordIdx.resize(1);
+        directionsInfos_[10].sensordIdx[0] = Ranger::SENSOR_N150;
+
+        //back sensors
+        directionsInfos_[11].direction = degreeToRadian(180);
+        directionsInfos_[11].sensordIdx.resize(2);
+        directionsInfos_[11].sensordIdx[0] = Ranger::SENSOR_P170;
+        directionsInfos_[11].sensordIdx[1] = Ranger::SENSOR_N170;
     }
 
     SelectingTarget::~SelectingTarget()
@@ -63,6 +137,11 @@ namespace mae
         }
 
         return new UpdatingValue(properties_);
+    }
+
+    void SelectingTarget::checkSourrounding()
+    {
+
     }
 
     void SelectingTarget::getMarkerInRange()

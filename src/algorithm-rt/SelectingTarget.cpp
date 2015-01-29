@@ -178,6 +178,7 @@ namespace mae
             }
             break;
         case SelectingMarker:
+            checkSourrounding();
             selectNextMarker();
             if(properties_.nextMarker == NULL) {
                 LOG(WARNING) << "-- no blank and no next marker found (" << properties_.robot->getName() << ")";

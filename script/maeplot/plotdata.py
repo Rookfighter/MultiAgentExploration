@@ -42,15 +42,19 @@ def plotCoverageEventsPerCount(data, outfile):
     plt.legend(loc='lower right')
     plt.savefig(outfile, dpi=100)  
 
-def plotBarChartPerAlgorithmPerTerrain(data, dataErr=None, outfile="", yAxLabel="", plotTitle=""):
+def plotBarChartPerAlgorithmPerTerrain(data, dataErr=None, outfile="", yAxLabel="", plotTitle="", maxVal=0, legendPos='upper right'):
     assert(len(data) == len(AVAILABLE_ALGORITHMS))
     
     colors = ColorCyle()
-    barWidth = 1.0 / (len(data) + 2)
+    barWidth = 1.0 / (len(data) + 1)
     
     fig, ax = plt.subplots()
     ax.set_ylabel(yAxLabel)
     ax.set_title(plotTitle)
+    
+    if maxVal > 0:
+        ax.set_autoscaley_on(False)
+        ax.set_ylim([0,maxVal])
     
     for algoCount, algoName in enumerate(AVAILABLE_ALGORITHMS):
         algoData = data[algoName]
@@ -68,23 +72,28 @@ def plotBarChartPerAlgorithmPerTerrain(data, dataErr=None, outfile="", yAxLabel=
             
     ax.set_xticks([(i + (len(data) * barWidth) / 2) for i in xrange(len(AVAILABLE_WORLDS))])
     ax.set_xticklabels(AVAILABLE_WORLDS)
-    ax.legend(loc='upper right')
+    ax.legend(loc=legendPos)
     
-    fig.set_size_inches(18.5,10.5)
+    fig.set_size_inches(9.6,5.4)
+    
     if len(outfile) > 0:
         plt.savefig(outfile, dpi=100)
     else:
         plt.show()
 
-def plotBarChartPerTerrainPerAlgorithm(data, dataErr=None, outfile="", yAxLabel="", plotTitle=""):
+def plotBarChartPerTerrainPerAlgorithm(data, dataErr=None, outfile="", yAxLabel="", plotTitle="", maxVal=0, legendPos='upper right'):
     assert(len(data) == len(AVAILABLE_WORLDS))
     
     colors = ColorCyle()
-    barWidth = 1.0 / (len(data) + 2)
+    barWidth = 1.0 / (len(data) + 1)
     
     fig, ax = plt.subplots()
     ax.set_ylabel(yAxLabel)
     ax.set_title(plotTitle)
+    
+    if maxVal > 0:
+        ax.set_autoscaley_on(False)
+        ax.set_ylim([0,maxVal])
     
     for worldCount, worldName in enumerate(AVAILABLE_WORLDS):
         worldData = data[worldName]
@@ -102,23 +111,28 @@ def plotBarChartPerTerrainPerAlgorithm(data, dataErr=None, outfile="", yAxLabel=
             
     ax.set_xticks([(i + (len(data) * barWidth) / 2) for i in xrange(len(AVAILABLE_ALGORITHMS))])
     ax.set_xticklabels(getAlgorithmNames())
-    ax.legend(loc='upper right')
+    ax.legend(loc=legendPos)
     
-    fig.set_size_inches(18.5,10.5)
+    fig.set_size_inches(9.6,5.4)
+    
     if len(outfile) > 0:
         plt.savefig(outfile, dpi=100)
     else:
         plt.show()    
 
-def plotBarChartPerRobotCountPerAlgorithm(data, dataErr=None, outfile="", yAxLabel="", plotTitle=""):
+def plotBarChartPerRobotCountPerAlgorithm(data, dataErr=None, outfile="", yAxLabel="", plotTitle="", maxVal=0, legendPos='upper right'):
     assert(len(data) == len(AVAILABLE_ROBOT_COUNTS))
     
     colors = ColorCyle()
-    barWidth = 1.0 / (len(data) + 2)
+    barWidth = 1.0 / (len(data) + 1)
     
     fig, ax = plt.subplots()
     ax.set_ylabel(yAxLabel)
     ax.set_title(plotTitle)
+    
+    if maxVal > 0:
+        ax.set_autoscaley_on(False)
+        ax.set_ylim([0,maxVal])
     
     for robotNum, robotCount in enumerate(AVAILABLE_ROBOT_COUNTS):
         robotCountData = data[robotCount]
@@ -142,9 +156,10 @@ def plotBarChartPerRobotCountPerAlgorithm(data, dataErr=None, outfile="", yAxLab
             
     ax.set_xticks([(i + (len(data) * barWidth) / 2) for i in xrange(len(AVAILABLE_ALGORITHMS))])
     ax.set_xticklabels(getAlgorithmNames())
-    ax.legend(loc='upper right')
+    ax.legend(loc=legendPos)
     
-    fig.set_size_inches(18.5,10.5)
+    fig.set_size_inches(9.6,5.4)
+        
     if len(outfile) > 0:
         plt.savefig(outfile, dpi=100)
     else:
@@ -184,7 +199,7 @@ def plotTimeToReachCoverage(data, outdir, coverageToPlot):
     title = "Time to reach {0}% Coverage".format(coveragePercent)
     outfile = os.path.join(outdir, TIME_TO_REACH_COVERAGE_FILE)
     yAxLabel = "minutes"
-    plotBarChartPerAlgorithmPerTerrain(dataPerAlgo, dataErr=errPerAlgo, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title)
+    plotBarChartPerAlgorithmPerTerrain(dataPerAlgo, dataErr=errPerAlgo, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title, maxVal=270, legendPos='upper left')
 
 def plotCoverageReachedAfterTime(data, outdir, time):
     assert(len(data) > 0)
@@ -220,7 +235,7 @@ def plotCoverageReachedAfterTime(data, outdir, time):
     title = "Coverage reached after {0} minutes".format(time)
     outfile = os.path.join(outdir, COVERAGE_REACHED_AFTER_TIME_FILE).format(time)
     yAxLabel = "coverage"
-    plotBarChartPerAlgorithmPerTerrain(dataPerAlgo, dataErr=errPerAlgo, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title)
+    plotBarChartPerAlgorithmPerTerrain(dataPerAlgo, dataErr=errPerAlgo, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title, maxVal=150)
 
 def plotNumberOfVisits(data, outdir, coverageToPlot):
     assert(len(data) > 0)
@@ -294,12 +309,12 @@ def plotTimeBetweenVisits(data, outdir, coverageToPlot):
     outfile = os.path.join(outdir, MEAN_NUMBER_OF_VISITS_FILE)
     title = "Mean Time between Visits to {0}% Coverage".format(coveragePercent)
     yAxisLabel = "minutes"   
-    plotBarChartPerTerrainPerAlgorithm(dataPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title)
+    plotBarChartPerTerrainPerAlgorithm(dataPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title, maxVal=13)
     
     outfile = os.path.join(outdir, STD_DEV_NUMBER_OF_VISITS_FILE)
     title = "Standard Deviation of Time between Visits to {0}% Coverage".format(coveragePercent)
     yAxisLabel = "standard deviation"
-    plotBarChartPerTerrainPerAlgorithm(errPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title)
+    plotBarChartPerTerrainPerAlgorithm(errPerWorld, dataErr=None, outfile=outfile, yAxLabel=yAxisLabel, plotTitle=title, maxVal=13)
     
 def plotTimeToReachCoveragePerRobotCount(data, outdir, coverageToPlot):
     assert(len(data) > 0)
@@ -335,7 +350,7 @@ def plotTimeToReachCoveragePerRobotCount(data, outdir, coverageToPlot):
     title = "Time to reach {0}% Coverage".format(coveragePercent)
     outfile = os.path.join(outdir, TIME_TO_REACH_COVERAGE_FILE)
     yAxLabel = "minutes"
-    plotBarChartPerRobotCountPerAlgorithm(dataPerRobotCount, dataErr=errPerRobotCount, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title)
+    plotBarChartPerRobotCountPerAlgorithm(dataPerRobotCount, dataErr=errPerRobotCount, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title, maxVal=320)
     
 def plotCoverageReachedAfterTimePerRobotCount(data, outdir, time):
     assert(len(data) > 0)
@@ -371,4 +386,4 @@ def plotCoverageReachedAfterTimePerRobotCount(data, outdir, time):
     title = "Coverage reached after {0} minutes".format(time)
     outfile = os.path.join(outdir, COVERAGE_REACHED_AFTER_TIME_FILE).format(time)
     yAxLabel = "coverage"
-    plotBarChartPerRobotCountPerAlgorithm(dataPerRobotCount, dataErr=errPerRobotCount, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title)
+    plotBarChartPerRobotCountPerAlgorithm(dataPerRobotCount, dataErr=errPerRobotCount, outfile=outfile, yAxLabel=yAxLabel, plotTitle=title, maxVal=150)

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from maeplot.utils import sameFloat, coverageToPercent, msecToMin
 from maeplot.experiment import AVAILABLE_WORLDS, AVAILABLE_ALGORITHMS, ALGORITHM_NAMES,\
-    getAlgorithmNames, AVAILABLE_ROBOT_COUNTS
+    getAlgorithmNames, AVAILABLE_ROBOT_COUNTS, WORLD_NAMES, getWorldNames
 import os
 
 class ColorCyle:
@@ -22,22 +22,31 @@ class ColorCyle:
         self.current_ = (self.current_ + 1) % len(self.colors_)
         return result
 
-def plotCoverageEventsPerCount(data, outfile):
+def plotCoverageEventsPerCount(data, algorithm, worldType, endCoverage, outfile):
+    titleFmt = "Coverage over Time for {0} in {1}"
     plt.figure("coverage-events-per-count")
     plt.clf()
     plt.xlabel('minutes')
     plt.ylabel('coverage')
-    plt.title('Coverage per amount of Robots')
+    plt.title(titleFmt.format(ALGORITHM_NAMES[algorithm], WORLD_NAMES[worldType]))
     
     for robotCount in sorted(data):
         meanData = data[robotCount].getMean(convertTime=msecToMin, convertCoverage=coverageToPercent)
         labelText = ""
         
         if robotCount == 1:
-            labelText = str(robotCount) + " robot"
+            labelText = str(robotCount) + " Robot"
         else:
-            labelText = str(robotCount) + " robots"
-        plt.plot(meanData[1], meanData[0], linestyle='-', marker='s', label=labelText)
+            labelText = str(robotCount) + " Robots"
+        
+        dataToPlot = [[], []]
+        for coverageData, timeData in zip(meanData[0], meanData[1]):
+            if coverageData > endCoverage:
+                continue
+            dataToPlot[0].append(coverageData)
+            dataToPlot[1].append(timeData)
+            
+        plt.plot(dataToPlot[1], dataToPlot[0], linestyle='-', marker='s', label=labelText)
     
     plt.legend(loc='lower right')
     plt.savefig(outfile, dpi=100)  
@@ -71,7 +80,7 @@ def plotBarChartPerAlgorithmPerTerrain(data, dataErr=None, outfile="", yAxLabel=
                     ha='center', va='bottom')
             
     ax.set_xticks([(i + (len(data) * barWidth) / 2) for i in xrange(len(AVAILABLE_WORLDS))])
-    ax.set_xticklabels(AVAILABLE_WORLDS)
+    ax.set_xticklabels(getWorldNames())
     ax.legend(loc=legendPos)
     
     fig.set_size_inches(9.6,5.4)
@@ -102,7 +111,7 @@ def plotBarChartPerTerrainPerAlgorithm(data, dataErr=None, outfile="", yAxLabel=
             worldErr = dataErr[worldName]
             
         leftBorders = [i + (worldCount * barWidth) for i in xrange(len(worldData))]
-        rects = ax.bar(leftBorders, worldData, yerr=worldErr, width=barWidth, label=worldName, color=colors.next())
+        rects = ax.bar(leftBorders, worldData, yerr=worldErr, width=barWidth, label=WORLD_NAMES[worldName], color=colors.next())
         # add value label on top of bars
         for rect in rects:
             barHeight = rect.get_height()

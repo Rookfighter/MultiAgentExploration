@@ -6,7 +6,7 @@ WORLD_NAMES = {"open":"Open",
 AVAILABLE_ROBOT_COUNTS = [1, 2, 4, 8]
 AVAILABLE_ALGORITHMS = ["randomwalk", "nodecounting", "lrtastar", "wagner", "compass"]
 ALGORITHM_NAMES = {"randomwalk":"Randomwalk",
-                   "nodecounting":"Nodecounting",
+                   "nodecounting":"Node Counting",
                    "lrtastar":"LRTA*",
                    "wagner":"Wagner",
                    "compass":"Batalin-Sukhatme"}

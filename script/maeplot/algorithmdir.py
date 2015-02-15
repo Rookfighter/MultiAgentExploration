@@ -27,7 +27,7 @@ TIME_EVENTS_FILE = "time-events.dat"
 FINAL_COVERAGE_FILE = "final-coverage.dat"
 
 # plot file names
-COVERAGE_EVENTS_PER_COUNT = "coverage-events-per-robots.png"
+COVERAGE_EVENTS_PER_COUNT = "coverage-events-per-robots-{0}-{1}.png"
 
 class AlgorithmDirectory:
     
@@ -154,9 +154,10 @@ class AlgorithmDirectory:
         summaryDir = self.getSummaryDir()
         for worldType in AVAILABLE_WORLDS:
             worldDir = os.path.join(summaryDir,worldType)
-            plotFile = os.path.join(worldDir, COVERAGE_EVENTS_PER_COUNT)
+            plotFile = os.path.join(worldDir, COVERAGE_EVENTS_PER_COUNT.format(worldType, self.getName()))
             
-            plotCoverageEventsPerCount(self.meanCoverageEvents_[worldType], plotFile)
+            endCoverage = 85
+            plotCoverageEventsPerCount(self.meanCoverageEvents_[worldType], self.getName(), worldType, endCoverage, plotFile)
             
     def getSaveFilename(self, worldDir, filename, robotCount):
         return os.path.join(worldDir, str(robotCount) + "-" + filename)    

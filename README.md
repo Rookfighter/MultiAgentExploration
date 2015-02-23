@@ -17,7 +17,7 @@ For compiling the 3 libraries the following components have to be installed via 
 sudo apt-get install build-essential git subversion cmake pkg-config libglu1-mesa-dev libpng12-dev libjpeg8-dev libfltk1.1-dev libltdl-dev libboost-dev libboost-thread-dev
 ```
 
-The dependencies yaml-cpp and easylogging++ can be installed using the ```get-deps`` shell script in ```scripts/```. If the script does not work, you have to install those libraries manually.
+The dependencies yaml-cpp and easylogging++ can be installed using the ```get-deps``` shell script in ```scripts/```. If the script does not work, you have to install those libraries manually.
 
 ### yaml-cpp
 

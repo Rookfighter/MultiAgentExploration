@@ -1,5 +1,17 @@
 # Multi Agent Exploration
 
+This project was developed for my bachelor thesis. Multiple algorithms for antbots are implemented in a simulator and tested for their effiecency in covering areas. Overall there are 5 Algorithms implemented:
+
+* Node Counting
+* Learning Real Time A* (LRTA*)
+* Wagner Algorithm
+* Batalin-Sukhatme Algorithm
+* Randomwalk
+
+The behavior of these algorithms is tested in 3 different terrains with different complexity. Furthermore the robots' behavior in swarms of different size is examined. The configuration of the simulation can be done via YAML files (see __Execution__).
+
+The data is captured during runtime, saved in .dat files and can be plotted using the included python scripts.
+
 ## Installation
 
 __Attention:__ This project was only tested under __Linux Mint 17__. However, it should also work on __Ubuntu 14.04__.
